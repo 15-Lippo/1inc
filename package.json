@@ -1,0 +1,74 @@
+{
+  "name": "1inch-widget",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=12.0",
+    "npm": "use-yarn",
+    "yarn": ">=1.22.0"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.1.1",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/node": "^16.11.32",
+    "@types/react": "^18.0.8",
+    "@types/react-dom": "^18.0.3",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.6.4"
+  },
+  "devDependencies": {
+    "commitlint": "^16.2.4",
+    "@commitlint/config-conventional": "^16.2.4",
+    "@types/jest": "^27.4.1",
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^26.1.5",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.4.1",
+    "prettier": "^2.6.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "lint": "eslint \"src/**/*{.ts,.tsx}\"",
+    "lint:fix": "eslint \"src/**/*{.ts,.tsx}\" --fix",
+    "prettier": "prettier --write .",
+    "hooks:pre-commit": "yarn lint && lint-staged",
+    "hooks:pre-push": "yarn build",
+    "hooks:commit-msg": "yarn commitlint --edit $1"
+  },
+  "lint-staged": {
+    "*.{js,json,css,md,ts,tsx,html,component.html}": [
+      "prettier --write"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
