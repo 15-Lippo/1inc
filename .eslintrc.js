@@ -1,49 +1,81 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    ecmaFeatures: {
+      // Allows for the parsing of JSX
+      jsx: true,
+    },
+  },
   env: {
     browser: true,
     jest: true,
     es2020: true,
   },
-  extends: ['airbnb', 'prettier', 'plugin:prettier/recommended', 'plugin:jest/recommended'],
-  plugins: ['prettier', 'jest'],
+  extends: [
+    'prettier',
+    'react-app',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier/@typescript-eslint',
+    'plugin:prettier/recommended',
+  ],
+  plugins: ['prettier', 'simple-import-sort', 'unused-imports'],
   settings: {
-    'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
-    'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
+    react: {
+      version: 'detect',
     },
   },
   rules: {
-    'prettier/prettier': ['error', { singleQuote: true, endOfLine: 'auto' }],
-    'import/extensions': [0],
-    'react/jsx-filename-extension': [0],
-    'prefer-destructuring': ['error', { object: true, array: false }],
-    'react/jsx-closing-bracket-location': [
-      1,
-      { selfClosing: 'line-aligned', nonEmpty: 'after-props' },
-    ],
+    'unused-imports/no-unused-imports': 'error',
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'prettier/prettier': 'error',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    'react/jsx-props-no-spreading': 'off',
-    'no-negated-condition': 'error',
-    'import/prefer-default-export': 'off',
-    'no-param-reassign': 'off',
-    'no-shadow': 'off',
-    'no-implicit-coercion': [
+    'object-shorthand': ['error', 'always'],
+    'no-restricted-imports': [
       'error',
       {
-        boolean: true,
-        number: true,
-        string: true,
-        allow: [],
+        paths: [
+          {
+            name: 'ethers',
+            message: "Please import from '@ethersproject/module' directly to support tree-shaking.",
+          },
+          {
+            name: 'styled-components',
+            message: 'Please import from styled-components/macro.',
+          },
+        ],
+        patterns: [
+          {
+            group: ['**/dist'],
+            message:
+              'Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.',
+          },
+        ],
       },
     ],
-    'react/prop-types': 'off',
-    'jsx-a11y/anchor-is-valid': ['error', { components: ['Link'], specialLink: ['onClick', 'to'] }],
   },
-  ignorePatterns: ['/dist/*', '/coverage/*', '/lib/*', '**/api/**'],
+  ignorePatterns: [
+    'node_modules',
+    'coverage',
+    'build',
+    'dist',
+    '.DS_Store',
+    '.env.local',
+    '.env.development.local',
+    '.env.test.local',
+    '.env.production.local',
+    '.idea/',
+    '.vscode/',
+    'package-lock.json',
+    'yarn.lock',
+  ],
 };
