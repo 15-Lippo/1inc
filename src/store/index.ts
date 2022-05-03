@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { load, save } from 'redux-localstorage-simple';
 
-import swap from './swap/reducer';
-import user from './user/reducer';
+import swapReducer from './state/swap/swapSlice';
+import userReducer from './state/user/userSlice';
 // import wallet from './wallet/reducer';
 // import transactions from './transactions/reducer';
 
@@ -10,10 +10,10 @@ const PERSISTED_KEYS: string[] = ['user', 'transactions'];
 
 const store = configureStore({
   reducer: {
-    user,
+    user: userReducer,
     // wallet,
     // transactions,
-    swap,
+    swap: swapReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),

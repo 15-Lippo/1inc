@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
-import { useAppDispatch } from '../hooks';
-import { updateUserDarkMode } from './actions';
+import { useAppDispatch } from '../../hooks';
+import { updateUserDarkMode } from './userSlice';
 
 export function useDarkModeManager(): [boolean, () => void] {
   const dispatch = useAppDispatch();

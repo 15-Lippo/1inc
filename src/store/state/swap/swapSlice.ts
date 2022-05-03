@@ -1,6 +1,9 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-import { Field, selectCurrency, switchCurrencies, typeInput } from './actions';
+export enum Field {
+  INPUT = 'INPUT',
+  OUTPUT = 'OUTPUT',
+}
 
 export interface SwapState {
   readonly independentField: Field;
@@ -27,9 +30,11 @@ export const initialState: SwapState = {
   recipient: null,
 };
 
-export default createReducer<SwapState>(initialState, (builder) =>
-  builder
-    .addCase(selectCurrency, (state, { payload: { currencyId, field } }) => {
+const swapSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    selectCurrency(state, { payload: { currencyId, field } }) {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT;
       if (currencyId === state[otherField].currencyId) {
         // the case where we have to swap the order
@@ -37,6 +42,7 @@ export default createReducer<SwapState>(initialState, (builder) =>
           ...state,
           independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
           [field]: { currencyId },
+          // @ts-ignore
           [otherField]: { currencyId: state[field].currencyId },
         };
       } else {
@@ -46,20 +52,27 @@ export default createReducer<SwapState>(initialState, (builder) =>
           [field]: { currencyId },
         };
       }
-    })
-    .addCase(switchCurrencies, (state) => {
+    },
+    switchCurrencies(state) {
       return {
         ...state,
         independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
         [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
         [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
       };
-    })
-    .addCase(typeInput, (state, { payload: { field, typedValue } }) => {
+    },
+    typeInput(state, { payload: { field, typedValue } }) {
       return {
         ...state,
         independentField: field,
         typedValue,
       };
-    })
-);
+    },
+  },
+});
+
+export const { selectCurrency, switchCurrencies, typeInput } = swapSlice.actions;
+
+const { reducer } = swapSlice;
+
+export default reducer;
