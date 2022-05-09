@@ -10,6 +10,10 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
   POLYGON = 137,
   POLYGON_MUMBAI = 80001,
+  BINANCE = 56,
+  BINANCE_TESTNET = 97,
+  AVALANCHE = 43114,
+  FANTOM = 250,
 }
 
 /**
