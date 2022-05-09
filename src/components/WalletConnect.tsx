@@ -1,12 +1,27 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React } from '@web3-react/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { injected, SUPPORTED_WALLETS } from '../constants/supportedWalles';
+import { useAppDispatch } from '../store/hooks';
+import { useAllTokenBalances } from '../store/state/tokens/hooks';
+import { fetchTokens } from '../store/state/tokens/tokensSlice';
 
 export default function WalletConnect() {
+  const dispatch = useAppDispatch();
   const { account, activate } = useWeb3React();
   const [pendingError, setPendingError] = useState<boolean>();
+
+  const getTokens = () => {
+    // @ts-ignore
+    dispatch(fetchTokens());
+  };
+
+  useEffect(() => {
+    getTokens();
+  }, []);
+
+  useAllTokenBalances();
 
   const tryConnectWallet = async (connector: AbstractConnector) => {
     try {

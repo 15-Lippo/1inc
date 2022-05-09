@@ -1,23 +1,58 @@
-import reducer, {
-  Field,
-  selectCurrency,
-  SwapState,
-  switchCurrencies,
-  typeInput,
-} from './swapSlice';
+import reducer, { Field, selectCurrency, switchCurrencies, typeInput } from './swapSlice';
+import { initialState as swapInitialState } from './swapSlice';
 
-export const initialState: SwapState = {
-  independentField: Field.INPUT,
-  typedValue: '',
-  [Field.INPUT]: {
-    currencyId: null,
+export const initialState = swapInitialState;
+const restValues = {
+  loading: 'idle',
+  error: null,
+  quoteInfo: {
+    fromToken: {
+      symbol: '',
+      name: '',
+      address: '',
+      decimals: 0,
+      logoURI: '',
+    },
+    toToken: {
+      symbol: '',
+      name: '',
+      address: '',
+      decimals: 0,
+      logoURI: '',
+    },
+    toTokenAmount: '',
+    fromTokenAmount: '',
+    protocols: [],
+    estimatedGas: 0,
   },
-  [Field.OUTPUT]: {
-    currencyId: null,
+  swapInfo: {
+    fromToken: {
+      symbol: '',
+      name: '',
+      address: '',
+      decimals: 0,
+      logoURI: '',
+    },
+    toToken: {
+      symbol: '',
+      name: '',
+      address: '',
+      decimals: 0,
+      logoURI: '',
+    },
+    toTokenAmount: '',
+    fromTokenAmount: '',
+    protocols: [],
+    tx: {
+      from: '',
+      to: '',
+      data: '',
+      value: '',
+      gasPrice: '',
+      gas: '',
+    },
   },
-  recipient: null,
 };
-
 describe('swapSlice', () => {
   it('typeInput 0.1 in OUTPUT field', () => {
     return expect(
@@ -43,6 +78,7 @@ describe('swapSlice', () => {
       typedValue,
       independentField: Field.OUTPUT,
       recipient: null,
+      ...restValues,
     });
   });
 
@@ -62,6 +98,7 @@ describe('swapSlice', () => {
       typedValue,
       independentField: Field.INPUT,
       recipient: null,
+      ...restValues,
     });
   });
 
@@ -80,6 +117,7 @@ describe('swapSlice', () => {
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
+      ...restValues,
     });
   });
 
@@ -90,6 +128,7 @@ describe('swapSlice', () => {
       typedValue: '',
       independentField: Field.OUTPUT,
       recipient: null,
+      ...restValues,
     });
   });
 
@@ -126,13 +165,16 @@ describe('swapSlice', () => {
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
+      ...restValues,
     };
+    // @ts-ignore
     expect(reducer(previousState, switchCurrencies())).toEqual({
       OUTPUT: { currencyId: '0x0000' },
       INPUT: { currencyId: '0x1111' },
       typedValue: '',
       independentField: 'OUTPUT',
       recipient: null,
+      ...restValues,
     });
   });
 });

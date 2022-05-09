@@ -11,11 +11,11 @@ import { getLibrary } from './utils';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <Web3ReactProvider getLibrary={getLibrary}>
         <App />
-      </Provider>
-    </Web3ReactProvider>
+      </Web3ReactProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
