@@ -7,6 +7,7 @@ import {
 } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api/index';
+import { Token } from '../tokens/tokensSlice';
 
 export const fetchQuote = createAsyncThunk(
   'user/getQuoteInfo',
@@ -43,10 +44,10 @@ export interface SwapState {
   readonly independentField: Field;
   readonly typedValue: string;
   readonly [Field.INPUT]: {
-    readonly currencyId: string | undefined | null;
+    readonly currency: Token;
   };
   readonly [Field.OUTPUT]: {
-    readonly currencyId: string | undefined | null;
+    readonly currency: Token;
   };
   // the typed recipient address if swap should go to sender
   readonly recipient: string | null;
@@ -60,10 +61,24 @@ export const initialState: SwapState = {
   independentField: Field.INPUT,
   typedValue: '',
   [Field.INPUT]: {
-    currencyId: null,
+    currency: {
+      symbol: '',
+      name: '',
+      address: '',
+      decimals: 0,
+      logoURI: '',
+      tokenAmount: 0,
+    },
   },
   [Field.OUTPUT]: {
-    currencyId: null,
+    currency: {
+      symbol: '',
+      name: '',
+      address: '',
+      decimals: 0,
+      logoURI: '',
+      tokenAmount: 0,
+    },
   },
   recipient: null,
   quoteInfo: {
@@ -121,22 +136,22 @@ const swapSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    selectCurrency(state, { payload: { currencyId, field } }) {
+    selectCurrency(state, { payload: { currency, field } }) {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT;
-      if (currencyId === state[otherField].currencyId) {
+      if (currency === state[otherField].currency) {
         // the case where we have to swap the order
         return {
           ...state,
           independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { currencyId },
+          [field]: { currency },
           // @ts-ignore
-          [otherField]: { currencyId: state[field].currencyId },
+          [otherField]: { currency: state[field].currency },
         };
       } else {
         // the normal case
         return {
           ...state,
-          [field]: { currencyId },
+          [field]: { currency },
         };
       }
     },
@@ -144,8 +159,8 @@ const swapSlice = createSlice({
       return {
         ...state,
         independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { currencyId: state[Field.OUTPUT].currencyId },
-        [Field.OUTPUT]: { currencyId: state[Field.INPUT].currencyId },
+        [Field.INPUT]: { currency: state[Field.OUTPUT].currency },
+        [Field.OUTPUT]: { currency: state[Field.INPUT].currency },
       };
     },
     typeInput(state, { payload: { field, typedValue } }) {
