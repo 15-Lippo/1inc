@@ -6,7 +6,7 @@ import {
   SwapResponseDto,
 } from '@yozh-io/1inch-widget-api-client';
 
-import { SwapApi } from '../../../api/index';
+import { SwapApi } from '../../../api';
 import { Token } from '../tokens/tokensSlice';
 
 export const fetchQuote = createAsyncThunk(
@@ -133,7 +133,7 @@ export const initialState: SwapState = {
 };
 
 const swapSlice = createSlice({
-  name: 'user',
+  name: 'swap',
   initialState,
   reducers: {
     selectCurrency(state, { payload: { currency, field } }) {

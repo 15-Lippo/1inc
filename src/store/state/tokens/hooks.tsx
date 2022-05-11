@@ -13,6 +13,7 @@ import { Token, updateAllTokenBalances } from './tokensSlice';
 
 export const MULTICALL_ADDRESS = {
   [SupportedChainId.MAINNET]: '0xb1f8e55c7f64d203c1400b9d8555d050f94adf39',
+  [SupportedChainId.LOCALHOST]: '0xb1f8e55c7f64d203c1400b9d8555d050f94adf39',
   [SupportedChainId.ARBITRUM_ONE]: '0x151E24A486D7258dd7C33Fb67E4bB01919B7B32c',
   [SupportedChainId.OPTIMISM]: '0xB1c568e9C3E6bdaf755A60c7418C269eb11524FC',
   [SupportedChainId.POLYGON]: '0x2352c63A83f9Fd126af8676146721Fa00924d7e4',
@@ -48,8 +49,9 @@ async function getTokenBalances(
 ) {
   if (!account) return [];
   // Returns an array of validated addresses:
-  const validatedTokenAddresses = await allTokenObjects.map((vt) => vt.address);
-
+  const allAddresses = await allTokenObjects.map((vt) => vt.address);
+  const nativeAddress = '0x0000000000000000000000000000000000000000';
+  const validatedTokenAddresses = [...allAddresses, nativeAddress];
   try {
     const userAddresses = [account];
     const balances = await getContractBalances(
@@ -61,9 +63,11 @@ async function getTokenBalances(
 
     return await Promise.all(
       allTokenObjects.map(async (token) => {
-        const balance = token?.address
-          ? balances[account][token?.address.toLowerCase()]
-          : balances[account]['0x0000000000000000000000000000000000000000'] || 0;
+        const balance =
+          token?.address.toLowerCase() ===
+          ('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' || nativeAddress)
+            ? balances[account][nativeAddress] || 0
+            : balances[account][token?.address.toLowerCase()];
 
         // Convert balance:
         const balanceInEth = formatUnits(balance, token.decimals);
@@ -134,6 +138,8 @@ export const useAllTokenBalances = () => {
   );
 
   return useMemo(async () => {
+    if (!library || !account) return;
+
     if (validatedTokens.length) {
       // @ts-ignore
       const result = await tokenBalances(library, account, chainId, validatedTokens);
@@ -141,5 +147,5 @@ export const useAllTokenBalances = () => {
       return result;
     }
     return console.error('No validatedTokens array found', validatedTokens);
-  }, [library, account, chainId, dispatch, tokensList]);
+  }, [validatedTokens, allTokensArray, library, account, chainId, dispatch]);
 };

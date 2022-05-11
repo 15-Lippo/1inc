@@ -14,6 +14,7 @@ export enum SupportedChainId {
   BINANCE_TESTNET = 97,
   AVALANCHE = 43114,
   FANTOM = 250,
+  LOCALHOST = 1337,
 }
 
 /**

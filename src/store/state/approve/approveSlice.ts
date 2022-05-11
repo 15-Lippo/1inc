@@ -8,8 +8,20 @@ import {
 
 import { ApproveApi } from '../../../api';
 
+export enum ApproveStatus {
+  UNKNOWN = 'UNKNOWN',
+  NOT_APPROVED = 'NOT_APPROVED',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+}
+
+interface ApprovalState {
+  allowance: string;
+  status: ApproveStatus;
+}
+
 export const fetchApproveAllowance = createAsyncThunk(
-  'tokens/getApproveAllowanceInfo',
+  'approve/getApproveAllowanceInfo',
   async (approveInfo: ApproveFactoryControllerGetAllowanceRequest, { rejectWithValue }) => {
     try {
       const JSONApiResponse = await ApproveApi.approveFactoryControllerGetAllowanceRaw(approveInfo);
@@ -22,7 +34,7 @@ export const fetchApproveAllowance = createAsyncThunk(
 );
 
 export const fetchApproveTransaction = createAsyncThunk(
-  'tokens/getApproveTransactionInfo',
+  'approve/getApproveTransactionInfo',
   async (approveInfo: ApproveFactoryControllerGetCallDataRequest, { rejectWithValue }) => {
     try {
       const JSONApiResponse = await ApproveApi.approveFactoryControllerGetCallDataRaw(approveInfo);
@@ -35,7 +47,7 @@ export const fetchApproveTransaction = createAsyncThunk(
 );
 
 export const fetchApproveSpender = createAsyncThunk(
-  'tokens/getApproveSpenderInfo',
+  'approve/getApproveSpenderInfo',
   async (approveInfo, { rejectWithValue }) => {
     try {
       const JSONApiResponse = await ApproveApi.approveFactoryControllerGetSpenderRaw();
@@ -48,13 +60,16 @@ export const fetchApproveSpender = createAsyncThunk(
 );
 
 export interface TokensState {
-  approveAllowanceInfo: void;
+  approveAllowanceInfo: ApprovalState;
   approveTransactionInfo: ApproveCalldataResponseDto;
   approveSpenderInfo: ApproveSpenderResponseDto;
 }
 
 export const initialState: TokensState = {
-  approveAllowanceInfo: undefined,
+  approveAllowanceInfo: {
+    allowance: '',
+    status: ApproveStatus.UNKNOWN,
+  },
   approveTransactionInfo: {
     data: '',
     gasPrice: '',
@@ -65,12 +80,16 @@ export const initialState: TokensState = {
 };
 
 const approveSlice = createSlice({
-  name: 'tokens',
+  name: 'approve',
   initialState,
-  reducers: {},
+  reducers: {
+    updateApproveStatus(state, action) {
+      state.approveAllowanceInfo.status = action.payload;
+    },
+  },
   extraReducers: (tokens) => {
     tokens.addCase(fetchApproveAllowance.fulfilled, (state, action) => {
-      state.approveAllowanceInfo = action.payload;
+      state.approveAllowanceInfo.allowance = action.payload.allowance;
     });
     tokens.addCase(fetchApproveTransaction.fulfilled, (state, action) => {
       state.approveTransactionInfo = action.payload;
@@ -80,6 +99,8 @@ const approveSlice = createSlice({
     });
   },
 });
+
+export const { updateApproveStatus } = approveSlice.actions;
 
 const { reducer } = approveSlice;
 
