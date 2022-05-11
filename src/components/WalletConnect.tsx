@@ -3,7 +3,8 @@ import { useWeb3React } from '@web3-react/core';
 import { useEffect, useState } from 'react';
 
 import { injected, SUPPORTED_WALLETS } from '../constants/supportedWalles';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { useCountdownQuote } from '../store/state/swap/hooks';
 import { useAllTokenBalances } from '../store/state/tokens/hooks';
 import { fetchTokens } from '../store/state/tokens/tokensSlice';
 
@@ -11,6 +12,8 @@ export default function WalletConnect() {
   const dispatch = useAppDispatch();
   const { account, activate } = useWeb3React();
   const [pendingError, setPendingError] = useState<boolean>();
+  const quoteState = useAppSelector((state) => state.swap.quoteInfo);
+  const countdownQuote = useCountdownQuote();
 
   const getTokens = () => {
     // @ts-ignore
@@ -84,6 +87,12 @@ export default function WalletConnect() {
       <div>Account: {account}</div>
       <div>Click on Supported Wallet: {getWalletOptions()}</div>
       <div>{pendingError}</div>
+      <div>
+        <b>Quote:</b>
+        <div>Update in {countdownQuote} sec</div>
+        <div>To Token Amount: {quoteState?.toTokenAmount}</div>
+        <div>From Token Amount: {quoteState?.fromTokenAmount}</div>
+      </div>
     </>
   );
 }
