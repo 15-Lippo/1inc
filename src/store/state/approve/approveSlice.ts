@@ -83,6 +83,9 @@ const approveSlice = createSlice({
   name: 'approve',
   initialState,
   reducers: {
+    updateAllowanceInfo(state, action) {
+      state.approveAllowanceInfo.allowance = action.payload;
+    },
     updateApproveStatus(state, action) {
       state.approveAllowanceInfo.status = action.payload;
     },
@@ -100,7 +103,7 @@ const approveSlice = createSlice({
   },
 });
 
-export const { updateApproveStatus } = approveSlice.actions;
+export const { updateApproveStatus, updateAllowanceInfo } = approveSlice.actions;
 
 const { reducer } = approveSlice;
 

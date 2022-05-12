@@ -15,13 +15,15 @@ export const useCountdownQuote = () => {
       if (countdown > 0) {
         setCountdown(countdown - 1);
       } else if (countdown === 0) {
-        dispatch(
-          fetchQuote({
-            fromTokenAddress: INPUT.currency.address,
-            toTokenAddress: OUTPUT.currency.address,
-            amount: typedValue,
-          })
-        );
+        if (typedValue) {
+          dispatch(
+            fetchQuote({
+              fromTokenAddress: INPUT.currency.address,
+              toTokenAddress: OUTPUT.currency.address,
+              amount: typedValue,
+            })
+          );
+        }
         setCountdown(DELAY);
       }
     }, 1000);
