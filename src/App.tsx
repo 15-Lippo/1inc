@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus, fetchApproveSpender } from './store/state/approve/approveSlice';
 import { useApproval, useCheckApproveState } from './store/state/approve/hooks';
 import { Field, selectCurrency } from './store/state/swap/swapSlice';
+import { withTheme } from './theme';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -62,4 +63,4 @@ function App() {
   );
 }
 
-export default App;
+export default withTheme(App);

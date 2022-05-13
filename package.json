@@ -11,6 +11,8 @@
     "@yozh-io:registry": "https://github.com/yozh-io/1inch-widget-api-client"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@ethersproject/address": "^5.6.0",
     "@ethersproject/providers": "^5.6.5",
     "@ethersproject/units": "^5.6.0",
