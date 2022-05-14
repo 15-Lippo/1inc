@@ -11,6 +11,10 @@ export const useCountdownQuote = () => {
   const [countdown, setCountdown] = useState<number>(DELAY);
 
   useEffect(() => {
+    setCountdown(0);
+  }, [typedValue]);
+
+  useEffect(() => {
     const countdownInterval = setInterval(() => {
       if (countdown > 0) {
         setCountdown(countdown - 1);

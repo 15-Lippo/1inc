@@ -1,20 +1,36 @@
 import './App.css';
 
+import { makeStyles } from '@mui/styles';
+import { useWeb3React } from '@web3-react/core';
 import React, { useEffect } from 'react';
 
+import GetBox from './components/GetBox';
+import SendBox from './components/SendBox';
 import WalletConnect from './components/WalletConnect';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus, fetchApproveSpender } from './store/state/approve/approveSlice';
 import { useApproval, useCheckApproveState } from './store/state/approve/hooks';
+import { useCountdownQuote } from './store/state/swap/hooks';
 import { Field, selectCurrency } from './store/state/swap/swapSlice';
-import { withTheme } from './theme';
+import { ITheme, withTheme } from './theme';
+
+const useStyles = makeStyles((theme: ITheme) => ({
+  widgetRoot: {
+    width: '418px',
+    boxShadow: '0px 12px 24px #E2E9F6',
+    borderRadius: '24px',
+  },
+}));
 
 function App() {
   const dispatch = useAppDispatch();
-  const tokensList = useAppSelector((state) => state.tokens.tokensList);
-  const { INPUT, OUTPUT } = useAppSelector((state) => state.swap);
-  const { status } = useAppSelector((state) => state.approve.approveAllowanceInfo);
+  const { account } = useWeb3React();
+  const countdownQuote = useCountdownQuote();
   const [, approve] = useApproval();
+  const classes = useStyles();
+
+  const tokensList = useAppSelector((state) => state.tokens.tokensList);
+  const { status } = useAppSelector((state) => state.approve.approveAllowanceInfo);
 
   const setDefaultTokens = () => {
     const outputToken = tokensList.find((i) => i.name.toLowerCase() === 'ethereum');
@@ -39,26 +55,19 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <WalletConnect />
-      <hr />
+    <div id="widget" className={classes.widgetRoot}>
+      <div>Update Quote in {countdownQuote} sec</div>
+      <div>Account: {account}</div>
       {tokensList && (
         <>
-          <div>
-            Balance of {INPUT.currency.symbol} in ETHER: {INPUT.currency.tokenAmount || 0}
-          </div>
-          <div>
-            Balance of {OUTPUT.currency.symbol} in ETHER: {OUTPUT.currency.tokenAmount || 0}
-          </div>
-          <div>Send: {INPUT.currency.symbol}</div>
-          <div>Get: {OUTPUT.currency.symbol}</div>
-          <hr />
-          Approve Status: {status}
+          <SendBox />
+          <GetBox />
           {status === ApproveStatus.NOT_APPROVED && (
             <button onClick={onApprove}>Approve token</button>
           )}
         </>
       )}
+      {!account && <WalletConnect />}
     </div>
   );
 }

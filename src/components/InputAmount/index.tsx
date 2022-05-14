@@ -3,14 +3,14 @@ import { TextField } from '@mui/material';
 import _ from 'lodash';
 import React from 'react';
 
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { Field, typeInput } from '../store/state/swap/swapSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { Field, typeInput } from '../../store/state/swap/swapSlice';
 
 export interface SendProps {
   inputId: Field;
 }
 
-export default function Send({ inputId }: SendProps) {
+const InputAmount = ({ inputId }: SendProps) => {
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT } = useAppSelector((state) => state.swap);
 
@@ -37,4 +37,6 @@ export default function Send({ inputId }: SendProps) {
       onChange={handleChange}
     />
   );
-}
+};
+
+export default InputAmount;
