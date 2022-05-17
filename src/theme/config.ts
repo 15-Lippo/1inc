@@ -52,21 +52,31 @@ interface IThemeOptions extends ThemeOptions {
 }
 
 const theme = createTheme({
-  overrides: {
-    MuiCssBaseline: {
-      '@global': {
-        html: {
-          height: '100%',
-        },
-        body: {
-          height: '100%',
-        },
-        '#root': {
-          height: '100%',
-        },
+  components: {
+    MuiButtonBase: {
+      defaultProps: {
+        // The props to change the default for.
+        disableRipple: true, // No more ripple, on the whole application 💣!
+        disableElevation: true,
+        disableFocusRipple: true,
       },
     },
   },
+  // overrides: {
+  //   MuiCssBaseline: {
+  //     '@global': {
+  //       html: {
+  //         height: '100%',
+  //       },
+  //       body: {
+  //         height: '100%',
+  //       },
+  //       '#root': {
+  //         height: '100%',
+  //       },
+  //     },
+  //   },
+  // },
   breakpoints: {
     values: {
       xs: 0,
