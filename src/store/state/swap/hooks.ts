@@ -5,14 +5,14 @@ import { fetchQuote } from './swapSlice';
 
 const DELAY = 15;
 
-export const useCountdownQuote = () => {
+export const useCountdownQuote = (update?: boolean) => {
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => state.swap);
   const [countdown, setCountdown] = useState<number>(DELAY);
 
   useEffect(() => {
     setCountdown(0);
-  }, [typedValue]);
+  }, [typedValue, update]);
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {

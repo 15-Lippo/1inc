@@ -4,13 +4,13 @@ import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect } from 'react';
 
+import RefreshQuoteButton from './components/Buttons/RefreshQuoteButton';
 import GetBox from './components/GetBox';
 import SendBox from './components/SendBox';
 import WalletConnect from './components/WalletConnect';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus, fetchApproveSpender } from './store/state/approve/approveSlice';
 import { useApproval, useCheckApproveState } from './store/state/approve/hooks';
-import { useCountdownQuote } from './store/state/swap/hooks';
 import { Field, selectCurrency } from './store/state/swap/swapSlice';
 import { ITheme, withTheme } from './theme';
 
@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: ITheme) => ({
 function App() {
   const dispatch = useAppDispatch();
   const { account } = useWeb3React();
-  const countdownQuote = useCountdownQuote();
   const [, approve] = useApproval();
   const classes = useStyles();
 
@@ -56,7 +55,7 @@ function App() {
 
   return (
     <div id="widget" className={classes.widgetRoot}>
-      <div>Update Quote in {countdownQuote} sec</div>
+      <RefreshQuoteButton />
       <div>Account: {account}</div>
       {tokensList && (
         <>
