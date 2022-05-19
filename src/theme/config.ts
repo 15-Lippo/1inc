@@ -20,9 +20,20 @@ interface IPalette extends Palette {
 }
 
 interface ITypography extends Typography {
-  r: TypographyStyle; // regular
-  m: TypographyStyle; // medium
-  sb: TypographyStyle; //semi-bold
+  // regular
+  rxxlg24: TypographyStyle;
+  rlg18: TypographyStyle;
+  rm16: TypographyStyle;
+  rsm14: TypographyStyle;
+  rxs12: TypographyStyle;
+
+  // medium
+  mxlg20: TypographyStyle;
+  mlg18: TypographyStyle;
+
+  //semi-bold
+  sblg18: TypographyStyle;
+  sbm16: TypographyStyle;
 }
 
 export interface ITheme extends Theme {
@@ -41,9 +52,20 @@ interface IPaletteOptions extends PaletteOptions {
 }
 
 interface ITypographyOptions extends TypographyOptions {
-  r?: TypographyStyleOptions;
-  m?: TypographyStyleOptions;
-  sb?: TypographyStyleOptions;
+  // regular
+  rxxlg24?: TypographyStyleOptions;
+  rlg18?: TypographyStyleOptions;
+  rm16?: TypographyStyleOptions;
+  rsm14?: TypographyStyleOptions;
+  rxs12?: TypographyStyleOptions;
+
+  // medium
+  mxlg20?: TypographyStyleOptions;
+  mlg18?: TypographyStyleOptions;
+
+  //semi-bold
+  sblg18?: TypographyStyleOptions;
+  sbm16?: TypographyStyleOptions;
 }
 
 interface IThemeOptions extends ThemeOptions {
@@ -57,7 +79,6 @@ const theme = createTheme({
       defaultProps: {
         // The props to change the default for.
         disableRipple: true, // No more ripple, on the whole application 💣!
-        disableElevation: true,
         disableFocusRipple: true,
       },
     },
@@ -88,43 +109,41 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ['Roboto', 'sans-serif'].join(','),
-    r: {
-      xxlg24: {
-        fontWeight: 400,
-        fontSize: '24px',
-      },
-      lg18: {
-        fontWeight: 400,
-        fontSize: '18px',
-      },
-      m16: {
-        fontWeight: 400,
-        fontSize: '16px',
-      },
-      sm14: {
-        fontWeight: 400,
-        fontSize: '14px',
-      },
-      xs12: {
-        fontWeight: 400,
-        fontSize: '12px',
-      },
-      m: {
-        lg18: {
-          fontWeight: 500,
-          fontSize: '18px',
-        },
-      },
-      sb: {
-        lg18: {
-          fontWeight: 600,
-          fontSize: '18px',
-        },
-        m16: {
-          fontWeight: 600,
-          fontSize: '16px',
-        },
-      },
+    rxxlg24: {
+      fontWeight: 400,
+      fontSize: '24px',
+    },
+    rlg18: {
+      fontWeight: 400,
+      fontSize: '18px',
+    },
+    rm16: {
+      fontWeight: 400,
+      fontSize: '16px',
+    },
+    rsm14: {
+      fontWeight: 400,
+      fontSize: '14px',
+    },
+    rxs12: {
+      fontWeight: 400,
+      fontSize: '12px',
+    },
+    mxlg20: {
+      fontWeight: 500,
+      fontSize: '20px',
+    },
+    mlg18: {
+      fontWeight: 500,
+      fontSize: '18px',
+    },
+    sblg18: {
+      fontWeight: 600,
+      fontSize: '18px',
+    },
+    sbm16: {
+      fontWeight: 600,
+      fontSize: '16px',
     },
   },
   palette: {
