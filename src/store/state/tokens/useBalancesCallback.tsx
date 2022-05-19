@@ -119,16 +119,14 @@ export async function tokenBalances(
   }
 }
 
-// Hook
-export const useAllTokenBalances = () => {
+export function useBalancesCallback() {
   const dispatch = useAppDispatch();
   const tokensList = useAppSelector((state) => state.tokens.tokensList);
   const { library, account, chainId } = useWeb3React();
 
   const allTokensArray = useMemo(
     () => Object.values(tokensList ?? {}),
-    // !DO NOT USE tokensList dependency here - it will call an endless look
-    [account, library, chainId]
+    [tokensList, account, library, chainId]
   );
   // Validation of all addresses:
   const validatedTokens = useMemo(
@@ -137,8 +135,8 @@ export const useAllTokenBalances = () => {
     [allTokensArray]
   );
 
-  return useMemo(async () => {
-    if (!library || !account) return;
+  const balancesCallback = async () => {
+    if (!library || !account) return console.error('No library or account in useBalancesCallback');
 
     if (validatedTokens.length) {
       // @ts-ignore
@@ -147,5 +145,7 @@ export const useAllTokenBalances = () => {
       return result;
     }
     return console.error('No validatedTokens array found', validatedTokens);
-  }, [validatedTokens, allTokensArray, library, account, chainId, dispatch]);
-};
+  };
+
+  return balancesCallback;
+}

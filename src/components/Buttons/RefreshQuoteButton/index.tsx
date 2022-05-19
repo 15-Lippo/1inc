@@ -2,7 +2,7 @@ import { IconButton } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
 
-import { useCountdownQuote } from '../../../store/state/swap/hooks';
+import { useCountdownQuote } from '../../../store/state/swap/useCountdownQuote';
 import { ITheme } from '../../../theme';
 
 const useStyles = makeStyles((theme: ITheme) => ({

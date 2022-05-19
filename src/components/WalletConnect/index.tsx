@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import { injected, SUPPORTED_WALLETS } from '../../constants/supportedWalles';
 import { useAppDispatch } from '../../store/hooks';
-import { useAllTokenBalances } from '../../store/state/tokens/hooks';
 import { fetchTokens } from '../../store/state/tokens/tokensSlice';
 
 const WalletConnect = () => {
@@ -20,8 +19,6 @@ const WalletConnect = () => {
   useEffect(() => {
     getTokens();
   }, []);
-
-  useAllTokenBalances();
 
   const tryConnectWallet = async (connector: AbstractConnector) => {
     try {

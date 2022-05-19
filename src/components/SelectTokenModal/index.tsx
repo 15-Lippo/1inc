@@ -3,7 +3,6 @@ import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
 
 import { Field } from '../../store/state/swap/swapSlice';
-import { Token } from '../../store/state/tokens/tokensSlice';
 import { ITheme } from '../../theme';
 import BackButton from '../Buttons/BackButton';
 import VirtualizedTokenList from '../VirtualizedTokenList';
@@ -41,29 +40,21 @@ const useStyles = makeStyles((theme: ITheme) => ({
 }));
 
 export interface SelectTokenModalProps {
-  token?: Token;
+  isOpen: boolean;
+  closeModal: () => void;
   field: Field;
 }
 
-const SelectTokenModal = ({ token, field }: SelectTokenModalProps) => {
+const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) => {
   const classes = useStyles();
-  const [isCloseModal, setIsCloseModal] = useState<boolean>(false);
   const [isSearchValue, setIsSearchValue] = useState<string>('');
 
-  const onCloseModal = () => {
-    setIsCloseModal(true);
-  };
-
-  const onCloseListModal = (data: boolean) => {
-    setIsCloseModal(data);
-  };
-
-  return !isCloseModal ? (
+  return isOpen ? (
     <Box className={classes.selectTokenModal}>
       <Box className={classes.selectTokenModalHeaderBox}>
         <Box className={classes.selectTokenModalTitleBox}>
           <Box sx={{ position: 'absolute', ml: '-8px' }}>
-            <BackButton onClick={onCloseModal}></BackButton>
+            <BackButton onClick={closeModal} />
           </Box>
           <Typography className={classes.selectTokenModalTitle}>Select a token</Typography>
         </Box>
@@ -89,9 +80,9 @@ const SelectTokenModal = ({ token, field }: SelectTokenModalProps) => {
           fullWidth
         />
         <Box>Pined Tokens</Box>
-        <Box className={classes.line}></Box>
+        <Box className={classes.line} />
       </Box>
-      <VirtualizedTokenList field={field} onCloseModal={onCloseListModal}></VirtualizedTokenList>
+      <VirtualizedTokenList field={field} closeModal={closeModal} />
     </Box>
   ) : null;
 };
