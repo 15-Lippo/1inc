@@ -7,9 +7,10 @@ import { Field, selectCurrency, switchCurrencies } from '../../store/state/swap/
 
 export interface VirtualizedTokenListProps {
   field: Field;
+  onCloseModal?: any;
 }
 
-const VirtualizedTokenList = ({ field }: VirtualizedTokenListProps) => {
+const VirtualizedTokenList = ({ field, onCloseModal }: VirtualizedTokenListProps) => {
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT } = useAppSelector((state) => state.swap);
   const tokensList = useAppSelector((state) => state.tokens.tokensList);
@@ -42,6 +43,7 @@ const VirtualizedTokenList = ({ field }: VirtualizedTokenListProps) => {
       );
       setSelectedInputName(name.toLowerCase());
       setSelectedOutputName(name.toLowerCase());
+      onCloseModal(true);
     };
 
     return (
@@ -64,7 +66,7 @@ const VirtualizedTokenList = ({ field }: VirtualizedTokenListProps) => {
   }
 
   return (
-    <FixedSizeList height={400} width={400} itemSize={72} itemCount={tokensList.length}>
+    <FixedSizeList height={400} width={'100%'} itemSize={72} itemCount={tokensList.length}>
       {renderRow}
     </FixedSizeList>
   );

@@ -16,6 +16,7 @@ import { ITheme, withTheme } from './theme';
 
 const useStyles = makeStyles((theme: ITheme) => ({
   widgetRoot: {
+    position: 'relative',
     width: '418px',
     boxShadow: '0px 12px 24px #E2E9F6',
     borderRadius: '24px',
