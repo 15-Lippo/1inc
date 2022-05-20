@@ -4,16 +4,17 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, selectCurrency, switchCurrencies } from '../../store/state/swap/swapSlice';
+import { Token } from '../../store/state/tokens/tokensSlice';
 
 export interface VirtualizedTokenListProps {
   field: Field;
   closeModal: () => void;
+  tokensList: Token[];
 }
 
-const VirtualizedTokenList = ({ field, closeModal }: VirtualizedTokenListProps) => {
+const VirtualizedTokenList = ({ field, closeModal, tokensList }: VirtualizedTokenListProps) => {
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT } = useAppSelector((state) => state.swap);
-  const tokensList = useAppSelector((state) => state.tokens.tokensList);
   const [selectedInputName, setSelectedInputName] = useState(INPUT.currency.name.toLowerCase());
   const [selectedOutputName, setSelectedOutputName] = useState(OUTPUT.currency.name.toLowerCase());
 

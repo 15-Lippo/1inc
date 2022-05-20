@@ -1,8 +1,10 @@
 import { Box, InputAdornment, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
+import { Token } from '../../store/state/tokens/tokensSlice';
 import { ITheme } from '../../theme';
 import BackButton from '../Buttons/BackButton';
 import VirtualizedTokenList from '../VirtualizedTokenList';
@@ -15,6 +17,7 @@ const useStyles = makeStyles((theme: ITheme) => ({
     width: '100%',
     paddingBottom: '1em',
     backgroundColor: theme.palette.background.default,
+    zIndex: '1',
   },
   selectTokenModalHeaderBox: {
     margin: '0.5em 1em 0',
@@ -47,7 +50,29 @@ export interface SelectTokenModalProps {
 
 const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) => {
   const classes = useStyles();
+  const tokensList = useAppSelector((state) => state.tokens.tokensList);
+  const [data, setData] = useState<Token[]>([]);
+  const [filteredResults, setFilteredResults] = useState<Token[]>([]);
   const [isSearchValue, setIsSearchValue] = useState<string>('');
+  const searchParams = ['address', 'name'];
+
+  useEffect(() => {
+    setData(tokensList);
+  }, [tokensList]);
+
+  useEffect(() => {
+    setIsSearchValue('');
+  }, [isOpen]);
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsSearchValue(e.target.value);
+    const filteredData = data.filter((item) =>
+      searchParams.some((param) =>
+        item[param as keyof Token]?.toString().toLowerCase().includes(isSearchValue.toLowerCase())
+      )
+    );
+    setFilteredResults(filteredData);
+  };
 
   return isOpen ? (
     <Box className={classes.selectTokenModal}>
@@ -65,7 +90,7 @@ const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) 
           type="search"
           value={isSearchValue}
           placeholder={'Search by name or paste address'}
-          onChange={(e) => setIsSearchValue(e.target.value)}
+          onChange={onSearch}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -82,7 +107,11 @@ const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) 
         <Box>Pined Tokens</Box>
         <Box className={classes.line} />
       </Box>
-      <VirtualizedTokenList field={field} closeModal={closeModal} />
+      <VirtualizedTokenList
+        field={field}
+        closeModal={closeModal}
+        tokensList={!isSearchValue ? data : filteredResults}
+      />
     </Box>
   ) : null;
 };
