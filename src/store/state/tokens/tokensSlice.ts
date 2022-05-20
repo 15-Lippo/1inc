@@ -9,7 +9,7 @@ export interface Token {
   address: string;
   decimals: number;
   logoURI: string;
-  tokenAmount?: number;
+  tokenAmount?: string;
 }
 
 export const fetchLiquiditySources = createAsyncThunk(

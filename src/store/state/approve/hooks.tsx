@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { TransactionReceipt, Web3Provider } from '@ethersproject/providers';
+import { formatUnits } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -49,7 +50,8 @@ export function useTokenAllowance(
       account ? account : undefined
     );
     const contractAllowance = await tokenContract.allowance(account, spender);
-    dispatch(updateAllowanceInfo(contractAllowance.toString()));
+    console.log('contractAllowance: ', contractAllowance, 'for', token.symbol);
+    dispatch(updateAllowanceInfo(formatUnits(contractAllowance, 0)));
   };
 
   useEffect(() => {
@@ -91,7 +93,7 @@ export function useCheckApproveState(txHash?: string) {
     if (!currentAllowance) return ApproveStatus.UNKNOWN;
     if (currentAllowance === '0') return ApproveStatus.NOT_APPROVED;
 
-    return BigNumber.from(currentAllowance).lt(BigNumber.from(typedValue))
+    return BigNumber.from(currentAllowance).lt(BigNumber.from(typedValue || 0))
       ? ApproveStatus.NOT_APPROVED
       : ApproveStatus.APPROVED;
   }, [dispatch, currentAllowance, txHash]);

@@ -23,7 +23,7 @@ const RefreshQuoteButton = () => {
   const classes = useStyles();
   const [update, setUpdate] = useState<boolean>(false);
   const countdownQuote = useCountdownQuote(update);
-  console.log('countdownQuote: ', countdownQuote);
+  // console.log('countdownQuote: ', countdownQuote);
 
   return (
     <IconButton

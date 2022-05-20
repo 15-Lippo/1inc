@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import { SupportedChainId } from '../../../constants/chains';
 import { chunkArray } from '../../../utils/chunkArray';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { updateCurrencyBalance } from '../swap/swapSlice';
 import { Token, updateAllTokenBalances } from './tokensSlice';
 
 export const MULTICALL_ADDRESS = {
@@ -50,6 +51,7 @@ async function getTokenBalances(
   if (!account) return [];
   // Returns an array of validated addresses:
   const allAddresses = await allTokenObjects.map((vt) => vt.address);
+
   const nativeAddress = '0x0000000000000000000000000000000000000000';
   const validatedTokenAddresses = [...allAddresses, nativeAddress];
   try {
@@ -64,18 +66,27 @@ async function getTokenBalances(
     return await Promise.all(
       allTokenObjects.map(async (token) => {
         const balance =
-          token?.address.toLowerCase() ===
-          ('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' || nativeAddress)
+          token?.address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
             ? balances[account][nativeAddress] || 0
             : balances[account][token?.address.toLowerCase()];
 
-        // Convert balance:
-        const balanceInEth = formatUnits(balance, token.decimals);
-        const valueToReturn = Math.ceil(parseFloat(balanceInEth)) === 0 ? 0 : balanceInEth;
-        return {
-          ...token,
-          tokenAmount: valueToReturn,
-        };
+        try {
+          // Convert balance:
+          let valueToReturn;
+          if (balance === '0' || !balance) {
+            valueToReturn = '0';
+          } else {
+            const balanceInEth = formatUnits(balance, token.decimals);
+            valueToReturn = Math.ceil(parseFloat(balanceInEth)) === 0 ? '0' : balanceInEth;
+            console.log({ valueToReturn });
+          }
+          return {
+            ...token,
+            tokenAmount: valueToReturn,
+          };
+        } catch (e) {
+          console.error('Failed to convert balance from wei');
+        }
       })
     );
   } catch ({ message }) {
@@ -95,7 +106,7 @@ export async function tokenBalances(
 ) {
   if (!validatedTokens.length) return [];
   if (!account || !lib) return validatedTokens;
-  const arrayLength = 200;
+  const arrayLength = 100;
 
   // multicall is limited by block size. if the request contains more than 600 addresses for the Ether network, the transaction will fail
   // that's why a big array should be divided into smaller arrays
@@ -136,13 +147,13 @@ export function useBalancesCallback() {
   );
 
   const balancesCallback = async () => {
-    if (!library || !account) return console.error('No library or account in useBalancesCallback');
+    if (!library || !account || !chainId)
+      return console.error('No library or account or chainId in useBalancesCallback');
 
     if (validatedTokens.length) {
-      // @ts-ignore
       const result = await tokenBalances(library, account, chainId, validatedTokens);
       dispatch(updateAllTokenBalances(result));
-      return result;
+      dispatch(updateCurrencyBalance({ tokensList: result }));
     }
     return console.error('No validatedTokens array found', validatedTokens);
   };

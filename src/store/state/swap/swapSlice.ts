@@ -67,7 +67,7 @@ export const initialState: SwapState = {
       address: '',
       decimals: 0,
       logoURI: '',
-      tokenAmount: 0,
+      tokenAmount: '0',
     },
   },
   [Field.OUTPUT]: {
@@ -77,7 +77,7 @@ export const initialState: SwapState = {
       address: '',
       decimals: 0,
       logoURI: '',
-      tokenAmount: 0,
+      tokenAmount: '0',
     },
   },
   recipient: null,
@@ -136,6 +136,16 @@ const swapSlice = createSlice({
   name: 'swap',
   initialState,
   reducers: {
+    updateCurrencyBalance(state, { payload: { tokensList } }) {
+      const currency = tokensList.find(
+        (i: { name: string }) =>
+          i.name.toLowerCase() === state[Field.INPUT].currency.name.toLowerCase()
+      );
+      return {
+        ...state,
+        [Field.INPUT]: { currency },
+      };
+    },
     selectCurrency(state, { payload: { currency, field } }) {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT;
       if (currency === state[otherField].currency) {
@@ -181,7 +191,8 @@ const swapSlice = createSlice({
   },
 });
 
-export const { selectCurrency, switchCurrencies, typeInput } = swapSlice.actions;
+export const { updateCurrencyBalance, selectCurrency, switchCurrencies, typeInput } =
+  swapSlice.actions;
 
 const { reducer } = swapSlice;
 

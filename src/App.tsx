@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: ITheme) => ({
 
 function App() {
   const dispatch = useAppDispatch();
-  const { account } = useWeb3React();
+  const { account, chainId, library } = useWeb3React();
   const [, approve] = useApproval();
   const balancesCallback = useBalancesCallback();
   const classes = useStyles();
@@ -36,8 +36,6 @@ function App() {
   const { status } = useAppSelector((state) => state.approve.approveAllowanceInfo);
 
   const setDefaultTokens = () => {
-    // const outputToken = tokensList.find((i) => i.name.toLowerCase() === 'ethereum');
-    // const inputToken = tokensList[15]; ///.find((i) => i.name === 'Tellor Tributes');
     const inputToken = tokensList.find((i) => i.name.toLowerCase() === 'ethereum');
     const outputToken = tokensList.find((i) => i.name.toLowerCase() === '1inch token');
 
@@ -55,12 +53,14 @@ function App() {
   useCheckApproveState();
 
   useEffect(() => {
-    try {
-      balancesCallback();
-    } catch (error) {
-      console.error(error);
+    if (tokensList.length) {
+      try {
+        balancesCallback();
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, [account, tokensList.length]);
+  }, [account, tokensList.length, library, chainId]);
 
   const onApprove = async () => {
     console.log('APPROVING...');
