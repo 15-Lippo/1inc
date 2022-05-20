@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
 import { ITheme } from '../../theme';
+import SelectTokenButton from '../Buttons/SelectTokenButton';
 import InputAmount from '../InputAmount';
 import SelectTokenModal from '../SelectTokenModal';
 
@@ -46,7 +47,11 @@ const SendBox = () => {
       </div>
 
       <div className={classes.sendAction}>
-        <Typography onClick={() => setSelectTokenModal(true)}>{INPUT.currency.symbol}</Typography>
+        <SelectTokenButton
+          token={INPUT.currency}
+          onClick={() => setSelectTokenModal(true)}
+          field={Field.INPUT}
+        />
         <Typography>{status}</Typography>
         <InputAmount inputId={Field.INPUT} />
       </div>

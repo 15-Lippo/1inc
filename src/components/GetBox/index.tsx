@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
+import SelectTokenButton from '../Buttons/SelectTokenButton';
 import SelectTokenModal from '../SelectTokenModal';
 
 const useStyles = makeStyles(() => ({
@@ -29,7 +30,11 @@ const GetBox = () => {
     <Box className={classes.getBoxRoot}>
       <Typography className={classes.getTitle}>Get</Typography>
       <div>
-        <Typography onClick={() => setSelectTokenModal(true)}>{OUTPUT.currency.symbol}</Typography>
+        <SelectTokenButton
+          token={OUTPUT.currency}
+          onClick={() => setSelectTokenModal(true)}
+          field={Field.OUTPUT}
+        />
         <Typography>Quote: {quoteState?.toTokenAmount}</Typography>
       </div>
 
