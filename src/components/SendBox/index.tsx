@@ -1,35 +1,14 @@
 import { Box, Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import React, { useState } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
-import { ITheme } from '../../theme';
 import SelectTokenButton from '../Buttons/SelectTokenButton';
 import InputAmount from '../InputAmount';
 import SelectTokenModal from '../SelectTokenModal';
 
-const useStyles = makeStyles((theme: ITheme) => ({
-  sendBoxRoot: {
-    display: 'flex',
-    backgroundColor: theme.palette.cool[100],
-    flexDirection: 'column',
-  },
-  sendTitle: {
-    justifyContent: 'space-between',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  sendAction: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    display: 'flex',
-  },
-}));
-
 const SendBox = () => {
-  const classes = useStyles();
   const { account } = useWeb3React();
   const { INPUT } = useAppSelector((state) => state.swap);
   const { status } = useAppSelector((state) => state.approve.approveAllowanceInfo);
@@ -40,13 +19,42 @@ const SendBox = () => {
   };
 
   return (
-    <Box className={classes.sendBoxRoot}>
-      <div className={classes.sendTitle}>
-        <Typography>Send</Typography>
-        {account && <p>Balance: {INPUT.currency.tokenAmount || 0}</p>}
-      </div>
+    <Box
+      sx={{
+        display: 'flex',
+        bgcolor: 'cool.100',
+        flexDirection: 'column',
+      }}>
+      <Box
+        sx={{
+          justifyContent: 'space-between',
+          display: 'flex',
+          alignItems: 'center',
+        }}>
+        <Typography
+          variant="rxs12"
+          sx={{
+            color: 'dark.700',
+          }}>
+          You sell
+        </Typography>
+        {account && (
+          <Typography
+            variant="rxs12"
+            sx={{
+              color: 'dark.700',
+            }}>
+            Balance: {INPUT.currency.tokenAmount || 0}
+          </Typography>
+        )}
+      </Box>
 
-      <div className={classes.sendAction}>
+      <Box
+        sx={{
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          display: 'flex',
+        }}>
         <SelectTokenButton
           token={INPUT.currency}
           onClick={() => setSelectTokenModal(true)}
@@ -54,7 +62,7 @@ const SendBox = () => {
         />
         <Typography>{status}</Typography>
         <InputAmount inputId={Field.INPUT} />
-      </div>
+      </Box>
 
       <SelectTokenModal
         field={Field.INPUT}

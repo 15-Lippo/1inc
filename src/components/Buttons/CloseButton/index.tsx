@@ -1,20 +1,16 @@
-import { IconButton } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { IconButton, IconButtonProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { ITheme } from '../../../theme';
-
-const useStyles = makeStyles((theme: ITheme) => ({
-  closeButton: {
-    '&:hover #close-button path': {
-      fill: theme.palette.cool[100],
-    },
-    '&:active #close-button #cross': {
-      stroke: theme.palette.blue[500],
-    },
-    '&:disabled #close-button #cross': {
-      stroke: theme.palette.dark[500],
-    },
+const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  '&:hover #close-button path': {
+    fill: theme.palette.cool[100],
+  },
+  '&:active #close-button #cross': {
+    stroke: theme.palette.blue[500],
+  },
+  '&:disabled #close-button #cross': {
+    stroke: theme.palette.dark[500],
   },
 }));
 
@@ -24,15 +20,8 @@ interface Props {
 }
 
 const CloseButton = ({ disabled, onClick }: Props) => {
-  const classes = useStyles();
-
   return (
-    <IconButton
-      disabled={disabled}
-      disableRipple
-      className={classes.closeButton}
-      aria-label="close"
-      onClick={onClick}>
+    <StyledIconButton disabled={disabled} disableRipple aria-label="close" onClick={onClick}>
       <svg
         id="close-button"
         width="36"
@@ -61,7 +50,7 @@ const CloseButton = ({ disabled, onClick }: Props) => {
           strokeLinejoin="round"
         />
       </svg>
-    </IconButton>
+    </StyledIconButton>
   );
 };
 

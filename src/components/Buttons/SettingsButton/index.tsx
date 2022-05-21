@@ -1,20 +1,16 @@
-import { IconButton } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { IconButton, IconButtonProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { ITheme } from '../../../theme';
-
-const useStyles = makeStyles((theme: ITheme) => ({
-  backButton: {
-    '&:hover #settings-button #background-settings': {
-      fill: theme.palette.cool[100],
-    },
-    '&:active #settings-button #settings-icon': {
-      fill: theme.palette.blue[500],
-    },
-    '&:disabled #settings-button #settings-icon': {
-      fill: theme.palette.dark[500],
-    },
+const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  '&:hover #settings-button #background-settings': {
+    fill: theme.palette.cool[100],
+  },
+  '&:active #settings-button #settings-icon': {
+    fill: theme.palette.blue[500],
+  },
+  '&:disabled #settings-button #settings-icon': {
+    fill: theme.palette.dark[500],
   },
 }));
 
@@ -24,13 +20,10 @@ interface Props {
 }
 
 const SettingsButton = ({ disabled, onClick }: Props) => {
-  const classes = useStyles();
-
   return (
-    <IconButton
+    <StyledIconButton
       disabled={disabled}
       disableRipple
-      className={classes.backButton}
       aria-label="settings-button"
       onClick={onClick}>
       <svg
@@ -56,7 +49,7 @@ const SettingsButton = ({ disabled, onClick }: Props) => {
           fill="black"
         />
       </svg>
-    </IconButton>
+    </StyledIconButton>
   );
 };
 

@@ -1,76 +1,110 @@
-import { Color } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
-import { Palette, PaletteColorOptions, PaletteOptions } from '@mui/material/styles/createPalette';
-import { Theme, ThemeOptions } from '@mui/material/styles/createTheme';
-import {
-  Typography,
-  TypographyOptions,
-  TypographyStyle,
-  TypographyStyleOptions,
-} from '@mui/material/styles/createTypography';
+import { createTheme, ThemeOptions } from '@mui/material';
+import { PaletteOptions } from '@mui/material';
+import { TypographyOptions } from '@mui/material/styles/createTypography';
+import { CSSProperties } from 'react';
 
-interface IPalette extends Palette {
-  dark: Color;
-  cool: Color;
-  blue: Color;
-  red: Color;
-  yellow: Color;
-  green: Color;
-  gradient: Color;
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    fontFamily: true;
+    // regular
+    rxxlg24: true;
+    rlg18: true;
+    rm16: true;
+    rsm14: true;
+    rxs12: true;
+
+    // medium
+    mxlg20: true;
+    mlg18: true;
+
+    //semi-bold
+    sblg18: true;
+    sbm16: true;
+  }
 }
 
-interface ITypography extends Typography {
+interface ExtendedTypographyOptions extends TypographyOptions {
   // regular
-  rxxlg24: TypographyStyle;
-  rlg18: TypographyStyle;
-  rm16: TypographyStyle;
-  rsm14: TypographyStyle;
-  rxs12: TypographyStyle;
+  rxxlg24: CSSProperties;
+  rlg18: CSSProperties;
+  rm16: CSSProperties;
+  rsm14: CSSProperties;
+  rxs12: CSSProperties;
 
   // medium
-  mxlg20: TypographyStyle;
-  mlg18: TypographyStyle;
+  mxlg20: CSSProperties;
+  mlg18: CSSProperties;
 
   //semi-bold
-  sblg18: TypographyStyle;
-  sbm16: TypographyStyle;
+  sblg18: CSSProperties;
+  sbm16: CSSProperties;
 }
 
-export interface ITheme extends Theme {
-  palette: IPalette;
-  typography: ITypography;
-}
-
-interface IPaletteOptions extends PaletteOptions {
-  dark?: PaletteColorOptions;
-  cool?: PaletteColorOptions;
-  blue?: PaletteColorOptions;
-  red?: PaletteColorOptions;
-  yellow?: PaletteColorOptions;
-  green?: PaletteColorOptions;
-  gradient?: PaletteColorOptions;
-}
-
-interface ITypographyOptions extends TypographyOptions {
-  // regular
-  rxxlg24?: TypographyStyleOptions;
-  rlg18?: TypographyStyleOptions;
-  rm16?: TypographyStyleOptions;
-  rsm14?: TypographyStyleOptions;
-  rxs12?: TypographyStyleOptions;
-
-  // medium
-  mxlg20?: TypographyStyleOptions;
-  mlg18?: TypographyStyleOptions;
-
-  //semi-bold
-  sblg18?: TypographyStyleOptions;
-  sbm16?: TypographyStyleOptions;
-}
-
-interface IThemeOptions extends ThemeOptions {
-  palette: IPaletteOptions;
-  typography: ITypographyOptions;
+declare module '@mui/material/styles' {
+  interface Palette {
+    dark: {
+      900: CSSProperties['color'];
+      700: CSSProperties['color'];
+      500: CSSProperties['color'];
+      50: CSSProperties['color'];
+    };
+    cool: {
+      300: CSSProperties['color'];
+      100: CSSProperties['color'];
+    };
+    blue: {
+      700: CSSProperties['color'];
+      500: CSSProperties['color'];
+      40: CSSProperties['color'];
+      16: CSSProperties['color'];
+    };
+    red: {
+      500: CSSProperties['color'];
+      16: CSSProperties['color'];
+    };
+    yellow: {
+      500: CSSProperties['color'];
+    };
+    green: {
+      500: CSSProperties['color'];
+    };
+    gradient: {
+      500: CSSProperties['color'];
+      52: CSSProperties['color'];
+    };
+  }
+  interface PaletteOptions {
+    dark: {
+      900: CSSProperties['color'];
+      700: CSSProperties['color'];
+      500: CSSProperties['color'];
+      50: CSSProperties['color'];
+    };
+    cool: {
+      300: CSSProperties['color'];
+      100: CSSProperties['color'];
+    };
+    blue: {
+      700: CSSProperties['color'];
+      500: CSSProperties['color'];
+      40: CSSProperties['color'];
+      16: CSSProperties['color'];
+    };
+    red: {
+      500: CSSProperties['color'];
+      16: CSSProperties['color'];
+    };
+    yellow: {
+      500: CSSProperties['color'];
+    };
+    green: {
+      500: CSSProperties['color'];
+    };
+    gradient: {
+      500: CSSProperties['color'];
+      52: CSSProperties['color'];
+    };
+  }
 }
 
 const theme = createTheme({
@@ -80,69 +114,6 @@ const theme = createTheme({
         // The props to change the default for.
         disableRipple: true, // No more ripple, on the whole application 💣!
       },
-    },
-  },
-  // overrides: {
-  //   MuiCssBaseline: {
-  //     '@global': {
-  //       html: {
-  //         height: '100%',
-  //       },
-  //       body: {
-  //         height: '100%',
-  //       },
-  //       '#root': {
-  //         height: '100%',
-  //       },
-  //     },
-  //   },
-  // },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 768,
-      md: 960,
-      lg: 1280,
-      xl: 1920,
-    },
-  },
-  typography: {
-    fontFamily: ['Roboto', 'sans-serif'].join(','),
-    rxxlg24: {
-      fontWeight: 400,
-      fontSize: '24px',
-    },
-    rlg18: {
-      fontWeight: 400,
-      fontSize: '18px',
-    },
-    rm16: {
-      fontWeight: 400,
-      fontSize: '16px',
-    },
-    rsm14: {
-      fontWeight: 400,
-      fontSize: '14px',
-    },
-    rxs12: {
-      fontWeight: 400,
-      fontSize: '12px',
-    },
-    mxlg20: {
-      fontWeight: 500,
-      fontSize: '20px',
-    },
-    mlg18: {
-      fontWeight: 500,
-      fontSize: '18px',
-    },
-    sblg18: {
-      fontWeight: 600,
-      fontSize: '18px',
-    },
-    sbm16: {
-      fontWeight: 600,
-      fontSize: '16px',
     },
   },
   palette: {
@@ -182,7 +153,46 @@ const theme = createTheme({
       500: 'linear-gradient(270deg, rgba(3, 97, 206, 0.49) 0%, #2F8AF5 51.04%, #0FBEE4 100%)',
       52: 'linear-gradient(270deg, rgba(47, 138, 245, 0.2704) 0%, rgba(3, 97, 206, 0.442) 52.08%, rgba(15, 190, 228, 0.442) 100%)',
     },
-  },
-} as IThemeOptions);
+  } as PaletteOptions,
+  typography: {
+    fontFamily: ['Roboto', 'sans-serif'].join(','),
+    rxxlg24: {
+      fontWeight: 400,
+      fontSize: '24px',
+    },
+    rlg18: {
+      fontWeight: 400,
+      fontSize: '18px',
+    },
+    rm16: {
+      fontWeight: 400,
+      fontSize: '16px',
+    },
+    rsm14: {
+      fontWeight: 400,
+      fontSize: '14px',
+    },
+    rxs12: {
+      fontWeight: 400,
+      fontSize: '12px',
+    },
+    mxlg20: {
+      fontWeight: 500,
+      fontSize: '20px',
+    },
+    mlg18: {
+      fontWeight: 500,
+      fontSize: '18px',
+    },
+    sblg18: {
+      fontWeight: 600,
+      fontSize: '18px',
+    },
+    sbm16: {
+      fontWeight: 600,
+      fontSize: '16px',
+    },
+  } as ExtendedTypographyOptions,
+} as ThemeOptions);
 
 export default theme;

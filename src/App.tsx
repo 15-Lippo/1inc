@@ -1,6 +1,5 @@
 import './App.css';
 
-import { makeStyles } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect } from 'react';
 
@@ -14,23 +13,12 @@ import { ApproveStatus, fetchApproveSpender } from './store/state/approve/approv
 import { useApproval, useCheckApproveState } from './store/state/approve/hooks';
 import { Field, selectCurrency } from './store/state/swap/swapSlice';
 import { useBalancesCallback } from './store/state/tokens/useBalancesCallback';
-import { ITheme, withTheme } from './theme';
-
-const useStyles = makeStyles((theme: ITheme) => ({
-  widgetRoot: {
-    position: 'relative',
-    width: '418px',
-    boxShadow: '0px 12px 24px #E2E9F6',
-    borderRadius: '24px',
-  },
-}));
 
 function App() {
   const dispatch = useAppDispatch();
   const { account, chainId, library } = useWeb3React();
   const [, approve] = useApproval();
   const balancesCallback = useBalancesCallback();
-  const classes = useStyles();
 
   const tokensList = useAppSelector((state) => state.tokens.tokensList);
   const { status } = useAppSelector((state) => state.approve.approveAllowanceInfo);
@@ -68,7 +56,14 @@ function App() {
   };
 
   return (
-    <div id="widget" className={classes.widgetRoot}>
+    <div
+      id="widget"
+      style={{
+        position: 'relative',
+        width: '418px',
+        boxShadow: '0px 12px 24px #E2E9F6',
+        borderRadius: '24px',
+      }}>
       <RefreshQuoteButton />
       <div>Account: {account}</div>
       {tokensList && (
@@ -86,4 +81,4 @@ function App() {
   );
 }
 
-export default withTheme(App);
+export default App;

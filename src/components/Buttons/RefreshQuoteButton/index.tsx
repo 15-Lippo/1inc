@@ -1,36 +1,28 @@
-import { IconButton } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { IconButton, IconButtonProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 
 import { useCountdownQuote } from '../../../store/state/swap/useCountdownQuote';
-import { ITheme } from '../../../theme';
 
-const useStyles = makeStyles((theme: ITheme) => ({
-  refreshQuoteButton: {
-    '&:hover #refresh-button-bg': {
-      fill: theme.palette.cool[100],
-    },
-    '&:active #refresh-arrow': {
-      stroke: theme.palette.blue[500],
-    },
-    '&:disabled #refresh-arrow': {
-      stroke: theme.palette.dark[500],
-    },
+const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  '&:hover #refresh-button-bg': {
+    fill: theme.palette.cool[100],
+  },
+  '&:active #refresh-arrow': {
+    stroke: theme.palette.blue[500],
+  },
+  '&:disabled #refresh-arrow': {
+    stroke: theme.palette.dark[500],
   },
 }));
 
 const RefreshQuoteButton = () => {
-  const classes = useStyles();
   const [update, setUpdate] = useState<boolean>(false);
   const countdownQuote = useCountdownQuote(update);
   // console.log('countdownQuote: ', countdownQuote);
 
   return (
-    <IconButton
-      disableRipple
-      className={classes.refreshQuoteButton}
-      aria-label="refresh-button"
-      onClick={() => setUpdate(!update)}>
+    <StyledIconButton disableRipple aria-label="refresh-button" onClick={() => setUpdate(!update)}>
       <svg
         id="refresh-button"
         width="36"
@@ -60,7 +52,7 @@ const RefreshQuoteButton = () => {
           strokeLinecap="round"
         />
       </svg>
-    </IconButton>
+    </StyledIconButton>
   );
 };
 

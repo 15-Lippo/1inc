@@ -1,44 +1,32 @@
 import { Box, InputAdornment, TextField, Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
 import { Token } from '../../store/state/tokens/tokensSlice';
-import { ITheme } from '../../theme';
 import BackButton from '../Buttons/BackButton';
 import VirtualizedTokenList from '../VirtualizedTokenList';
 
-const useStyles = makeStyles((theme: ITheme) => ({
-  selectTokenModal: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    paddingBottom: '1em',
-    backgroundColor: theme.palette.background.default,
-    zIndex: '1',
-  },
-  selectTokenModalHeaderBox: {
-    margin: '0.5em 1em 0',
-  },
-  selectTokenModalTitleBox: {
-    display: 'flex',
-    alignItems: 'center',
-    height: '2.5em',
-  },
-  selectTokenModalTitle: {
-    width: '100%',
-    fontSize: '20px',
-    fontWeight: '500',
-    lineHeight: '23px',
-    textAlign: 'center',
-    color: theme.palette.dark[900],
-  },
-  line: {
-    width: '100%',
-    height: '1px',
-    backgroundColor: theme.palette.cool[300],
+export const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    background: theme.palette.cool[100],
+    '& ::placeholder': {
+      opacity: 'none',
+      color: '#3E4D63',
+    },
+    borderRadius: '12px',
+    '& fieldset': {
+      color: theme.palette.dark[900],
+      borderRadius: '12px',
+      borderColor: theme.palette.cool[100],
+    },
+    '&:hover fieldset': {
+      borderColor: theme.palette.blue[500],
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: theme.palette.blue[500],
+    },
   },
 }));
 
@@ -49,7 +37,6 @@ export interface SelectTokenModalProps {
 }
 
 const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) => {
-  const classes = useStyles();
   const tokensList = useAppSelector((state) => state.tokens.tokensList);
   const [data, setData] = useState<Token[]>([]);
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
@@ -75,15 +62,37 @@ const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) 
   };
 
   return isOpen ? (
-    <Box className={classes.selectTokenModal}>
-      <Box className={classes.selectTokenModalHeaderBox}>
-        <Box className={classes.selectTokenModalTitleBox}>
+    <Box
+      sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        pb: '1em',
+        bgcolor: 'background.default',
+        zIndex: '1',
+      }}>
+      <Box sx={{ margin: '0.5em 1em 0' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            height: '2.5em',
+          }}>
           <Box sx={{ position: 'absolute', ml: '-8px' }}>
             <BackButton onClick={closeModal} />
           </Box>
-          <Typography className={classes.selectTokenModalTitle}>Select a token</Typography>
+          <Typography
+            sx={{
+              typography: 'mxlg20',
+              width: '100%',
+              textAlign: 'center',
+              color: 'dark.900',
+            }}>
+            Select a token
+          </Typography>
         </Box>
-        <TextField
+        <StyledTextField
           id="search-token"
           variant="outlined"
           aria-label="search-token"
@@ -105,7 +114,12 @@ const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) 
           fullWidth
         />
         <Box>Pined Tokens</Box>
-        <Box className={classes.line} />
+        <Box
+          sx={{
+            width: '100%',
+            height: '1px',
+          }}
+        />
       </Box>
       <VirtualizedTokenList
         field={field}

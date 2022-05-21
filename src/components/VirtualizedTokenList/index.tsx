@@ -9,7 +9,7 @@ import { Token } from '../../store/state/tokens/tokensSlice';
 export interface VirtualizedTokenListProps {
   field: Field;
   closeModal: () => void;
-  tokensList: Token[];
+  tokensList: Token[] | [];
 }
 
 const VirtualizedTokenList = ({ field, closeModal, tokensList }: VirtualizedTokenListProps) => {
@@ -48,7 +48,16 @@ const VirtualizedTokenList = ({ field, closeModal, tokensList }: VirtualizedToke
     };
 
     return (
-      <ListItem style={style} key={index} component="div" disablePadding>
+      <ListItem
+        sx={{
+          '& .MuiListItemButton-root:hover': {
+            bgcolor: 'cool.300',
+          },
+        }}
+        style={style}
+        key={index}
+        component="div"
+        disablePadding>
         <ListItemButton
           onClick={handleClick}
           selected={isSelectedInputName || isSelectedOutputName}
@@ -56,10 +65,28 @@ const VirtualizedTokenList = ({ field, closeModal, tokensList }: VirtualizedToke
           <ListItemAvatar>
             <Avatar src={logoURI} alt={symbol} />
           </ListItemAvatar>
-          <ListItemText primary={name} secondary={symbol} />
           <ListItemText
+            primaryTypographyProps={{
+              typography: 'rm16',
+              color: 'dark.900',
+            }}
+            secondaryTypographyProps={{
+              typography: 'rxs12',
+              color: 'dark.700',
+            }}
+            primary={name}
+            secondary={symbol}
+          />
+          <ListItemText
+            sx={{
+              flexDirection: 'row-reverse',
+              display: 'flex',
+            }}
+            primaryTypographyProps={{
+              typography: 'rm16',
+              color: 'dark.900',
+            }}
             primary={`${tokenAmount || 0}`}
-            style={{ display: 'flex', flexDirection: 'row-reverse' }}
           />
         </ListItemButton>
       </ListItem>

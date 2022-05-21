@@ -1,10 +1,9 @@
 import { Avatar, Button } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { Field } from '../../../store/state/swap/swapSlice';
 import { Token } from '../../../store/state/tokens/tokensSlice';
-import { ITheme } from '../../../theme';
 
 interface SelectedTokenProps {
   token: Token;
@@ -12,33 +11,28 @@ interface SelectedTokenProps {
   onClick: () => void;
 }
 
-const useStyles = makeStyles((theme: ITheme) => ({
-  selectTokenButton: {
-    '&:hover #select-down-arrow-button': {
-      fill: theme.palette.blue[500],
-    },
+const StyledSelectTokenButton = styled(Button)<{ field?: Field }>(({ theme, field }) => ({
+  '&:hover #select-down-arrow-button': {
+    fill: theme.palette.blue[500],
+  },
+  padding: '8px 15px',
+  width: 'fit-content',
+  backgroundColor: field === Field.INPUT ? theme.palette.cool[100] : theme.palette.common.white,
+  color: theme.palette.dark[900],
+  borderRadius: '14px',
+  '&:hover': {
+    backgroundColor: field === Field.INPUT ? theme.palette.common.white : theme.palette.cool[100],
   },
 }));
 
 const SelectTokenButton = ({ token, field, onClick }: SelectedTokenProps) => {
-  const classes = useStyles();
-
   return (
-    <Button
-      variant="text"
-      className={classes.selectTokenButton}
+    <StyledSelectTokenButton
       sx={{
-        padding: '8px 15px',
-        backgroundColor: field === Field.INPUT ? '#F3F5FA' : '#FFFFFF',
-        fontSize: '18px',
-        lineHeight: '21px',
-        fontWeight: '400',
-        color: '#222222',
-        borderRadius: '14px',
-        '&:hover': {
-          backgroundColor: field === Field.INPUT ? '#FFFFFF' : '#F3F5FA',
-        },
+        typography: 'rlg18',
       }}
+      field={field}
+      variant="text"
       onClick={onClick}
       startIcon={<Avatar src={token.logoURI} style={{ width: 24, height: 24 }} />}
       endIcon={
@@ -56,7 +50,7 @@ const SelectTokenButton = ({ token, field, onClick }: SelectedTokenProps) => {
         </svg>
       }>
       {token.symbol}
-    </Button>
+    </StyledSelectTokenButton>
   );
 };
 
