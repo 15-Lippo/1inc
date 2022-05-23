@@ -73,26 +73,8 @@ describe('swapSlice', () => {
         })
       )
     ).toEqual({
-      [Field.OUTPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
-      [Field.INPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
+      [Field.OUTPUT]: '',
+      [Field.INPUT]: '',
       typedValue,
       independentField: Field.OUTPUT,
       recipient: null,
@@ -111,26 +93,8 @@ describe('swapSlice', () => {
         })
       )
     ).toEqual({
-      [Field.OUTPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
-      [Field.INPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
+      [Field.OUTPUT]: '',
+      [Field.INPUT]: '',
       typedValue,
       independentField: Field.INPUT,
       recipient: null,
@@ -144,37 +108,12 @@ describe('swapSlice', () => {
         initialState,
         selectCurrency({
           field: Field.OUTPUT,
-          currency: {
-            symbol: 'AAA',
-            name: 'AAA Token',
-            address: '0x0000',
-            decimals: 18,
-            logoURI: 'https://tokens.1inch.io/0x0000.png',
-            tokenAmount: '1',
-          },
+          currency: '0x0000',
         })
       )
     ).toEqual({
-      [Field.OUTPUT]: {
-        currency: {
-          symbol: 'AAA',
-          name: 'AAA Token',
-          address: '0x0000',
-          decimals: 18,
-          logoURI: 'https://tokens.1inch.io/0x0000.png',
-          tokenAmount: '1',
-        },
-      },
-      [Field.INPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
+      [Field.OUTPUT]: '0x0000',
+      [Field.INPUT]: '',
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
@@ -184,26 +123,8 @@ describe('swapSlice', () => {
 
   it('switchCurrencies', () => {
     expect(reducer(initialState, switchCurrencies())).toEqual({
-      [Field.OUTPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
-      [Field.INPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
+      [Field.OUTPUT]: '',
+      [Field.INPUT]: '',
       typedValue: '',
       independentField: Field.OUTPUT,
       recipient: null,
@@ -213,26 +134,8 @@ describe('swapSlice', () => {
 
   it('selectCurrency in both fields', () => {
     const previousState = {
-      [Field.OUTPUT]: {
-        currency: {
-          symbol: '',
-          name: '',
-          address: '',
-          decimals: 0,
-          logoURI: '',
-          tokenAmount: '0',
-        },
-      },
-      [Field.INPUT]: {
-        currency: {
-          symbol: 'AAA',
-          name: 'AAA Token',
-          address: '0x0000',
-          decimals: 18,
-          logoURI: 'https://tokens.1inch.io/0x0000.png',
-          tokenAmount: '1',
-        },
-      },
+      [Field.OUTPUT]: '',
+      [Field.INPUT]: '0x0000',
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
@@ -243,37 +146,12 @@ describe('swapSlice', () => {
         previousState,
         selectCurrency({
           field: Field.OUTPUT,
-          currency: {
-            symbol: 'EEE',
-            name: 'EEE Token',
-            address: '0x1111',
-            decimals: 18,
-            logoURI: 'https://tokens.1inch.io/0x1111.png',
-            tokenAmount: '1',
-          },
+          currency: '0x1111',
         })
       )
     ).toEqual({
-      OUTPUT: {
-        currency: {
-          symbol: 'EEE',
-          name: 'EEE Token',
-          address: '0x1111',
-          decimals: 18,
-          logoURI: 'https://tokens.1inch.io/0x1111.png',
-          tokenAmount: '1',
-        },
-      },
-      INPUT: {
-        currency: {
-          symbol: 'AAA',
-          name: 'AAA Token',
-          address: '0x0000',
-          decimals: 18,
-          logoURI: 'https://tokens.1inch.io/0x0000.png',
-          tokenAmount: '1',
-        },
-      },
+      OUTPUT: '0x1111',
+      INPUT: '0x0000',
       typedValue: '',
       independentField: 'INPUT',
       recipient: null,
@@ -282,8 +160,8 @@ describe('swapSlice', () => {
 
   it('switchCurrencies', () => {
     const previousState = {
-      [Field.OUTPUT]: { currency: '0x1111' },
-      [Field.INPUT]: { currency: '0x0000' },
+      [Field.OUTPUT]: '0x1111',
+      [Field.INPUT]: '0x0000',
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
@@ -291,8 +169,8 @@ describe('swapSlice', () => {
     };
     // @ts-ignore
     expect(reducer(previousState, switchCurrencies())).toEqual({
-      OUTPUT: { currency: '0x0000' },
-      INPUT: { currency: '0x1111' },
+      OUTPUT: '0x0000',
+      INPUT: '0x1111',
       typedValue: '',
       independentField: 'OUTPUT',
       recipient: null,

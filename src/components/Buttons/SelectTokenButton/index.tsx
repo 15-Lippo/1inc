@@ -2,11 +2,10 @@ import { Avatar, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import { useAppSelector } from '../../../store/hooks';
 import { Field } from '../../../store/state/swap/swapSlice';
-import { Token } from '../../../store/state/tokens/tokensSlice';
 
 interface SelectedTokenProps {
-  token: Token;
   field: Field;
   onClick: () => void;
 }
@@ -25,8 +24,14 @@ const StyledSelectTokenButton = styled(Button)<{ field?: Field }>(({ theme, fiel
   },
 }));
 
-const SelectTokenButton = ({ token, field, onClick }: SelectedTokenProps) => {
-  return (
+const SelectTokenButton = ({ field, onClick }: SelectedTokenProps) => {
+  const { token } = useAppSelector((state) => {
+    return {
+      token: state.tokens.tokens[state.swap[field]],
+    };
+  });
+
+  return token ? (
     <StyledSelectTokenButton
       sx={{
         typography: 'rlg18',
@@ -51,7 +56,7 @@ const SelectTokenButton = ({ token, field, onClick }: SelectedTokenProps) => {
       }>
       {token.symbol}
     </StyledSelectTokenButton>
-  );
+  ) : null;
 };
 
 export default SelectTokenButton;

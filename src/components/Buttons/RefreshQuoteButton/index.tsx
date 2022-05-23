@@ -1,6 +1,6 @@
 import { IconButton, IconButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useCountdownQuote } from '../../../store/state/swap/useCountdownQuote';
 
@@ -17,12 +17,10 @@ const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
 }));
 
 const RefreshQuoteButton = () => {
-  const [update, setUpdate] = useState<boolean>(false);
-  const countdownQuote = useCountdownQuote(update);
-  // console.log('countdownQuote: ', countdownQuote);
+  const { reset } = useCountdownQuote();
 
   return (
-    <StyledIconButton disableRipple aria-label="refresh-button" onClick={() => setUpdate(!update)}>
+    <StyledIconButton disableRipple aria-label="refresh-button" onClick={reset}>
       <svg
         id="refresh-button"
         width="36"

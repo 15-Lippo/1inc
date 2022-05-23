@@ -2,8 +2,8 @@ import { Box, InputAdornment, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-import { useAppSelector } from '../../store/hooks';
-import { Field } from '../../store/state/swap/swapSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { Field, selectCurrency } from '../../store/state/swap/swapSlice';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import BackButton from '../Buttons/BackButton';
 import VirtualizedTokenList from '../VirtualizedTokenList';
@@ -32,33 +32,53 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
 
 export interface SelectTokenModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
   field: Field;
 }
 
-const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) => {
-  const tokensList = useAppSelector((state) => state.tokens.tokensList);
+const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => {
+  const dispatch = useAppDispatch();
+  const { tokensList, tokenOnField } = useAppSelector((state) => ({
+    tokensList: Object.values(state.tokens.tokens),
+    tokenOnField: state.swap[field],
+  }));
   const [data, setData] = useState<Token[]>([]);
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
-  const [isSearchValue, setIsSearchValue] = useState<string>('');
-  const searchParams = ['address', 'name'];
+  const [searchValue, setSearchValue] = useState<string>('');
 
   useEffect(() => {
     setData(tokensList);
-  }, [tokensList]);
-
-  useEffect(() => {
-    setIsSearchValue('');
-  }, [isOpen]);
+  }, [tokensList.length]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsSearchValue(e.target.value);
-    const filteredData = data.filter((item) =>
-      searchParams.some((param) =>
-        item[param as keyof Token]?.toString().toLowerCase().includes(isSearchValue.toLowerCase())
-      )
-    );
+    const { value } = e.target;
+    setSearchValue(value);
+    const filteredData = data.filter((item) => {
+      if (value.startsWith('0x0')) {
+        return item.address.toLowerCase().startsWith(value.toLowerCase());
+      }
+
+      return (
+        item.name.toLowerCase().startsWith(value.toLowerCase()) ||
+        item.symbol.toLowerCase().startsWith(value.toLowerCase())
+      );
+    });
     setFilteredResults(filteredData);
+  };
+
+  const closeModal = () => {
+    onClose();
+    setSearchValue('');
+  };
+
+  const onChoose = (address: string) => {
+    dispatch(
+      selectCurrency({
+        currency: address,
+        field,
+      })
+    );
+    closeModal();
   };
 
   return isOpen ? (
@@ -97,7 +117,7 @@ const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) 
           variant="outlined"
           aria-label="search-token"
           type="search"
-          value={isSearchValue}
+          value={searchValue}
           placeholder={'Search by name or paste address'}
           onChange={onSearch}
           InputProps={{
@@ -122,9 +142,9 @@ const SelectTokenModal = ({ isOpen, closeModal, field }: SelectTokenModalProps) 
         />
       </Box>
       <VirtualizedTokenList
-        field={field}
-        closeModal={closeModal}
-        tokensList={!isSearchValue ? data : filteredResults}
+        tokensList={!searchValue ? data : filteredResults}
+        onChoose={onChoose}
+        selectedValue={tokenOnField}
       />
     </Box>
   ) : null;

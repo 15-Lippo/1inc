@@ -1,32 +1,33 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
-import { useState } from 'react';
 
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getTokenInfo } from '../tokens/balances';
+import { updateTokenInfo } from '../tokens/tokensSlice';
 
 export function useSwapCallback(swapTxInfo: TransactionRequest) {
+  const dispatch = useAppDispatch();
   const { library, account, chainId } = useWeb3React();
-  const { INPUT } = useAppSelector((state) => state.swap);
-  const [txHash, setTxHash] = useState<string | undefined>();
+  const { INPUT, spender } = useAppSelector((state) => ({
+    INPUT: state.swap.INPUT,
+    spender: state.approve.spender,
+  }));
 
   const swapCallback = async () => {
-    if (!chainId) {
-      return console.warn('No chainId');
-    } else if (!INPUT) {
-      return console.warn('No token');
-    }
+    if (!chainId || !INPUT || !account) return;
 
     try {
       const signer = library.getSigner(account);
       const tx = await signer.sendTransaction(swapTxInfo);
-      const result = await tx.wait();
-      if (result) {
-        setTxHash(result.transactionHash);
-        return {
-          error: null,
-          ...result,
-        };
-      }
+      await tx.wait();
+      const updatedBalance = await getTokenInfo(
+        library,
+        account,
+        chainId,
+        [INPUT],
+        spender.address
+      );
+      dispatch(updateTokenInfo(updatedBalance[INPUT]));
     } catch ({ message }) {
       console.error('Attempt to send transaction failed:', message);
       return { error: message };

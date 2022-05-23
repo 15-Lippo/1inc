@@ -7,7 +7,6 @@ import {
 } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
-import { Token } from '../tokens/tokensSlice';
 
 export const fetchQuote = createAsyncThunk(
   'user/getQuoteInfo',
@@ -43,12 +42,8 @@ export enum Field {
 export interface SwapState {
   readonly independentField: Field;
   readonly typedValue: string;
-  readonly [Field.INPUT]: {
-    readonly currency: Token;
-  };
-  readonly [Field.OUTPUT]: {
-    readonly currency: Token;
-  };
+  readonly [Field.INPUT]: string;
+  readonly [Field.OUTPUT]: string;
   // the typed recipient address if swap should go to sender
   readonly recipient: string | null;
   readonly quoteInfo?: QuoteResponseDto;
@@ -60,26 +55,8 @@ export interface SwapState {
 export const initialState: SwapState = {
   independentField: Field.INPUT,
   typedValue: '',
-  [Field.INPUT]: {
-    currency: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-      tokenAmount: '0',
-    },
-  },
-  [Field.OUTPUT]: {
-    currency: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-      tokenAmount: '0',
-    },
-  },
+  [Field.INPUT]: '',
+  [Field.OUTPUT]: '',
   recipient: null,
   quoteInfo: {
     fromToken: {
@@ -136,41 +113,31 @@ const swapSlice = createSlice({
   name: 'swap',
   initialState,
   reducers: {
-    updateCurrencyBalance(state, { payload: { tokensList } }) {
-      const currency = tokensList.find(
-        (i: { name: string }) =>
-          i.name.toLowerCase() === state[Field.INPUT].currency.name.toLowerCase()
-      );
-      return {
-        ...state,
-        [Field.INPUT]: { currency },
-      };
-    },
     selectCurrency(state, { payload: { currency, field } }) {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT;
-      if (currency === state[otherField].currency) {
+      if (currency === state[otherField]) {
+        const flipCurrency = state[field as Field];
         // the case where we have to swap the order
         return {
           ...state,
           independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { currency },
-          // @ts-ignore
-          [otherField]: { currency: state[field].currency },
-        };
-      } else {
-        // the normal case
-        return {
-          ...state,
-          [field]: { currency },
+          [field]: currency,
+          [otherField]: flipCurrency,
         };
       }
+
+      // the normal case
+      return {
+        ...state,
+        [field]: currency,
+      };
     },
     switchCurrencies(state) {
       return {
         ...state,
         independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: { currency: state[Field.OUTPUT].currency },
-        [Field.OUTPUT]: { currency: state[Field.INPUT].currency },
+        [Field.INPUT]: state[Field.OUTPUT],
+        [Field.OUTPUT]: state[Field.INPUT],
       };
     },
     typeInput(state, { payload: { field, typedValue } }) {
@@ -191,8 +158,7 @@ const swapSlice = createSlice({
   },
 });
 
-export const { updateCurrencyBalance, selectCurrency, switchCurrencies, typeInput } =
-  swapSlice.actions;
+export const { selectCurrency, switchCurrencies, typeInput } = swapSlice.actions;
 
 const { reducer } = swapSlice;
 

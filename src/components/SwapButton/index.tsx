@@ -26,8 +26,8 @@ const SwapButton = () => {
   const handleClick = () => {
     dispatch(
       fetchSwap({
-        fromTokenAddress: INPUT.currency.address,
-        toTokenAddress: OUTPUT.currency.address,
+        fromTokenAddress: INPUT,
+        toTokenAddress: OUTPUT,
         amount: typedValue,
         fromAddress: String(account),
         slippage: 1,

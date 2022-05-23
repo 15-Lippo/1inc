@@ -1,50 +1,26 @@
+import { formatUnits } from '@ethersproject/units';
 import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { Field, selectCurrency, switchCurrencies } from '../../store/state/swap/swapSlice';
 import { Token } from '../../store/state/tokens/tokensSlice';
 
 export interface VirtualizedTokenListProps {
-  field: Field;
-  closeModal: () => void;
-  tokensList: Token[] | [];
+  tokensList: Token[];
+  selectedValue?: string;
+  onChoose: (val: string) => void;
 }
 
-const VirtualizedTokenList = ({ field, closeModal, tokensList }: VirtualizedTokenListProps) => {
-  const dispatch = useAppDispatch();
-  const { INPUT, OUTPUT } = useAppSelector((state) => state.swap);
-  const [selectedInputName, setSelectedInputName] = useState(INPUT.currency.name.toLowerCase());
-  const [selectedOutputName, setSelectedOutputName] = useState(OUTPUT.currency.name.toLowerCase());
-
-  useEffect(() => {
-    setSelectedInputName(INPUT.currency.name.toLowerCase());
-    setSelectedOutputName(OUTPUT.currency.name.toLowerCase());
-  }, [INPUT, OUTPUT]);
-
+const VirtualizedTokenList = ({
+  tokensList,
+  selectedValue,
+  onChoose,
+}: VirtualizedTokenListProps) => {
   function renderRow({ index, style }: ListChildComponentProps) {
-    const { symbol, name, logoURI, tokenAmount } = tokensList[index];
-
-    const isSelectedInputName = selectedInputName === name.toLowerCase();
-    const isSelectedOutputName = selectedOutputName === name.toLowerCase();
-
-    const isDisabledInputName = field === Field.INPUT && isSelectedInputName;
-    const isDisabledOutputName = field === Field.OUTPUT && isSelectedOutputName;
+    const { symbol, name, logoURI, userBalance, address, decimals } = tokensList[index];
 
     const handleClick = () => {
-      if (isSelectedInputName || isSelectedOutputName) {
-        dispatch(switchCurrencies());
-      }
-      dispatch(
-        selectCurrency({
-          currency: tokensList[index],
-          field,
-        })
-      );
-      setSelectedInputName(name.toLowerCase());
-      setSelectedOutputName(name.toLowerCase());
-      closeModal();
+      onChoose(tokensList[index].address);
     };
 
     return (
@@ -58,10 +34,7 @@ const VirtualizedTokenList = ({ field, closeModal, tokensList }: VirtualizedToke
         key={index}
         component="div"
         disablePadding>
-        <ListItemButton
-          onClick={handleClick}
-          selected={isSelectedInputName || isSelectedOutputName}
-          disabled={isDisabledInputName || isDisabledOutputName}>
+        <ListItemButton onClick={handleClick} disabled={address === selectedValue}>
           <ListItemAvatar>
             <Avatar src={logoURI} alt={symbol} />
           </ListItemAvatar>
@@ -86,7 +59,7 @@ const VirtualizedTokenList = ({ field, closeModal, tokensList }: VirtualizedToke
               typography: 'rm16',
               color: 'dark.900',
             }}
-            primary={`${tokenAmount || 0}`}
+            primary={`${formatUnits(userBalance || '0', decimals)}`}
           />
         </ListItemButton>
       </ListItem>

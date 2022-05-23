@@ -12,18 +12,19 @@ export interface SendProps {
 
 const InputAmount = ({ inputId }: SendProps) => {
   const dispatch = useAppDispatch();
-  const { INPUT, OUTPUT } = useAppSelector((state) => state.swap);
+  const { INPUT } = useAppSelector((state) => ({
+    INPUT: state.tokens.tokens[state.swap.INPUT],
+  }));
 
   const setTypedValueSwap = (value: string, field: Field) => {
-    const decimals = field === Field.INPUT ? INPUT.currency.decimals : OUTPUT.currency.decimals;
-    const valueInWei = parseUnits(value, decimals).toString();
+    const valueInWei = parseUnits(value, INPUT.decimals).toString();
     dispatch(typeInput({ field, typedValue: valueInWei }));
   };
 
   const debounceTypedValueSwap = _.debounce(setTypedValueSwap, 1000);
 
   const handleChange = ({ target }: any) => {
-    if (INPUT.currency.address) debounceTypedValueSwap(target.value, target.id);
+    if (INPUT?.address) debounceTypedValueSwap(target.value, target.id);
   };
 
   return (

@@ -1,41 +1,57 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchQuote } from './swapSlice';
 
 const DELAY = 15;
 
-export const useCountdownQuote = (update?: boolean) => {
+function useInterval(callback: any, delay: number) {
+  const callbacRef = useRef();
+
+  // update callback function with current render callback that has access to latest props and state
+  useEffect(() => {
+    callbacRef.current = callback;
+  });
+
+  useEffect(() => {
+    if (!delay) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      // @ts-ignore
+      callbacRef.current && callbacRef.current();
+    }, delay);
+    return () => clearInterval(interval);
+  }, [delay]);
+}
+
+export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => state.swap);
   const [countdown, setCountdown] = useState<number>(DELAY);
 
-  useEffect(() => {
+  useInterval(() => {
+    if (countdown === 0) {
+      setCountdown(DELAY);
+
+      if (!typedValue) return;
+
+      dispatch(
+        fetchQuote({
+          fromTokenAddress: INPUT,
+          toTokenAddress: OUTPUT,
+          amount: typedValue,
+        })
+      );
+    }
+
+    setCountdown(countdown - 1);
+  }, 1000);
+
+  const reset = () => {
     setCountdown(0);
-  }, [typedValue, update]);
+  };
 
-  useEffect(() => {
-    const countdownInterval = setInterval(() => {
-      if (countdown > 0) {
-        setCountdown(countdown - 1);
-      } else if (countdown === 0) {
-        if (typedValue) {
-          dispatch(
-            fetchQuote({
-              fromTokenAddress: INPUT.currency.address,
-              toTokenAddress: OUTPUT.currency.address,
-              amount: typedValue,
-            })
-          );
-        }
-        setCountdown(DELAY);
-      }
-    }, 1000);
-
-    return () => {
-      clearInterval(countdownInterval);
-    };
-  }, [countdown, dispatch]);
-
-  return countdown;
+  return { countdown, reset };
 };

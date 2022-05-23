@@ -8,8 +8,11 @@ import SelectTokenButton from '../Buttons/SelectTokenButton';
 import SelectTokenModal from '../SelectTokenModal';
 
 const GetBox = () => {
-  const { OUTPUT } = useAppSelector((state) => state.swap);
-  const quoteState = useAppSelector((state) => state.swap.quoteInfo);
+  const { quoteState } = useAppSelector((state) => {
+    return {
+      quoteState: state.swap.quoteInfo,
+    };
+  });
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
 
   const onCloseListModal = () => {
@@ -30,22 +33,18 @@ const GetBox = () => {
         You buy
       </Typography>
 
-      <SelectTokenButton
-        token={OUTPUT.currency}
-        onClick={() => setSelectTokenModal(true)}
-        field={Field.OUTPUT}
-      />
+      <SelectTokenButton onClick={() => setSelectTokenModal(true)} field={Field.OUTPUT} />
 
       <Typography variant="mlg18">
         1inch{' '}
         {quoteState &&
           quoteState.toTokenAmount &&
-          parseFloat(formatUnits(quoteState?.toTokenAmount, 18))}
+          parseFloat(formatUnits(quoteState?.toTokenAmount))}
       </Typography>
 
       <SelectTokenModal
         field={Field.OUTPUT}
-        closeModal={onCloseListModal}
+        onClose={onCloseListModal}
         isOpen={isOpenSelectTokenModal}
       />
     </Box>
