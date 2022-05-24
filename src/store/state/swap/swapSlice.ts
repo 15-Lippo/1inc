@@ -41,6 +41,7 @@ export enum Field {
 
 export interface SwapState {
   readonly independentField: Field;
+  readonly slippage: number;
   readonly typedValue: string;
   readonly [Field.INPUT]: string;
   readonly [Field.OUTPUT]: string;
@@ -54,6 +55,7 @@ export interface SwapState {
 
 export const initialState: SwapState = {
   independentField: Field.INPUT,
+  slippage: 1,
   typedValue: '',
   [Field.INPUT]: '',
   [Field.OUTPUT]: '',

@@ -1,11 +1,11 @@
-import { Box, InputAdornment, TextField, Typography } from '@mui/material';
+import { Box, InputAdornment, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, selectCurrency } from '../../store/state/swap/swapSlice';
 import { Token } from '../../store/state/tokens/tokensSlice';
-import BackButton from '../Buttons/BackButton';
+import Modal, { ModalHeaderType } from '../Modal';
 import VirtualizedTokenList from '../VirtualizedTokenList';
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -81,37 +81,12 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
     closeModal();
   };
 
-  return isOpen ? (
-    <Box
-      sx={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        pb: '1em',
-        bgcolor: 'background.default',
-        zIndex: '1',
-      }}>
-      <Box sx={{ margin: '0.5em 1em 0' }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            height: '2.5em',
-          }}>
-          <Box sx={{ position: 'absolute', ml: '-8px' }}>
-            <BackButton onClick={closeModal} />
-          </Box>
-          <Typography
-            sx={{
-              typography: 'mxlg20',
-              width: '100%',
-              textAlign: 'center',
-              color: 'dark.900',
-            }}>
-            Select a token
-          </Typography>
-        </Box>
+  return (
+    <Modal headerType={ModalHeaderType.SelectToken} closeModal={closeModal} isOpen={isOpen}>
+      <Box
+        sx={{
+          m: '0 16px',
+        }}>
         <StyledTextField
           id="search-token"
           variant="outlined"
@@ -133,21 +108,14 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
           margin="dense"
           fullWidth
         />
-        <Box>Pined Tokens</Box>
-        <Box
-          sx={{
-            width: '100%',
-            height: '1px',
-          }}
-        />
       </Box>
       <VirtualizedTokenList
         tokensList={!searchValue ? data : filteredResults}
         onChoose={onChoose}
         selectedValue={tokenOnField}
       />
-    </Box>
-  ) : null;
+    </Modal>
+  );
 };
 
 export default SelectTokenModal;

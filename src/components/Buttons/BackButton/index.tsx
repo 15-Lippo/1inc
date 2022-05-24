@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 
 const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  padding: 0,
   '&:hover #back-button #background-back': {
     fill: theme.palette.cool[100],
   },

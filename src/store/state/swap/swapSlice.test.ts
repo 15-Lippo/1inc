@@ -4,6 +4,7 @@ import { initialState as swapInitialState } from './swapSlice';
 export const initialState = swapInitialState;
 const restValues = {
   loading: 'idle',
+  slippage: 1,
   error: null,
   quoteInfo: {
     fromToken: {
@@ -134,6 +135,7 @@ describe('swapSlice', () => {
 
   it('selectCurrency in both fields', () => {
     const previousState = {
+      slippage: 1,
       [Field.OUTPUT]: '',
       [Field.INPUT]: '0x0000',
       typedValue: '',
