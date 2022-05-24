@@ -3,6 +3,7 @@ import './App.css';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect } from 'react';
 
+import MainButton, { MainButtonType } from './components/Buttons/MainButton';
 import RefreshQuoteButton from './components/Buttons/RefreshQuoteButton';
 import GetBox from './components/GetBox';
 import SendBox from './components/SendBox';
@@ -61,7 +62,7 @@ function App() {
           <SendBox />
           <GetBox />
           {status === ApproveStatus.APPROVAL_NEEDED && (
-            <button onClick={onApprove}>Approve token</button>
+            <MainButton type={MainButtonType.Approve} onClick={onApprove} />
           )}
         </>
       )}

@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useState } from 'react';
 
 import { injected, SUPPORTED_WALLETS } from '../../constants/supportedWalles';
+import MainButton, { MainButtonType } from '../Buttons/MainButton';
 
 const WalletConnect = () => {
   const { activate } = useWeb3React();
@@ -57,7 +58,7 @@ const WalletConnect = () => {
               tryConnectWallet(option.connector);
             }}
             key={key}>
-            {option.name}
+            <MainButton type={MainButtonType.Connect} />
           </div>
         )
       );
@@ -66,7 +67,7 @@ const WalletConnect = () => {
 
   return (
     <>
-      <div>Click on Supported Wallet: {getWalletOptions()}</div>
+      <div>{getWalletOptions()}</div>
       <div>{pendingError}</div>
     </>
   );

@@ -1,11 +1,11 @@
 import { TransactionRequest } from '@ethersproject/providers';
-import { Button } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import React, { useCallback, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchSwap } from '../../store/state/swap/swapSlice';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
+import MainButton, { MainButtonType } from '../Buttons/MainButton';
 
 const SwapButton = () => {
   const dispatch = useAppDispatch();
@@ -47,20 +47,16 @@ const SwapButton = () => {
 
   return (
     <>
-      <Button
-        variant="contained"
+      <MainButton
+        type={MainButtonType.Swap}
         onClick={handleClick}
         disabled={!(account && typedValue && !isWaiting)}
-        fullWidth>
-        Swap
-      </Button>
-      <Button
-        variant="contained"
+      />
+      <MainButton
+        type={MainButtonType.Confirm}
         onClick={handleSendTx}
         disabled={!(account && typedValue && swapInfo?.tx?.data)}
-        fullWidth>
-        Confirm swap
-      </Button>
+      />
     </>
   );
 };
