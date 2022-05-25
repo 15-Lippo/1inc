@@ -24,6 +24,11 @@ const GetBox = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
+        padding: '15px',
+        margin: '13px 0',
+        border: '1px solid',
+        borderColor: 'cool.100',
+        borderRadius: '16px',
       }}>
       <Typography
         variant="rxs12"
@@ -33,7 +38,12 @@ const GetBox = () => {
         You buy
       </Typography>
 
-      <SelectTokenButton onClick={() => setSelectTokenModal(true)} field={Field.OUTPUT} />
+      <Box
+        sx={{
+          margin: '10px 0 14px -6px',
+        }}>
+        <SelectTokenButton onClick={() => setSelectTokenModal(true)} field={Field.OUTPUT} />
+      </Box>
 
       <Typography variant="mlg18">
         1inch{' '}

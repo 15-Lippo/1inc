@@ -34,6 +34,7 @@ const SelectTokenButton = ({ field, onClick }: SelectedTokenProps) => {
   return token ? (
     <StyledSelectTokenButton
       sx={{
+        minWidth: 'fit-content',
         typography: 'rlg18',
       }}
       field={field}
