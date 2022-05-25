@@ -50,6 +50,7 @@ export interface SwapState {
   readonly quoteInfo?: QuoteResponseDto;
   readonly swapInfo?: SwapResponseDto;
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
+  readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly error?: any;
 }
 
@@ -108,6 +109,7 @@ export const initialState: SwapState = {
     },
   },
   loading: 'idle',
+  loadingQuote: 'idle',
   error: null,
 };
 
@@ -151,8 +153,15 @@ const swapSlice = createSlice({
     },
   },
   extraReducers: (user) => {
+    user.addCase(fetchQuote.pending, (state, action) => {
+      state.loadingQuote = 'pending';
+    });
+    user.addCase(fetchQuote.rejected, (state, action) => {
+      state.loadingQuote = 'failed';
+    });
     user.addCase(fetchQuote.fulfilled, (state, action) => {
       state.quoteInfo = action.payload;
+      state.loadingQuote = 'succeeded';
     });
     user.addCase(fetchSwap.fulfilled, (state, action) => {
       state.swapInfo = action.payload;

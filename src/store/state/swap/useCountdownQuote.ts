@@ -31,7 +31,13 @@ export const useCountdownQuote = () => {
   const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => state.swap);
   const [countdown, setCountdown] = useState<number>(DELAY);
 
+  useEffect(() => {
+    setCountdown(0);
+  }, [typedValue]);
+
   useInterval(() => {
+    setCountdown(countdown - 1);
+
     if (countdown === 0) {
       setCountdown(DELAY);
 
@@ -45,8 +51,6 @@ export const useCountdownQuote = () => {
         })
       );
     }
-
-    setCountdown(countdown - 1);
   }, 1000);
 
   const reset = () => {

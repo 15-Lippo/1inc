@@ -37,7 +37,7 @@ const InputAmount = ({ inputId }: SendProps) => {
   }));
 
   const setTypedValueSwap = (value: string, field: Field) => {
-    const valueInWei = parseUnits(value, INPUT.decimals).toString();
+    const valueInWei = value ? parseUnits(value, INPUT.decimals).toString() : '';
     dispatch(typeInput({ field, typedValue: valueInWei }));
   };
 
