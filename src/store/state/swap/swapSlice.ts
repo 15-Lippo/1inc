@@ -10,11 +10,31 @@ import { SwapApi } from '../../../api';
 
 export const fetchQuote = createAsyncThunk(
   'user/getQuoteInfo',
-  async (quoteInfo: SwapFactoryCommonControllerGetQuoteRequest, { rejectWithValue }) => {
+  async (
+    param: {
+      quoteInfo: SwapFactoryCommonControllerGetQuoteRequest;
+      isTokenPriceInUsd?: boolean;
+    },
+    { getState, rejectWithValue }
+  ) => {
+    const state: any = getState();
+    const usdcToken: any = Object.entries(state.tokens.tokens).find(
+      (token: any) => token[1].name === 'USD Coin'
+    );
+
+    const tokenPriceInUsdInfo = {
+      fromTokenAddress: param.quoteInfo.fromTokenAddress,
+      toTokenAddress: usdcToken?.[1].address,
+      amount: param.quoteInfo.amount,
+    };
     try {
-      const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(quoteInfo);
-      const response = await JSONApiResponse.raw.json();
-      return response;
+      const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(param.quoteInfo);
+      const JSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(
+        tokenPriceInUsdInfo
+      );
+      const responseInfo = await JSONApiResponse.raw.json();
+      const responsePrice = param.isTokenPriceInUsd && (await JSONApiResponseUsdc.raw.json());
+      return { info: responseInfo, price: responsePrice?.toTokenAmount };
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -49,6 +69,7 @@ export interface SwapState {
   readonly recipient: string | null;
   readonly quoteInfo?: QuoteResponseDto;
   readonly swapInfo?: SwapResponseDto;
+  readonly tokenPriceInUsd?: string;
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly error?: any;
@@ -108,6 +129,7 @@ export const initialState: SwapState = {
       gas: '',
     },
   },
+  tokenPriceInUsd: '',
   loading: 'idle',
   loadingQuote: 'idle',
   error: null,
@@ -160,7 +182,8 @@ const swapSlice = createSlice({
       state.loadingQuote = 'failed';
     });
     user.addCase(fetchQuote.fulfilled, (state, action) => {
-      state.quoteInfo = action.payload;
+      state.quoteInfo = action.payload.info;
+      state.tokenPriceInUsd = action.payload.price;
       state.loadingQuote = 'succeeded';
     });
     user.addCase(fetchSwap.fulfilled, (state, action) => {

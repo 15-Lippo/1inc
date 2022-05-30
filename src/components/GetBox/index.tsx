@@ -81,7 +81,7 @@ const GetBox = () => {
         typedValue &&
         loadingQuote === 'succeeded' ? (
           <Typography variant="mlg18">
-            {parseFloat(formatUnits(quoteInfo?.toTokenAmount)).toFixed(6)}
+            {formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)}
           </Typography>
         ) : (
           <Skeleton

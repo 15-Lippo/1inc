@@ -36,6 +36,7 @@ const SelectTokenButton = ({ field, onClick }: SelectedTokenProps) => {
       sx={{
         minWidth: 'fit-content',
         typography: 'rlg18',
+        textTransform: 'none',
       }}
       field={field}
       variant="text"

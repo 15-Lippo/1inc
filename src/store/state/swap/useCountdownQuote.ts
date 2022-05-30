@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core';
 import { useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -6,11 +7,11 @@ import { fetchQuote } from './swapSlice';
 const DELAY = 15;
 
 function useInterval(callback: any, delay: number) {
-  const callbacRef = useRef();
+  const callbackRef = useRef();
 
   // update callback function with current render callback that has access to latest props and state
   useEffect(() => {
-    callbacRef.current = callback;
+    callbackRef.current = callback;
   });
 
   useEffect(() => {
@@ -20,7 +21,7 @@ function useInterval(callback: any, delay: number) {
 
     const interval = setInterval(() => {
       // @ts-ignore
-      callbacRef.current && callbacRef.current();
+      callbackRef.current && callbackRef.current();
     }, delay);
     return () => clearInterval(interval);
   }, [delay]);
@@ -28,12 +29,13 @@ function useInterval(callback: any, delay: number) {
 
 export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
+  const { chainId } = useWeb3React();
   const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => state.swap);
   const [countdown, setCountdown] = useState<number>(DELAY);
 
   useEffect(() => {
     setCountdown(0);
-  }, [typedValue]);
+  }, [INPUT, OUTPUT, typedValue, chainId]);
 
   useInterval(() => {
     setCountdown(countdown - 1);
@@ -45,9 +47,12 @@ export const useCountdownQuote = () => {
 
       dispatch(
         fetchQuote({
-          fromTokenAddress: INPUT,
-          toTokenAddress: OUTPUT,
-          amount: typedValue,
+          quoteInfo: {
+            fromTokenAddress: INPUT,
+            toTokenAddress: OUTPUT,
+            amount: typedValue,
+          },
+          isTokenPriceInUsd: true,
         })
       );
     }

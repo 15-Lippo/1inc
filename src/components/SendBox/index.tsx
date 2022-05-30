@@ -12,10 +12,12 @@ import SelectTokenModal from '../SelectTokenModal';
 
 const SendBox = () => {
   const { account } = useWeb3React();
-  const { INPUT, status, typedValue } = useAppSelector((state) => ({
+  const { INPUT, status, typedValue, tokenPriceInUsd, loadingQuote } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     status: state.approve.approveAllowanceInfo.status,
     typedValue: state.swap.typedValue,
+    tokenPriceInUsd: state.swap.tokenPriceInUsd,
+    loadingQuote: state.swap.loadingQuote,
   }));
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
 
@@ -85,11 +87,7 @@ const SendBox = () => {
           display: 'flex',
           margin: '6px 0 6px -6px',
         }}>
-        <SelectTokenButton
-          // token={INPUT}
-          onClick={() => setSelectTokenModal(true)}
-          field={Field.INPUT}
-        />
+        <SelectTokenButton onClick={() => setSelectTokenModal(true)} field={Field.INPUT} />
         <Box>{status === ApproveStatus.APPROVAL_NEEDED && LockIcon}</Box>
         <InputAmount inputId={Field.INPUT} />
       </Box>
@@ -102,6 +100,12 @@ const SendBox = () => {
         <Typography variant="rxs12" sx={{ color: 'dark.700' }}>
           {INPUT?.name}
         </Typography>
+        {tokenPriceInUsd && account && typedValue && loadingQuote === 'succeeded' ? (
+          <Typography variant="rxs12" sx={{ color: 'dark.700' }}>
+            ~$
+            {formatUnits(tokenPriceInUsd, 6)}
+          </Typography>
+        ) : null}
       </Box>
 
       <SelectTokenModal
