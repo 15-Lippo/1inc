@@ -34,8 +34,9 @@ export interface SendProps {
 const InputAmount = ({ inputId }: SendProps) => {
   const dispatch = useAppDispatch();
   const [amount, setAmount] = useState<string>('');
-  const { INPUT } = useAppSelector((state) => ({
+  const { INPUT, typedValue } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
+    typedValue: state.swap.typedValue,
   }));
   const [input, setInput] = useState<Token>(INPUT);
 

@@ -1,3 +1,4 @@
+import { parseUnits } from '@ethersproject/units';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   QuoteResponseDto,
@@ -14,6 +15,8 @@ export const fetchQuote = createAsyncThunk(
     param: {
       quoteInfo: SwapFactoryCommonControllerGetQuoteRequest;
       isTokenPriceInUsd?: boolean;
+      fromTokenDecimals: number;
+      toTokenDecimals?: number;
     },
     { getState, rejectWithValue }
   ) => {
@@ -22,19 +25,47 @@ export const fetchQuote = createAsyncThunk(
       (token: any) => token[1].name === 'USD Coin'
     );
 
-    const tokenPriceInUsdInfo = {
-      fromTokenAddress: param.quoteInfo.fromTokenAddress,
-      toTokenAddress: usdcToken?.[1].address,
-      amount: param.quoteInfo.amount,
+    const price = {
+      input: '',
+      output: '',
     };
+
     try {
       const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(param.quoteInfo);
-      const JSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(
-        tokenPriceInUsdInfo
-      );
+
       const responseInfo = await JSONApiResponse.raw.json();
-      const responsePrice = param.isTokenPriceInUsd && (await JSONApiResponseUsdc.raw.json());
-      return { info: responseInfo, price: responsePrice?.toTokenAmount };
+
+      if (param.quoteInfo.fromTokenAddress === usdcToken?.[1].address) {
+        price.input = '1000000';
+      } else {
+        // get price for 1 token:
+        const InputJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
+          fromTokenAddress: param.quoteInfo.fromTokenAddress,
+          toTokenAddress: usdcToken?.[1].address,
+          amount: parseUnits('1', param.fromTokenDecimals).toString(),
+        });
+        const responseInputPrice =
+          param.isTokenPriceInUsd && (await InputJSONApiResponseUsdc.raw.json());
+        price.input = responseInputPrice?.toTokenAmount;
+      }
+
+      if (param.quoteInfo.toTokenAddress === usdcToken?.[1].address) {
+        price.output = '1000000';
+      } else {
+        const OutputJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
+          fromTokenAddress: param.quoteInfo.toTokenAddress,
+          toTokenAddress: usdcToken?.[1].address,
+          amount: parseUnits('1', param.toTokenDecimals).toString(),
+        });
+        const responseOutputPrice =
+          param.isTokenPriceInUsd && (await OutputJSONApiResponseUsdc.raw.json());
+        price.output = responseOutputPrice?.toTokenAmount;
+      }
+
+      return {
+        info: responseInfo,
+        price,
+      };
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -69,7 +100,10 @@ export interface SwapState {
   readonly recipient: string | null;
   readonly quoteInfo?: QuoteResponseDto;
   readonly swapInfo?: SwapResponseDto;
-  readonly tokenPriceInUsd?: string;
+  readonly tokenPriceInUsd?: {
+    readonly input: string;
+    readonly output: string;
+  };
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly error?: any;
@@ -129,7 +163,10 @@ export const initialState: SwapState = {
       gas: '',
     },
   },
-  tokenPriceInUsd: '',
+  tokenPriceInUsd: {
+    input: '',
+    output: '',
+  },
   loading: 'idle',
   loadingQuote: 'idle',
   error: null,
@@ -167,6 +204,7 @@ const swapSlice = createSlice({
       };
     },
     typeInput(state, { payload: { field, typedValue } }) {
+      console.log({ typedValue });
       return {
         ...state,
         independentField: field,

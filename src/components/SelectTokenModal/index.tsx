@@ -38,9 +38,10 @@ export interface SelectTokenModalProps {
 
 const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => {
   const dispatch = useAppDispatch();
-  const { tokensList, tokenOnField } = useAppSelector((state) => ({
+  const { tokensList, tokenOnField, inputBalance } = useAppSelector((state) => ({
     tokensList: Object.values(state.tokens.tokens),
     tokenOnField: state.swap[field],
+    inputBalance: state.tokens.tokens[state.swap[field]]?.userBalance || '0',
   }));
   const [data, setData] = useState<Token[]>([]);
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
@@ -48,7 +49,7 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
 
   useEffect(() => {
     setData(tokensList);
-  }, [tokensList.length]);
+  }, [tokensList.length, inputBalance]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;

@@ -4,6 +4,11 @@ import { initialState as swapInitialState } from './swapSlice';
 export const initialState = swapInitialState;
 const restValues = {
   loading: 'idle',
+  loadingQuote: 'idle',
+  tokenPriceInUsd: {
+    input: '',
+    output: '',
+  },
   slippage: 1,
   error: null,
   quoteInfo: {
@@ -157,6 +162,7 @@ describe('swapSlice', () => {
       typedValue: '',
       independentField: 'INPUT',
       recipient: null,
+      slippage: 1,
     });
   });
 

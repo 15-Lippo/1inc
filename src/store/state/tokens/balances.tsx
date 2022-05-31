@@ -26,7 +26,6 @@ export async function getTokenInfo(
   );
   const tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
   const result: IUserTokenInfo = {};
-
   for (let i = 0; i < addresses.length; i++) {
     result[addresses[i]] = {
       balance: tokenInfo[i].balance.toString(),

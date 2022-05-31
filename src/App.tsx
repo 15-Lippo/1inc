@@ -7,6 +7,7 @@ import MainButton, { MainButtonType } from './components/Buttons/MainButton';
 import ConfirmSwapModal from './components/ConfirmSwapModal';
 import GetBox from './components/GetBox';
 import Modal, { ModalHeaderType } from './components/Modal';
+import RateSection from './components/RateSection';
 import SendBox from './components/SendBox';
 import WalletConnect from './components/WalletConnect';
 import { useAppDispatch, useAppSelector } from './store/hooks';
@@ -25,7 +26,13 @@ function App() {
   const { account } = useWeb3React();
   const { addresses } = useTokens();
   const { status, approve } = useApproval();
-  const { INPUT, OUTPUT } = useAppSelector((state) => state.swap);
+  const { INPUT, OUTPUT, typedValue, tokensList } = useAppSelector((state) => ({
+    INPUT: state.swap.INPUT,
+    OUTPUT: state.swap.OUTPUT,
+    typedValue: state.swap.typedValue,
+    tokensList: state.tokens.tokens,
+  }));
+
   const [isConfirmModalModal, setConfirmModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -43,34 +50,31 @@ function App() {
     setDefaultTokens();
   }, [addresses.length, INPUT, OUTPUT]);
 
-  const onApprove = async () => {
-    await approve();
+  const mainButtonByType = () => {
+    const balance = tokensList[INPUT]?.userBalance || '0';
+
+    if (!account) return <WalletConnect />;
+    if (!Number(typedValue)) return <MainButton type={MainButtonType.EnterAmount} />;
+    if (status === ApproveStatus.APPROVAL_NEEDED)
+      return <MainButton type={MainButtonType.Approve} onClick={approve} />;
+    if (Number(typedValue) > Number(balance))
+      return <MainButton type={MainButtonType.InsufficientBalance} />;
+    return <MainButton type={MainButtonType.Swap} onClick={() => setConfirmModalOpen(true)} />;
   };
+
   return (
-    <Modal headerType={ModalHeaderType.Main} isOpen>
-      {addresses.length && (
-        <>
-          <SendBox />
-          <GetBox />
-          {status === ApproveStatus.APPROVAL_NEEDED && (
-            <MainButton type={MainButtonType.Approve} onClick={onApprove} />
-          )}
-        </>
-      )}
-      {account ? (
-        <MainButton
-          type={MainButtonType.Swap}
-          // disabled={!account || !typedValue}
-          onClick={() => setConfirmModalOpen(true)}
-        />
-      ) : (
-        <WalletConnect />
-      )}
+    <>
+      <Modal headerType={ModalHeaderType.Main} isOpen hide={isConfirmModalModal}>
+        <SendBox />
+        <GetBox />
+        <RateSection />
+        {mainButtonByType()}
+      </Modal>
       <ConfirmSwapModal
         closeModal={() => setConfirmModalOpen(false)}
         isOpen={isConfirmModalModal}
       />
-    </Modal>
+    </>
   );
 }
 

@@ -80,8 +80,14 @@ const GetBox = () => {
         account &&
         typedValue &&
         loadingQuote === 'succeeded' ? (
-          <Typography variant="mlg18">
-            {formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)}
+          <Typography
+            variant="mlg18"
+            sx={{
+              lineHeight: '24px',
+            }}>
+            {parseFloat(formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)).toFixed(
+              6
+            )}
           </Typography>
         ) : (
           <Skeleton

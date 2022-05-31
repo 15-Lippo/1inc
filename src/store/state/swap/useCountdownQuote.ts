@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchQuote } from './swapSlice';
+import { fetchQuote, Field } from './swapSlice';
 
 const DELAY = 15;
 
@@ -30,7 +30,12 @@ function useInterval(callback: any, delay: number) {
 export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
   const { chainId } = useWeb3React();
-  const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => state.swap);
+  // const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => state.swap);
+  const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => ({
+    INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
+    OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
+    typedValue: state.swap.typedValue || '0',
+  }));
   const [countdown, setCountdown] = useState<number>(DELAY);
 
   useEffect(() => {
@@ -48,11 +53,13 @@ export const useCountdownQuote = () => {
       dispatch(
         fetchQuote({
           quoteInfo: {
-            fromTokenAddress: INPUT,
-            toTokenAddress: OUTPUT,
+            fromTokenAddress: INPUT.address,
+            toTokenAddress: OUTPUT.address,
             amount: typedValue,
           },
           isTokenPriceInUsd: true,
+          fromTokenDecimals: INPUT.decimals,
+          toTokenDecimals: OUTPUT.decimals,
         })
       );
     }

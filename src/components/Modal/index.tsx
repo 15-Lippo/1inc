@@ -21,13 +21,16 @@ export interface ModalProps {
   isOpen: boolean;
   closeModal?: () => void;
   children?: React.ReactNode;
+  hide?: boolean;
 }
 
-const Modal = ({ headerType, isOpen, closeModal, children }: ModalProps) => {
+const Modal = ({ headerType, isOpen, closeModal, children, hide }: ModalProps) => {
   const { account } = useWeb3React();
+
   return isOpen ? (
     <Box
       sx={{
+        display: hide ? 'none' : '',
         boxShadow: '0px 12px 24px #E2E9F6',
         borderRadius: '24px',
         position: 'absolute',

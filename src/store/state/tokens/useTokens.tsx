@@ -8,9 +8,9 @@ import { fetchTokens, updateAllTokenBalances } from './tokensSlice';
 export const useTokens = () => {
   const { library, account, chainId } = useWeb3React();
   const dispatch = useAppDispatch();
-  const { tokens, tokenInfoFetched, spender } = useAppSelector((state) => ({
+  const { tokens, spender } = useAppSelector((state) => ({
     tokens: state.tokens.tokens,
-    tokenInfoFetched: state.tokens.tokenInfoFetched,
+    // tokenInfoFetched: state.tokens.tokenInfoFetched,
     spender: state.approve.spender,
   }));
   const addresses = useMemo(() => Object.keys(tokens), [JSON.stringify(tokens)]);
@@ -23,7 +23,7 @@ export const useTokens = () => {
   }, []);
 
   useEffect(() => {
-    if (!account || !addresses.length || !chainId || !spender.address || tokenInfoFetched) return;
+    if (!account || !addresses.length || !chainId || !spender.address) return;
 
     console.log('balances...');
     const getBalances = async () => {
@@ -33,7 +33,7 @@ export const useTokens = () => {
 
     getBalances();
     console.log('...balances');
-  }, [account, addresses.length, spender.address, tokenInfoFetched]);
+  }, [account, spender.address, chainId]);
 
   return { tokens, addresses };
 };

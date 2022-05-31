@@ -1,7 +1,7 @@
 import { LoadingButton } from '@mui/lab';
 import { CircularProgress, Theme, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { useAppSelector } from '../../../store/hooks';
 import { Field } from '../../../store/state/swap/swapSlice';
@@ -105,22 +105,11 @@ export interface MainButtonProps {
 }
 
 const MainButton = ({ type, disabled, onClick, rateExpired }: MainButtonProps) => {
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const { token } = useAppSelector((state) => {
     return {
       token: state.tokens.tokens[state.swap[Field.INPUT]],
     };
   });
-
-  useEffect(() => {
-    if (
-      type === MainButtonType.EnterAmount ||
-      type === MainButtonType.InsufficientBalance ||
-      disabled
-    ) {
-      setIsDisabled(true);
-    }
-  }, [type]);
 
   const ConnectWalletIcon = (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -167,13 +156,21 @@ const MainButton = ({ type, disabled, onClick, rateExpired }: MainButtonProps) =
       variant="contained"
       loading={type === MainButtonType.Loading}
       loadingIndicator={<CircularProgress size={30} />}
-      disabled={isDisabled}
+      disabled={
+        type === MainButtonType.EnterAmount ||
+        type === MainButtonType.InsufficientBalance ||
+        disabled
+      }
       onClick={onClick}
       startIcon={type === MainButtonType.Connect && ConnectWalletIcon}
       fullWidth>
       <Typography variant="sbm16">{textButtonType[type]}</Typography>
     </StyledMainButton>
   );
+};
+
+MainButton.defaultProps = {
+  disabled: false,
 };
 
 export default MainButton;

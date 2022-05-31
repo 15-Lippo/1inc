@@ -1,5 +1,6 @@
+import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
-import { Box, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import React, { useMemo, useState } from 'react';
 
@@ -12,13 +13,15 @@ import SelectTokenModal from '../SelectTokenModal';
 
 const SendBox = () => {
   const { account } = useWeb3React();
-  const { INPUT, status, typedValue, tokenPriceInUsd, loadingQuote } = useAppSelector((state) => ({
-    INPUT: state.tokens.tokens[state.swap.INPUT],
-    status: state.approve.approveAllowanceInfo.status,
-    typedValue: state.swap.typedValue,
-    tokenPriceInUsd: state.swap.tokenPriceInUsd,
-    loadingQuote: state.swap.loadingQuote,
-  }));
+  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote } = useAppSelector(
+    (state) => ({
+      INPUT: state.tokens.tokens[state.swap.INPUT],
+      status: state.approve.approveAllowanceInfo.status,
+      typedValue: state.swap.typedValue,
+      inputTokenPriceInUsd: state.swap.tokenPriceInUsd?.input,
+      loadingQuote: state.swap.loadingQuote,
+    })
+  );
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
 
   const LockIcon = (
@@ -47,7 +50,15 @@ const SendBox = () => {
 
     return formatUnits(INPUT.userBalance || '0', INPUT.decimals);
   }, [INPUT]);
-  console.log(status);
+
+  const valueInUsd =
+    inputTokenPriceInUsd && typedValue
+      ? formatUnits(
+          BigNumber.from(inputTokenPriceInUsd).mul(BigNumber.from(typedValue)),
+          INPUT.decimals + 6
+        )
+      : '0';
+
   return (
     <Box
       sx={{
@@ -100,12 +111,20 @@ const SendBox = () => {
         <Typography variant="rxs12" sx={{ color: 'dark.700' }}>
           {INPUT?.name}
         </Typography>
-        {tokenPriceInUsd && account && typedValue && loadingQuote === 'succeeded' ? (
-          <Typography variant="rxs12" sx={{ color: 'dark.700' }}>
+        {inputTokenPriceInUsd && account && typedValue && loadingQuote === 'succeeded' ? (
+          <Typography variant="rxs12" sx={{ color: 'dark.700', lineHeight: '19px' }}>
             ~$
-            {formatUnits(tokenPriceInUsd, 6)}
+            {parseFloat(valueInUsd).toFixed(2)}
           </Typography>
-        ) : null}
+        ) : (
+          <Skeleton
+            sx={{
+              bgcolor: 'common.white',
+            }}
+            animation="wave"
+            width="100px"
+          />
+        )}
       </Box>
 
       <SelectTokenModal
