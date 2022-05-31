@@ -10,3 +10,5 @@ export const TOKEN_HELPER_ADDRESS = {
   [SupportedChainId.AVALANCHE]: '',
   [SupportedChainId.FANTOM]: '',
 };
+
+export const REFRESH_QUOTE_DELAY = 15;

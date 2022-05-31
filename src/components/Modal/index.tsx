@@ -43,7 +43,11 @@ const Modal = ({ headerType, isOpen, closeModal, children, hide }: ModalProps) =
         boxSizing: 'border-box',
       }}>
       {headerType === ModalHeaderType.Main ? (
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          marginBottom="7px">
           <Typography
             sx={{
               typography: 'sbm16',

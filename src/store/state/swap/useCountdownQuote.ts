@@ -1,10 +1,9 @@
 import { useWeb3React } from '@web3-react/core';
 import { useEffect, useRef, useState } from 'react';
 
+import { REFRESH_QUOTE_DELAY } from '../../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchQuote, Field } from './swapSlice';
-
-const DELAY = 15;
 
 function useInterval(callback: any, delay: number) {
   const callbackRef = useRef();
@@ -36,7 +35,7 @@ export const useCountdownQuote = () => {
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     typedValue: state.swap.typedValue || '0',
   }));
-  const [countdown, setCountdown] = useState<number>(DELAY);
+  const [countdown, setCountdown] = useState<number>(REFRESH_QUOTE_DELAY);
 
   useEffect(() => {
     setCountdown(0);
@@ -46,7 +45,7 @@ export const useCountdownQuote = () => {
     setCountdown(countdown - 1);
 
     if (countdown === 0) {
-      setCountdown(DELAY);
+      setCountdown(REFRESH_QUOTE_DELAY);
 
       if (!typedValue) return;
 
