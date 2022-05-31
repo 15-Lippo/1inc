@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
 import BackButton from '../Buttons/BackButton';
+import CloseButton from '../Buttons/CloseButton';
 import RefreshQuoteButton from '../Buttons/RefreshQuoteButton';
 
 export enum ModalHeaderType {
@@ -20,11 +21,12 @@ export interface ModalProps {
   headerType: ModalHeaderType;
   isOpen: boolean;
   closeModal?: () => void;
+  goBack?: () => void;
   children?: React.ReactNode;
   hide?: boolean;
 }
 
-const Modal = ({ headerType, isOpen, closeModal, children, hide }: ModalProps) => {
+const Modal = ({ headerType, isOpen, closeModal, goBack, children, hide }: ModalProps) => {
   const { account } = useWeb3React();
 
   return isOpen ? (
@@ -79,9 +81,9 @@ const Modal = ({ headerType, isOpen, closeModal, children, hide }: ModalProps) =
             height: '2.5em',
             m: headerType === ModalHeaderType.SelectToken ? '0 16px' : '',
           }}>
-          {closeModal && (
+          {goBack && (
             <Box sx={{ position: 'absolute' }}>
-              <BackButton onClick={closeModal} />
+              <BackButton onClick={goBack} />
             </Box>
           )}
           <Typography
@@ -93,6 +95,11 @@ const Modal = ({ headerType, isOpen, closeModal, children, hide }: ModalProps) =
             }}>
             {headerType}
           </Typography>
+          {closeModal && (
+            <Box sx={{ right: '8px', position: 'absolute' }}>
+              <CloseButton onClick={closeModal} />
+            </Box>
+          )}
         </Box>
       )}
       {children}

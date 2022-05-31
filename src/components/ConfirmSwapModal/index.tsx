@@ -13,7 +13,7 @@ import Modal, { ModalHeaderType } from '../Modal';
 
 export interface SelectTokenModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  goBack: () => void;
 }
 interface SwapTokenBoxProps {
   field: Field;
@@ -64,7 +64,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
   );
 };
 
-const ConfirmSwapModal = ({ isOpen, closeModal }: SelectTokenModalProps) => {
+const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
   const dispatch = useAppDispatch();
   const { account } = useWeb3React();
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
@@ -92,18 +92,17 @@ const ConfirmSwapModal = ({ isOpen, closeModal }: SelectTokenModalProps) => {
   }, [swapInfo?.toTokenAmount, typedValue, loadingQuote]);
 
   useEffect(() => {
-    if (INPUT && OUTPUT) {
-      dispatch(
-        fetchSwap({
-          fromTokenAddress: INPUT.address,
-          toTokenAddress: OUTPUT.address,
-          amount: typedValue,
-          fromAddress: String(account),
-          slippage,
-          disableEstimate: true,
-        })
-      );
-    }
+    if (!INPUT?.address || !OUTPUT?.address || !typedValue || !account) return;
+    dispatch(
+      fetchSwap({
+        fromTokenAddress: INPUT.address,
+        toTokenAddress: OUTPUT.address,
+        amount: typedValue,
+        fromAddress: String(account),
+        slippage,
+        disableEstimate: true,
+      })
+    );
   }, [INPUT, OUTPUT, account, typedValue, loadingQuote]);
 
   const txData: TransactionRequest = {
@@ -134,7 +133,7 @@ const ConfirmSwapModal = ({ isOpen, closeModal }: SelectTokenModalProps) => {
     parseFloat(formatUnits(tokenPriceInUsd.output, 6)).toFixed(2);
 
   return (
-    <Modal headerType={ModalHeaderType.Confirm} closeModal={closeModal} isOpen={isOpen}>
+    <Modal headerType={ModalHeaderType.Confirm} goBack={goBack} isOpen={isOpen}>
       <Stack direction="column">
         <Box>
           <SwapTokenBox

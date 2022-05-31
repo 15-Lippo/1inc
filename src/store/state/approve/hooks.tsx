@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenInfo } from '../tokens/balances';
 import { updateTokenInfo } from '../tokens/tokensSlice';
+import { setLastTxHash } from '../transactions/txSlice';
 import {
   ApproveStatus,
   fetchApproveSpender,
@@ -71,6 +72,7 @@ export function useApproval() {
         [INPUT.address],
         spender.address
       );
+      dispatch(setLastTxHash(tx.hash));
       dispatch(updateTokenInfo(updatedBalance[INPUT.address]));
     } catch ({ message }) {
       console.error('Attempt to send transaction failed:', message);

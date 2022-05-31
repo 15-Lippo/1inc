@@ -1,6 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Typography } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useState } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
@@ -9,7 +8,6 @@ import SelectTokenButton from '../Buttons/SelectTokenButton';
 import SelectTokenModal from '../SelectTokenModal';
 
 const GetBox = () => {
-  const { account } = useWeb3React();
   const { quoteInfo, typedValue, loadingQuote } = useAppSelector((state) => state.swap);
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
 
@@ -75,11 +73,7 @@ const GetBox = () => {
           </Typography>
         </Box>
         <Typography variant="rm16">1inch</Typography>
-        {quoteInfo &&
-        quoteInfo.toTokenAmount &&
-        account &&
-        typedValue &&
-        loadingQuote === 'succeeded' ? (
+        {quoteInfo && quoteInfo.toTokenAmount && typedValue && loadingQuote === 'succeeded' ? (
           <Typography
             variant="mlg18"
             sx={{

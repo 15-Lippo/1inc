@@ -111,7 +111,7 @@ const SendBox = () => {
         <Typography variant="rxs12" sx={{ color: 'dark.700' }}>
           {INPUT?.name}
         </Typography>
-        {inputTokenPriceInUsd && account && typedValue && loadingQuote === 'succeeded' ? (
+        {inputTokenPriceInUsd && typedValue && loadingQuote === 'succeeded' ? (
           <Typography variant="rxs12" sx={{ color: 'dark.700', lineHeight: '19px' }}>
             ~$
             {parseFloat(valueInUsd).toFixed(2)}

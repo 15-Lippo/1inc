@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenInfo } from '../tokens/balances';
 import { updateTokenInfo } from '../tokens/tokensSlice';
+import { setLastTxHash } from '../transactions/txSlice';
 
 export function useSwapCallback(swapTxInfo: TransactionRequest) {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ export function useSwapCallback(swapTxInfo: TransactionRequest) {
         [INPUT],
         spender.address
       );
+      dispatch(setLastTxHash(tx.hash));
       dispatch(updateTokenInfo(updatedBalance[INPUT]));
     } catch ({ message }) {
       console.error('Attempt to send transaction failed:', message);

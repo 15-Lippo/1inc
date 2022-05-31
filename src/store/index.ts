@@ -5,9 +5,9 @@ import approveReducer from './state/approve/approveSlice';
 import healthcheckReducer from './state/healthcheck/healthcheckSlice';
 import swapReducer from './state/swap/swapSlice';
 import tokensReducer from './state/tokens/tokensSlice';
-import userReducer from './state/user/userSlice';
 // import wallet from './wallet/reducer';
-// import transactions from './transactions/reducer';
+import txReducer from './state/transactions/txSlice';
+import userReducer from './state/user/userSlice';
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions'];
 
@@ -19,7 +19,7 @@ const store = configureStore({
     swap: swapReducer,
     tokens: tokensReducer,
     // wallet,
-    // transactions,
+    transactions: txReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),

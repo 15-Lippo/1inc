@@ -1,6 +1,7 @@
 import { LoadingButton } from '@mui/lab';
 import { CircularProgress, Theme, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import React from 'react';
 
 import { useAppSelector } from '../../../store/hooks';
@@ -16,6 +17,7 @@ export enum MainButtonType {
   Close,
   InsufficientBalance,
   Loading,
+  Explorer,
 }
 
 const styledButtonType = {
@@ -88,6 +90,13 @@ const styledButtonType = {
       background: theme.palette.blue[16],
     },
   }),
+  [MainButtonType.Explorer]: (theme: Theme) => ({
+    background: theme.palette.blue[500],
+    color: theme.palette.common.white,
+    '&:hover': {
+      background: theme.palette.blue[500],
+    },
+  }),
 };
 
 const StyledMainButton = styled(LoadingButton)<{
@@ -102,9 +111,18 @@ export interface MainButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   rateExpired?: boolean;
+  explorerName?: string;
+  sx?: SxProps;
 }
 
-const MainButton = ({ type, disabled, onClick, rateExpired }: MainButtonProps) => {
+const MainButton = ({
+  type,
+  disabled,
+  onClick,
+  rateExpired,
+  explorerName,
+  sx,
+}: MainButtonProps) => {
   const { token } = useAppSelector((state) => {
     return {
       token: state.tokens.tokens[state.swap[Field.INPUT]],
@@ -138,6 +156,7 @@ const MainButton = ({ type, disabled, onClick, rateExpired }: MainButtonProps) =
     [MainButtonType.Close]: 'Close',
     [MainButtonType.InsufficientBalance]: `Insufficient ${token && token.symbol} balance`,
     [MainButtonType.Loading]: '',
+    [MainButtonType.Explorer]: `View on ${explorerName}`,
   };
 
   return (
@@ -145,6 +164,7 @@ const MainButton = ({ type, disabled, onClick, rateExpired }: MainButtonProps) =
       typeStyledButton={type}
       rateExpired={rateExpired}
       sx={{
+        ...sx,
         padding: '12px 0',
         borderRadius: '14px',
         textTransform: 'none',

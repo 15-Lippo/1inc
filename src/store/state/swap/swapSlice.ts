@@ -10,7 +10,7 @@ import {
 import { SwapApi } from '../../../api';
 
 export const fetchQuote = createAsyncThunk(
-  'user/getQuoteInfo',
+  'swap/getQuoteInfo',
   async (
     param: {
       quoteInfo: SwapFactoryCommonControllerGetQuoteRequest;
@@ -18,7 +18,7 @@ export const fetchQuote = createAsyncThunk(
       fromTokenDecimals: number;
       toTokenDecimals?: number;
     },
-    { getState, rejectWithValue }
+    { getState }
   ) => {
     const state: any = getState();
     const [, usdcToken]: any = Object.entries(state.tokens.tokens).find(
@@ -68,20 +68,20 @@ export const fetchQuote = createAsyncThunk(
         price,
       };
     } catch (error) {
-      return rejectWithValue(error);
+      console.error(error);
     }
   }
 );
 
 export const fetchSwap = createAsyncThunk(
-  'user/getSwapInfo',
-  async (swapInfo: SwapFactoryCommonControllerGetSwapRequest, { rejectWithValue }) => {
+  'swap/getSwapInfo',
+  async (swapInfo: SwapFactoryCommonControllerGetSwapRequest) => {
     try {
       const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetSwapRaw(swapInfo);
       const response = await JSONApiResponse.raw.json();
       return response;
     } catch (error) {
-      return rejectWithValue(error);
+      console.error(error);
     }
   }
 );
@@ -221,9 +221,11 @@ const swapSlice = createSlice({
       state.loadingQuote = 'failed';
     });
     user.addCase(fetchQuote.fulfilled, (state, action) => {
-      state.quoteInfo = action.payload.info;
-      state.tokenPriceInUsd = action.payload.price;
-      state.loadingQuote = 'succeeded';
+      if (action.payload) {
+        state.quoteInfo = action.payload.info;
+        state.tokenPriceInUsd = action.payload.price;
+        state.loadingQuote = 'succeeded';
+      }
     });
     user.addCase(fetchSwap.fulfilled, (state, action) => {
       state.swapInfo = action.payload;

@@ -9,6 +9,7 @@ import GetBox from './components/GetBox';
 import Modal, { ModalHeaderType } from './components/Modal';
 import RateSection from './components/RateSection';
 import SendBox from './components/SendBox';
+import TxSentModal from './components/TxSentModal';
 import WalletConnect from './components/WalletConnect';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus } from './store/state/approve/approveSlice';
@@ -70,10 +71,8 @@ function App() {
         <RateSection />
         {mainButtonByType()}
       </Modal>
-      <ConfirmSwapModal
-        closeModal={() => setConfirmModalOpen(false)}
-        isOpen={isConfirmModalModal}
-      />
+      <ConfirmSwapModal goBack={() => setConfirmModalOpen(false)} isOpen={isConfirmModalModal} />
+      <TxSentModal />
     </>
   );
 }

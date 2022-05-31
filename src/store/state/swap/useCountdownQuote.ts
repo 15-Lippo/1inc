@@ -29,7 +29,6 @@ function useInterval(callback: any, delay: number) {
 export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
   const { chainId } = useWeb3React();
-  // const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => state.swap);
   const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
@@ -47,7 +46,7 @@ export const useCountdownQuote = () => {
     if (countdown === 0) {
       setCountdown(REFRESH_QUOTE_DELAY);
 
-      if (!typedValue) return;
+      if (!Number(typedValue)) return;
 
       dispatch(
         fetchQuote({
