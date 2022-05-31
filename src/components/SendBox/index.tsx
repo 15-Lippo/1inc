@@ -48,7 +48,7 @@ const SendBox = () => {
   const userBalance = useMemo(() => {
     if (!INPUT) return '0';
 
-    return formatUnits(INPUT.userBalance || '0', INPUT.decimals);
+    return parseFloat(formatUnits(INPUT.userBalance || '0', INPUT.decimals)).toFixed(6);
   }, [INPUT]);
 
   const valueInUsd =

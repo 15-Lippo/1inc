@@ -59,7 +59,7 @@ const VirtualizedTokenList = ({
               typography: 'rm16',
               color: 'dark.900',
             }}
-            primary={`${formatUnits(userBalance || '0', decimals)}`}
+            primary={Number(userBalance) ? `${formatUnits(userBalance || '0x00', decimals)}` : ''}
           />
         </ListItemButton>
       </ListItem>

@@ -21,8 +21,9 @@ export const fetchQuote = createAsyncThunk(
     { getState, rejectWithValue }
   ) => {
     const state: any = getState();
-    const usdcToken: any = Object.entries(state.tokens.tokens).find(
-      (token: any) => token[1].name === 'USD Coin'
+    const [, usdcToken]: any = Object.entries(state.tokens.tokens).find(
+      // @ts-ignore
+      ([, token]) => token.name === 'USD Coin'
     );
 
     const price = {
@@ -35,13 +36,13 @@ export const fetchQuote = createAsyncThunk(
 
       const responseInfo = await JSONApiResponse.raw.json();
 
-      if (param.quoteInfo.fromTokenAddress === usdcToken?.[1].address) {
+      if (param.quoteInfo.fromTokenAddress === usdcToken?.address) {
         price.input = '1000000';
       } else {
         // get price for 1 token:
         const InputJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
           fromTokenAddress: param.quoteInfo.fromTokenAddress,
-          toTokenAddress: usdcToken?.[1].address,
+          toTokenAddress: usdcToken?.address,
           amount: parseUnits('1', param.fromTokenDecimals).toString(),
         });
         const responseInputPrice =
@@ -49,12 +50,12 @@ export const fetchQuote = createAsyncThunk(
         price.input = responseInputPrice?.toTokenAmount;
       }
 
-      if (param.quoteInfo.toTokenAddress === usdcToken?.[1].address) {
+      if (param.quoteInfo.toTokenAddress === usdcToken?.address) {
         price.output = '1000000';
       } else {
         const OutputJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
           fromTokenAddress: param.quoteInfo.toTokenAddress,
-          toTokenAddress: usdcToken?.[1].address,
+          toTokenAddress: usdcToken?.address,
           amount: parseUnits('1', param.toTokenDecimals).toString(),
         });
         const responseOutputPrice =
