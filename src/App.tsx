@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
 import MainButton, { MainButtonType } from './components/Buttons/MainButton';
+import SwitchTokensButton from './components/Buttons/SwitchTokensButton';
 import ConfirmSwapModal from './components/ConfirmSwapModal';
 import GetBox from './components/GetBox';
 import Modal, { ModalHeaderType } from './components/Modal';
@@ -67,6 +68,7 @@ function App() {
     <>
       <Modal headerType={ModalHeaderType.Main} isOpen hide={isConfirmModalModal}>
         <SendBox />
+        <SwitchTokensButton />
         <GetBox />
         <RateSection />
         {mainButtonByType()}

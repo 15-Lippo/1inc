@@ -9,6 +9,7 @@ import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
+import SwitchTokensIcon from '../icons/SwitchTokensIcon';
 import Modal, { ModalHeaderType } from '../Modal';
 import SignTxModal from '../SignTxModal';
 import TxSentModal from '../TxSentModal';
@@ -145,6 +146,14 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
               amount={formatUnits(typedValue || '0x00')}
               usdcPrice={inputUsdcPrice}
             />
+            <Box
+              sx={{
+                position: 'absolute',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}>
+              <SwitchTokensIcon />
+            </Box>
             <SwapTokenBox
               field={Field.OUTPUT}
               token={OUTPUT}
