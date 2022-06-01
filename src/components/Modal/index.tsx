@@ -11,6 +11,7 @@ export enum ModalHeaderType {
   Confirm = 'Confirm swap',
   Sign = 'Sign transaction',
   Sent = 'Transaction sent',
+  Failed = 'Transaction Failed',
   Slippage = 'Slippage',
   GasPrice = 'Gas price',
   SelectToken = 'Select a token',

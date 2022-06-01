@@ -205,7 +205,6 @@ const swapSlice = createSlice({
       };
     },
     typeInput(state, { payload: { field, typedValue } }) {
-      console.log({ typedValue });
       return {
         ...state,
         independentField: field,

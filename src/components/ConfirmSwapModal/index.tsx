@@ -10,6 +10,8 @@ import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import Modal, { ModalHeaderType } from '../Modal';
+import SignTxModal from '../SignTxModal';
+import TxSentModal from '../TxSentModal';
 
 export interface SelectTokenModalProps {
   isOpen: boolean;
@@ -132,117 +134,122 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
     tokenPriceInUsd.output &&
     parseFloat(formatUnits(tokenPriceInUsd.output, 6)).toFixed(2);
 
-  return (
-    <Modal headerType={ModalHeaderType.Confirm} goBack={goBack} isOpen={isOpen}>
-      <Stack direction="column">
-        <Box>
-          <SwapTokenBox
-            field={Field.INPUT}
-            token={INPUT}
-            amount={formatUnits(typedValue || '0x00')}
-            usdcPrice={inputUsdcPrice}
-          />
-          <SwapTokenBox
-            field={Field.OUTPUT}
-            token={OUTPUT}
-            amount={parseFloat(formatUnits(swapInfo?.toTokenAmount || '0x00')).toFixed(6)}
-            usdcPrice={outputUsdcPrice}
-          />
-          <Stack>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography
-                variant="rxs12"
-                sx={{
-                  color: 'dark.700',
-                  mb: '9px',
-                }}>
-                1 {INPUT && INPUT.symbol} price
-              </Typography>
-              <Box>
-                {tokenPriceInUsd && (
-                  <Typography
-                    variant="rxs12"
-                    sx={{
-                      color: 'dark.700',
-                    }}>
-                    ~${inputUsdcPrice}
-                  </Typography>
-                )}
-                <Typography variant="rxs12">{` ${inputPrice}  ${
-                  INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)
-                }`}</Typography>
-              </Box>
-            </Stack>
+  return isOpen ? (
+    <>
+      <Modal headerType={ModalHeaderType.Confirm} goBack={goBack} isOpen={isOpen}>
+        <Stack direction="column">
+          <Box>
+            <SwapTokenBox
+              field={Field.INPUT}
+              token={INPUT}
+              amount={formatUnits(typedValue || '0x00')}
+              usdcPrice={inputUsdcPrice}
+            />
+            <SwapTokenBox
+              field={Field.OUTPUT}
+              token={OUTPUT}
+              amount={parseFloat(formatUnits(swapInfo?.toTokenAmount || '0x00')).toFixed(6)}
+              usdcPrice={outputUsdcPrice}
+            />
+            <Stack>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography
+                  variant="rxs12"
+                  sx={{
+                    color: 'dark.700',
+                    mb: '9px',
+                  }}>
+                  1 {INPUT && INPUT.symbol} price
+                </Typography>
+                <Box>
+                  {tokenPriceInUsd && (
+                    <Typography
+                      variant="rxs12"
+                      sx={{
+                        color: 'dark.700',
+                      }}>
+                      ~${inputUsdcPrice}
+                    </Typography>
+                  )}
+                  <Typography variant="rxs12">{` ${inputPrice}  ${
+                    INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)
+                  }`}</Typography>
+                </Box>
+              </Stack>
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography
-                variant="rxs12"
-                sx={{
-                  color: 'dark.700',
-                  mb: '9px',
-                }}>
-                1 {OUTPUT && OUTPUT.symbol} price
-              </Typography>
-              <Box>
-                {tokenPriceInUsd && (
-                  <Typography
-                    variant="rxs12"
-                    sx={{
-                      color: 'dark.700',
-                    }}>
-                    ~${outputUsdcPrice}
-                  </Typography>
-                )}
-                <Typography variant="rxs12">{` ${outputPrice}  ${
-                  OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)
-                }`}</Typography>
-              </Box>
-            </Stack>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography
+                  variant="rxs12"
+                  sx={{
+                    color: 'dark.700',
+                    mb: '9px',
+                  }}>
+                  1 {OUTPUT && OUTPUT.symbol} price
+                </Typography>
+                <Box>
+                  {tokenPriceInUsd && (
+                    <Typography
+                      variant="rxs12"
+                      sx={{
+                        color: 'dark.700',
+                      }}>
+                      ~${outputUsdcPrice}
+                    </Typography>
+                  )}
+                  <Typography variant="rxs12">{` ${outputPrice}  ${
+                    OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)
+                  }`}</Typography>
+                </Box>
+              </Stack>
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography
-                variant="rxs12"
-                sx={{
-                  color: 'dark.700',
-                  mb: '9px',
-                }}>
-                Gas price
-              </Typography>
-              <Typography variant="rxs12">
-                {parseFloat(formatUnits(swapInfo?.tx?.gasPrice || '0x00', 'gwei')).toFixed(2)} Gwei
-              </Typography>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography
+                  variant="rxs12"
+                  sx={{
+                    color: 'dark.700',
+                    mb: '9px',
+                  }}>
+                  Gas price
+                </Typography>
+                <Typography variant="rxs12">
+                  {parseFloat(formatUnits(swapInfo?.tx?.gasPrice || '0x00', 'gwei')).toFixed(2)}{' '}
+                  Gwei
+                </Typography>
+              </Stack>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography
+                  variant="rxs12"
+                  sx={{
+                    color: 'dark.700',
+                    mb: '9px',
+                  }}>
+                  Slippage
+                </Typography>
+                <Typography variant="rxs12">{slippage}%</Typography>
+              </Stack>
             </Stack>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography
-                variant="rxs12"
-                sx={{
-                  color: 'dark.700',
-                  mb: '9px',
-                }}>
-                Slippage
-              </Typography>
-              <Typography variant="rxs12">{slippage}%</Typography>
-            </Stack>
-          </Stack>
-          <svg
-            style={{
-              marginBottom: '10px',
-            }}
-            height="1"
-            viewBox="0 0 386 1"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <rect width="386" height="1" fill="#E3E7EE" />
-          </svg>
-        </Box>
-        <MainButton
-          type={MainButtonType.Confirm}
-          onClick={handleSendTx}
-          disabled={!(account && typedValue && swapInfo?.tx?.data)}
-        />
-      </Stack>
-    </Modal>
-  );
+            <svg
+              style={{
+                marginBottom: '10px',
+              }}
+              height="1"
+              viewBox="0 0 386 1"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <rect width="386" height="1" fill="#E3E7EE" />
+            </svg>
+          </Box>
+          <MainButton
+            type={MainButtonType.Confirm}
+            onClick={handleSendTx}
+            disabled={!(account && typedValue && swapInfo?.tx?.data)}
+          />
+        </Stack>
+      </Modal>
+      <SignTxModal />
+      <TxSentModal />
+    </>
+  ) : null;
 };
 
 export default ConfirmSwapModal;

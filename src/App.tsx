@@ -9,7 +9,6 @@ import GetBox from './components/GetBox';
 import Modal, { ModalHeaderType } from './components/Modal';
 import RateSection from './components/RateSection';
 import SendBox from './components/SendBox';
-import TxSentModal from './components/TxSentModal';
 import WalletConnect from './components/WalletConnect';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus } from './store/state/approve/approveSlice';
@@ -32,6 +31,7 @@ function App() {
     OUTPUT: state.swap.OUTPUT,
     typedValue: state.swap.typedValue,
     tokensList: state.tokens.tokens,
+    lastTxHash: state.transactions.lastTxHash,
   }));
 
   const [isConfirmModalModal, setConfirmModalOpen] = useState<boolean>(false);
@@ -72,7 +72,6 @@ function App() {
         {mainButtonByType()}
       </Modal>
       <ConfirmSwapModal goBack={() => setConfirmModalOpen(false)} isOpen={isConfirmModalModal} />
-      <TxSentModal />
     </>
   );
 }

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenInfo } from '../tokens/balances';
 import { updateTokenInfo } from '../tokens/tokensSlice';
-import { setLastTxHash } from '../transactions/txSlice';
+import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transactions/txSlice';
 import {
   ApproveStatus,
   fetchApproveSpender,
@@ -59,7 +59,9 @@ export function useApproval() {
 
   const approve = useCallback(async () => {
     if (!approveTransactionInfo.data || !account || !chainId || !INPUT.address) return;
+
     try {
+      dispatch(setIsWaitingTx(true));
       const signer = library.getSigner(account).connectUnchecked();
       const tx = await signer.sendTransaction(approveTransactionInfo);
 
@@ -75,6 +77,7 @@ export function useApproval() {
       dispatch(setLastTxHash(tx.hash));
       dispatch(updateTokenInfo(updatedBalance[INPUT.address]));
     } catch ({ message }) {
+      dispatch(setTxErrorMessage(message));
       console.error('Attempt to send transaction failed:', message);
       return { error: message };
     }

@@ -28,7 +28,7 @@ function useInterval(callback: any, delay: number) {
 
 export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
-  const { chainId } = useWeb3React();
+  const { chainId, account } = useWeb3React();
   const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
@@ -38,7 +38,7 @@ export const useCountdownQuote = () => {
 
   useEffect(() => {
     setCountdown(0);
-  }, [INPUT, OUTPUT, typedValue, chainId]);
+  }, [INPUT?.address, OUTPUT?.address, typedValue, chainId, account]);
 
   useInterval(() => {
     setCountdown(countdown - 1);
