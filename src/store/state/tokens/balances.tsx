@@ -68,7 +68,7 @@ export async function getTokenBalances(
 
   const promises = [];
   for (const chunk of chunks) {
-    promises.push(getTokenInfo(lib, account, chainId, chunk, spender));
+    promises.push(await getTokenInfo(lib, account, chainId, chunk, spender));
   }
   const result = await Promise.all(promises);
   return result.reduce((pV, cV) => {

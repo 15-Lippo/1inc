@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { formatUnits } from '@ethersproject/units';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Link, Stack, Typography } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -9,6 +9,7 @@ import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
+import SlippageButtonsGroup from '../Buttons/SlippageButtonsGroup';
 import SwitchTokensIcon from '../icons/SwitchTokensIcon';
 import Modal, { ModalHeaderType } from '../Modal';
 import SignTxModal from '../SignTxModal';
@@ -81,6 +82,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
 
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
+  const [slippageModalOpen, setSlippageModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const outputAmount = swapInfo?.toTokenAmount;
@@ -234,7 +236,19 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
                   }}>
                   Slippage
                 </Typography>
-                <Typography variant="rxs12">{slippage}%</Typography>
+                <Box>
+                  <Link
+                    sx={{
+                      mr: '10px',
+                    }}
+                    variant="rxs12"
+                    href="#"
+                    underline="none"
+                    onClick={() => setSlippageModalOpen(true)}>
+                    Edit
+                  </Link>
+                  <Typography variant="rxs12">{slippage}%</Typography>
+                </Box>
               </Stack>
             </Stack>
             <svg
@@ -254,6 +268,15 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
             disabled={!(account && typedValue && swapInfo?.tx?.data)}
           />
         </Stack>
+      </Modal>
+      <Modal
+        goBack={() => setSlippageModalOpen(false)}
+        isOpen={slippageModalOpen}
+        sx={{
+          minHeight: '537px',
+        }}
+        headerType={ModalHeaderType.Slippage}>
+        <SlippageButtonsGroup />
       </Modal>
       <SignTxModal />
       <TxSentModal />

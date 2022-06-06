@@ -14,14 +14,14 @@ const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08))',
   '&:hover #switch-tokens': {
     transform: 'rotate(180deg)',
-    '-webkit-transition': '0.40s',
-    '-moz-transition': '0.40s',
-    '-ms-transition': '0.40s',
-    '-o-transition': '0.40s',
-    '-webkit-transform': 'rotate(180deg)',
-    '-moz-transform': 'rotate(180deg)',
-    '-o-transform': 'rotate(180deg)',
-    '-ms-transform': 'rotate(180deg)',
+    WebkitTransition: '0.40s',
+    MozTransition: '0.40s',
+    MsTransition: '0.40s',
+    OTransition: '0.40s',
+    WebkitTransform: 'rotate(180deg)',
+    MozTransform: 'rotate(180deg)',
+    OTransform: 'rotate(180deg)',
+    MsTransform: 'rotate(180deg)',
   },
 }));
 

@@ -1,5 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
@@ -10,6 +10,10 @@ import SelectTokenModal from '../SelectTokenModal';
 const GetBox = () => {
   const { quoteInfo, typedValue, loadingQuote } = useAppSelector((state) => state.swap);
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
+  const { outputAddress, explorer } = useAppSelector((state) => ({
+    outputAddress: state.swap.OUTPUT,
+    explorer: state.user.explorer,
+  }));
 
   const onCloseListModal = () => {
     setSelectTokenModal(false);
@@ -26,13 +30,16 @@ const GetBox = () => {
         borderColor: 'cool.100',
         borderRadius: '16px',
       }}>
-      <Typography
-        variant="rxs12"
+      <Link
+        target="_blank"
         sx={{
+          typography: 'rxs12',
           color: 'dark.700',
-        }}>
+        }}
+        href={explorer && `${explorer.link}/token/${outputAddress}`}
+        underline="hover">
         You buy
-      </Typography>
+      </Link>
 
       <Box
         sx={{

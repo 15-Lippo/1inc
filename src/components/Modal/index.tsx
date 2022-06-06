@@ -1,4 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
+import { SxProps } from '@mui/system';
 import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
@@ -25,14 +26,16 @@ export interface ModalProps {
   goBack?: () => void;
   children?: React.ReactNode;
   hide?: boolean;
+  sx?: SxProps;
 }
 
-const Modal = ({ headerType, isOpen, closeModal, goBack, children, hide }: ModalProps) => {
+const Modal = ({ headerType, isOpen, closeModal, goBack, children, hide, sx }: ModalProps) => {
   const { account } = useWeb3React();
 
   return isOpen ? (
     <Box
       sx={{
+        ...sx,
         display: hide ? 'none' : '',
         boxShadow: '0px 12px 24px #E2E9F6',
         borderRadius: '24px',

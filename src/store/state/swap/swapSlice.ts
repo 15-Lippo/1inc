@@ -177,6 +177,12 @@ const swapSlice = createSlice({
   name: 'swap',
   initialState,
   reducers: {
+    setSlippage(state, { payload: { percent } }) {
+      return {
+        ...state,
+        slippage: percent,
+      };
+    },
     selectCurrency(state, { payload: { currency, field } }) {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT;
       if (currency === state[otherField]) {
@@ -232,7 +238,7 @@ const swapSlice = createSlice({
   },
 });
 
-export const { selectCurrency, switchCurrencies, typeInput } = swapSlice.actions;
+export const { setSlippage, selectCurrency, switchCurrencies, typeInput } = swapSlice.actions;
 
 const { reducer } = swapSlice;
 

@@ -11,11 +11,13 @@ import Modal, { ModalHeaderType } from './components/Modal';
 import RateSection from './components/RateSection';
 import SendBox from './components/SendBox';
 import WalletConnect from './components/WalletConnect';
+import { SupportedChainId } from './constants/chains';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus } from './store/state/approve/approveSlice';
 import { useApproval } from './store/state/approve/hooks';
 import { Field, selectCurrency } from './store/state/swap/swapSlice';
 import { useTokens } from './store/state/tokens/useTokens';
+import { setExplorer } from './store/state/user/userSlice';
 
 export interface IWidgetProps {
   defaultInput: string;
@@ -24,7 +26,7 @@ export interface IWidgetProps {
 
 function App() {
   const dispatch = useAppDispatch();
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const { addresses } = useTokens();
   const { status, approve } = useApproval();
   const { INPUT, OUTPUT, typedValue, tokensList } = useAppSelector((state) => ({
@@ -51,6 +53,10 @@ function App() {
     console.log('set default tokens ...');
     setDefaultTokens();
   }, [addresses.length, INPUT, OUTPUT]);
+
+  useEffect(() => {
+    dispatch(setExplorer({ chainId: chainId || SupportedChainId.MAINNET }));
+  }, [chainId]);
 
   const mainButtonByType = () => {
     const balance = tokensList[INPUT]?.userBalance || '0';

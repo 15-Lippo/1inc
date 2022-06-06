@@ -64,6 +64,7 @@ declare module '@mui/material/styles' {
     };
     yellow: {
       500: CSSProperties['color'];
+      20: CSSProperties['color'];
     };
     green: {
       500: CSSProperties['color'];
@@ -96,6 +97,7 @@ declare module '@mui/material/styles' {
     };
     yellow: {
       500: CSSProperties['color'];
+      20: CSSProperties['color'];
     };
     green: {
       500: CSSProperties['color'];
@@ -145,6 +147,7 @@ const theme = createTheme({
     },
     yellow: {
       500: '#FF9C08',
+      20: 'rgba(255, 156, 8, 0.2)',
     },
     green: {
       500: '#00897B',

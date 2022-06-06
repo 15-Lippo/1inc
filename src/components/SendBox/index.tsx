@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Box, Link, Skeleton, Typography } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import React, { useMemo, useState } from 'react';
 
@@ -13,15 +13,15 @@ import SelectTokenModal from '../SelectTokenModal';
 
 const SendBox = () => {
   const { account } = useWeb3React();
-  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote } = useAppSelector(
-    (state) => ({
+  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer } =
+    useAppSelector((state) => ({
       INPUT: state.tokens.tokens[state.swap.INPUT],
       status: state.approve.approveAllowanceInfo.status,
       typedValue: state.swap.typedValue,
       inputTokenPriceInUsd: state.swap.tokenPriceInUsd?.input,
       loadingQuote: state.swap.loadingQuote,
-    })
-  );
+      explorer: state.user.explorer,
+    }));
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
 
   const LockIcon = (
@@ -47,7 +47,7 @@ const SendBox = () => {
 
   const userBalance = useMemo(() => {
     if (!INPUT) return '0';
-
+    if (!Number(INPUT.userBalance)) return '0';
     return parseFloat(formatUnits(INPUT.userBalance || '0', INPUT.decimals)).toFixed(6);
   }, [INPUT]);
 
@@ -74,13 +74,16 @@ const SendBox = () => {
           display: 'flex',
           alignItems: 'center',
         }}>
-        <Typography
-          variant="rxs12"
+        <Link
+          target="_blank"
           sx={{
+            typography: 'rxs12',
             color: 'dark.700',
-          }}>
+          }}
+          href={explorer && INPUT && `${explorer.link}/token/${INPUT.address}`}
+          underline="hover">
           You sell
-        </Typography>
+        </Link>
         {account && (
           <Typography
             variant="rxs12"

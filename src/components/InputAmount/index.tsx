@@ -22,7 +22,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     },
   },
   '& input::-webkit-inner-spin-button, & input::-webkit-outer-spin-button': {
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     margin: 0,
   },
 }));
@@ -34,7 +34,7 @@ export interface SendProps {
 const InputAmount = ({ inputId }: SendProps) => {
   const dispatch = useAppDispatch();
   const [amount, setAmount] = useState<string>('');
-  const { INPUT, typedValue } = useAppSelector((state) => ({
+  const { INPUT } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     typedValue: state.swap.typedValue,
   }));
