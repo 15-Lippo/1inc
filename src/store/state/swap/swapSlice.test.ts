@@ -8,6 +8,7 @@ const restValues = {
   tokenPriceInUsd: {
     input: '',
     output: '',
+    perNativeToken: '',
   },
   slippage: 1,
   error: null,

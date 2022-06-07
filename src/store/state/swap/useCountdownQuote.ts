@@ -29,10 +29,11 @@ function useInterval(callback: any, delay: number) {
 export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
   const { chainId, account } = useWeb3React();
-  const { INPUT, OUTPUT, typedValue } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, typedValue, gasLimit } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     typedValue: state.swap.typedValue || '0',
+    gasLimit: state.swap.txFeeCalculation?.gasLimit,
   }));
   const [countdown, setCountdown] = useState<number>(REFRESH_QUOTE_DELAY);
 
@@ -54,6 +55,7 @@ export const useCountdownQuote = () => {
             fromTokenAddress: INPUT.address,
             toTokenAddress: OUTPUT.address,
             amount: typedValue,
+            gasLimit,
           },
           isTokenPriceInUsd: true,
           fromTokenDecimals: INPUT.decimals,

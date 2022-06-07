@@ -29,12 +29,25 @@ export const fetchQuote = createAsyncThunk(
     const price = {
       input: '',
       output: '',
+      perNativeToken: '',
     };
 
     try {
       const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(param.quoteInfo);
 
       const responseInfo = await JSONApiResponse.raw.json();
+
+      if (param.quoteInfo.fromTokenAddress !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+        const PerEthJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
+          fromTokenAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          toTokenAddress: usdcToken?.address,
+          amount: parseUnits('1', param.fromTokenDecimals).toString(),
+        });
+
+        const responseEthPrice =
+          param.isTokenPriceInUsd && (await PerEthJSONApiResponseUsdc.raw.json());
+        price.perNativeToken = responseEthPrice?.toTokenAmount;
+      }
 
       if (param.quoteInfo.fromTokenAddress === usdcToken?.address) {
         price.input = '1000000';
@@ -104,6 +117,12 @@ export interface SwapState {
   readonly tokenPriceInUsd?: {
     readonly input: string;
     readonly output: string;
+    readonly perNativeToken: string;
+  };
+  readonly txFeeCalculation?: {
+    readonly gasLimit?: string;
+    readonly maxFeePerGas?: string;
+    readonly txFee?: string;
   };
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
@@ -167,6 +186,12 @@ export const initialState: SwapState = {
   tokenPriceInUsd: {
     input: '',
     output: '',
+    perNativeToken: '',
+  },
+  txFeeCalculation: {
+    gasLimit: '',
+    maxFeePerGas: '',
+    txFee: '',
   },
   loading: 'idle',
   loadingQuote: 'idle',
@@ -217,6 +242,24 @@ const swapSlice = createSlice({
         typedValue,
       };
     },
+    setGasLimit(state, { payload: gasLimit }) {
+      return {
+        ...state,
+        txFeeCalculation: { ...state.txFeeCalculation, gasLimit },
+      };
+    },
+    setMaxFeePerGas(state, { payload: maxFeePerGas }) {
+      return {
+        ...state,
+        txFeeCalculation: { ...state.txFeeCalculation, maxFeePerGas },
+      };
+    },
+    setTxFee(state, { payload: txFee }) {
+      return {
+        ...state,
+        txFeeCalculation: { ...state.txFeeCalculation, txFee },
+      };
+    },
   },
   extraReducers: (user) => {
     user.addCase(fetchQuote.pending, (state, action) => {
@@ -238,7 +281,15 @@ const swapSlice = createSlice({
   },
 });
 
-export const { setSlippage, selectCurrency, switchCurrencies, typeInput } = swapSlice.actions;
+export const {
+  setSlippage,
+  selectCurrency,
+  switchCurrencies,
+  typeInput,
+  setGasLimit,
+  setMaxFeePerGas,
+  setTxFee,
+} = swapSlice.actions;
 
 const { reducer } = swapSlice;
 

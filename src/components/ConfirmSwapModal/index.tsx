@@ -76,9 +76,8 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
   }));
 
-  const { typedValue, swapInfo, slippage, tokenPriceInUsd, loadingQuote } = useAppSelector(
-    (state) => state.swap
-  );
+  const { typedValue, swapInfo, slippage, tokenPriceInUsd, loadingQuote, txFeeCalculation } =
+    useAppSelector((state) => state.swap);
 
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
@@ -97,7 +96,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
   }, [swapInfo?.toTokenAmount, typedValue, loadingQuote]);
 
   useEffect(() => {
-    if (!INPUT?.address || !OUTPUT?.address || !typedValue || !account) return;
+    if (!INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
     dispatch(
       fetchSwap({
         fromTokenAddress: INPUT.address,
@@ -106,6 +105,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
         fromAddress: String(account),
         slippage,
         disableEstimate: true,
+        gasLimit: txFeeCalculation?.gasLimit,
       })
     );
   }, [INPUT, OUTPUT, account, typedValue, loadingQuote]);
@@ -115,7 +115,8 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
     to: swapInfo?.tx?.to,
     data: swapInfo?.tx?.data,
     value: swapInfo?.tx?.value,
-    gasPrice: swapInfo?.tx?.gasPrice,
+    gasLimit: txFeeCalculation?.gasLimit,
+    gasPrice: txFeeCalculation?.maxFeePerGas,
   };
 
   const swapCallback = useSwapCallback(txData);

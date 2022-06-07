@@ -1,23 +1,50 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
+import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
 import SelectTokenButton from '../Buttons/SelectTokenButton';
 import SelectTokenModal from '../SelectTokenModal';
 
 const GetBox = () => {
-  const { quoteInfo, typedValue, loadingQuote } = useAppSelector((state) => state.swap);
+  const { estimateGasLimit, getFeeData } = useCalculateTxCost();
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
-  const { outputAddress, explorer } = useAppSelector((state) => ({
-    outputAddress: state.swap.OUTPUT,
-    explorer: state.user.explorer,
-  }));
+  const {
+    quoteInfo,
+    typedValue,
+    loadingQuote,
+    swapInfo,
+    tokenPriceInUsd,
+    txFeeCalculation,
+    OUTPUT,
+  } = useAppSelector((state) => state.swap);
+  const explorer = useAppSelector((state) => state.user.explorer);
+
+  useEffect(() => {
+    getFeeData();
+    if (swapInfo && swapInfo?.tx?.data) estimateGasLimit();
+  }, [swapInfo?.tx?.data]);
 
   const onCloseListModal = () => {
     setSelectTokenModal(false);
   };
+
+  const txCostInTokenInput =
+    txFeeCalculation?.txFee && parseFloat(formatUnits(txFeeCalculation?.txFee, 'ether')).toFixed(4);
+
+  const txCostInUsdPerToken = () => {
+    if (swapInfo?.fromToken?.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
+      if (!tokenPriceInUsd?.input) return;
+      return parseFloat(formatUnits(tokenPriceInUsd?.input, 6)).toFixed(2);
+    } else {
+      if (!tokenPriceInUsd?.perNativeToken) return;
+      return parseFloat(formatUnits(tokenPriceInUsd?.perNativeToken, 6)).toFixed(2);
+    }
+  };
+
+  const txCostInUsd = Number(txCostInTokenInput) * Number(txCostInUsdPerToken());
 
   return (
     <Box
@@ -36,7 +63,7 @@ const GetBox = () => {
           typography: 'rxs12',
           color: 'dark.700',
         }}
-        href={explorer && `${explorer.link}/token/${outputAddress}`}
+        href={explorer && `${explorer.link}/token/${OUTPUT}`}
         underline="hover">
         You buy
       </Link>
@@ -52,8 +79,7 @@ const GetBox = () => {
         sx={{
           position: 'relative',
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          flexDirection: 'column',
           border: '1px solid',
           borderColor: 'blue.500',
           borderRadius: '8px 12px 12px 12px',
@@ -79,27 +105,54 @@ const GetBox = () => {
             Best quote
           </Typography>
         </Box>
-        <Typography variant="rm16">1inch</Typography>
-        {quoteInfo && quoteInfo.toTokenAmount && typedValue && loadingQuote === 'succeeded' ? (
-          <Typography
-            variant="mlg18"
-            sx={{
-              lineHeight: '24px',
-            }}>
-            {parseFloat(formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)).toFixed(
-              6
-            )}
-          </Typography>
-        ) : (
-          <Skeleton
-            sx={{
-              bgcolor: 'cool.100',
-            }}
-            animation="wave"
-            height={24}
-            width="151px"
-          />
-        )}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
+          <Typography variant="rm16">1inch</Typography>
+          {quoteInfo && quoteInfo.toTokenAmount && typedValue && loadingQuote === 'succeeded' ? (
+            <Typography
+              variant="mlg18"
+              sx={{
+                lineHeight: '24px',
+              }}>
+              {parseFloat(
+                formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)
+              ).toFixed(6)}
+            </Typography>
+          ) : (
+            <Skeleton
+              sx={{
+                bgcolor: 'cool.100',
+              }}
+              animation="wave"
+              height={24}
+              width="151px"
+            />
+          )}
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
+          {txCostInTokenInput && txCostInUsd && typedValue && loadingQuote === 'succeeded' ? (
+            <Typography variant="rxs12" sx={{ color: 'dark.700', lineHeight: '24px' }}>
+              {`Tx cost ${txCostInTokenInput} Ξ (~$${txCostInUsd.toFixed(2)})`}
+            </Typography>
+          ) : (
+            <Skeleton
+              sx={{
+                bgcolor: 'cool.100',
+              }}
+              animation="wave"
+              height={24}
+              width="151px"
+            />
+          )}
+        </Box>
       </Box>
 
       <SelectTokenModal
