@@ -6,6 +6,7 @@ import React from 'react';
 import BackButton from '../Buttons/BackButton';
 import CloseButton from '../Buttons/CloseButton';
 import RefreshQuoteButton from '../Buttons/RefreshQuoteButton';
+import SettingsButton from '../Buttons/SettingsButton';
 
 export enum ModalHeaderType {
   Main = 'Swap',
@@ -24,12 +25,22 @@ export interface ModalProps {
   isOpen: boolean;
   closeModal?: () => void;
   goBack?: () => void;
+  openSettings?: () => void;
   children?: React.ReactNode;
   hide?: boolean;
   sx?: SxProps;
 }
 
-const Modal = ({ headerType, isOpen, closeModal, goBack, children, hide, sx }: ModalProps) => {
+const Modal = ({
+  headerType,
+  isOpen,
+  closeModal,
+  goBack,
+  openSettings,
+  children,
+  hide,
+  sx,
+}: ModalProps) => {
   const { account } = useWeb3React();
 
   return isOpen ? (
@@ -64,6 +75,7 @@ const Modal = ({ headerType, isOpen, closeModal, goBack, children, hide, sx }: M
           </Typography>
           <Stack direction="row" alignItems="center">
             <RefreshQuoteButton />
+            <SettingsButton onClick={openSettings} />
             {account && (
               <Box
                 sx={{

@@ -10,6 +10,11 @@ const restValues = {
     output: '',
     perNativeToken: '',
   },
+  txFeeCalculation: {
+    gasLimit: '',
+    maxFeePerGas: '',
+    txFee: '',
+  },
   slippage: 1,
   error: null,
   quoteInfo: {

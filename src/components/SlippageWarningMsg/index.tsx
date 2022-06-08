@@ -9,6 +9,7 @@ const SlippageWarningMsg = ({ slippagePercent }: Props) => {
     <Paper
       elevation={0}
       sx={{
+        m: '14px 0 0',
         backgroundColor: 'yellow.20',
         display: 'flex',
         borderRadius: '12px',

@@ -10,6 +10,7 @@ import GetBox from './components/GetBox';
 import Modal, { ModalHeaderType } from './components/Modal';
 import RateSection from './components/RateSection';
 import SendBox from './components/SendBox';
+import SettingsModal from './components/SettingsModal';
 import WalletConnect from './components/WalletConnect';
 import { SupportedChainId } from './constants/chains';
 import { useAppDispatch, useAppSelector } from './store/hooks';
@@ -37,7 +38,8 @@ function App() {
     lastTxHash: state.transactions.lastTxHash,
   }));
 
-  const [isConfirmModalModal, setConfirmModalOpen] = useState<boolean>(false);
+  const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const setDefaultTokens = () => {
@@ -72,14 +74,24 @@ function App() {
 
   return (
     <>
-      <Modal headerType={ModalHeaderType.Main} isOpen hide={isConfirmModalModal}>
+      <Modal
+        headerType={ModalHeaderType.Main}
+        isOpen
+        hide={isConfirmOpen || isSettingsOpen}
+        openSettings={() => setSettingsOpen(true)}>
         <SendBox />
         <SwitchTokensButton />
         <GetBox />
         <RateSection />
         {mainButtonByType()}
       </Modal>
-      <ConfirmSwapModal goBack={() => setConfirmModalOpen(false)} isOpen={isConfirmModalModal} />
+      <Modal
+        headerType={ModalHeaderType.AdvancedSettings}
+        isOpen={isSettingsOpen}
+        goBack={() => setSettingsOpen(false)}
+      />
+      <SettingsModal isOpen={isSettingsOpen} goBack={() => setSettingsOpen(false)} />
+      <ConfirmSwapModal goBack={() => setConfirmModalOpen(false)} isOpen={isConfirmOpen} />
     </>
   );
 }

@@ -16,7 +16,7 @@ const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
 
 interface Props {
   disabled?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const SettingsButton = ({ disabled, onClick }: Props) => {

@@ -112,9 +112,50 @@ declare module '@mui/material/styles' {
 const theme = createTheme({
   components: {
     MuiButtonBase: {
+      styleOverrides: {
+        root: {
+          '&.MuiAccordionSummary-root.Mui-expanded': {
+            minHeight: 0,
+          },
+        },
+      },
       defaultProps: {
         // The props to change the default for.
         disableRipple: true, // No more ripple, on the whole application 💣!
+      },
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          '&:before': {
+            backgroundColor: 'white',
+          },
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+          minHeight: 0,
+          '.MuiAccordionSummary-content': {
+            height: '3rem',
+            alignItems: 'center',
+            margin: 0,
+          },
+          '.MuiAccordionSummary-content.Mui-expanded': {
+            margin: 0,
+          },
+        },
+      },
+    },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+        },
       },
     },
   },

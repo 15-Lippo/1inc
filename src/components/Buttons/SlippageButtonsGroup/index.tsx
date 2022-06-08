@@ -8,7 +8,7 @@ import theme from '../../../theme/config';
 import { StyledTextField } from '../../SelectTokenModal';
 import SlippageWarningMsg from '../../SlippageWarningMsg';
 
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
@@ -34,7 +34,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   },
 }));
 
-const SlippageButtonsGroup = () => {
+export const SlippageButtonsGroup = () => {
   const dispatch = useAppDispatch();
   const { slippage } = useAppSelector((state) => state.swap);
   const [customSlippage, setCustomSlippage] = useState<string>(
@@ -63,7 +63,6 @@ const SlippageButtonsGroup = () => {
           display: 'flex',
           alignItems: 'center',
           borderRadius: '12px',
-          m: '14px 0',
         }}>
         <StyledToggleButtonGroup
           value={slippage.toString()}
@@ -139,5 +138,3 @@ const SlippageButtonsGroup = () => {
     </>
   );
 };
-
-export default SlippageButtonsGroup;

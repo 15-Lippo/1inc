@@ -9,7 +9,7 @@ import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
-import SlippageButtonsGroup from '../Buttons/SlippageButtonsGroup';
+import { SlippageButtonsGroup } from '../Buttons/SlippageButtonsGroup';
 import SwitchTokensIcon from '../icons/SwitchTokensIcon';
 import Modal, { ModalHeaderType } from '../Modal';
 import SignTxModal from '../SignTxModal';
