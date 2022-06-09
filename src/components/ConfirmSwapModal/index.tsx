@@ -1,17 +1,19 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { formatUnits } from '@ethersproject/units';
-import { Box, Link, Stack, Typography } from '@mui/material';
+import { Box, Link, Skeleton, Stack, Typography } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
+import { useCountdownQuote } from '../../store/state/swap/useCountdownQuote';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import { SlippageButtonsGroup } from '../Buttons/SlippageButtonsGroup';
 import SwitchTokensIcon from '../icons/SwitchTokensIcon';
 import Modal, { ModalHeaderType } from '../Modal';
+import RefreshRateWarningMsg from '../RefreshRateWarningMsg';
 import SignTxModal from '../SignTxModal';
 import TxSentModal from '../TxSentModal';
 
@@ -25,6 +27,7 @@ interface SwapTokenBoxProps {
   amount: string;
   usdcPrice?: string;
 }
+
 const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) => {
   return (
     <Box
@@ -41,18 +44,29 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
           variant="rxs12"
           sx={{
             color: 'dark.700',
+            lineHeight: '14px',
             mb: '17px',
           }}>
           {field === Field.INPUT ? 'You sell' : 'You get'}
         </Typography>
-        {usdcPrice && (
+        {usdcPrice ? (
           <Typography
             variant="rxs12"
             sx={{
               color: 'dark.700',
+              lineHeight: '14px',
             }}>
             ~${usdcPrice}
           </Typography>
+        ) : (
+          <Skeleton
+            sx={{
+              bgcolor: 'cool.100',
+            }}
+            animation="wave"
+            height={14}
+            width="60px"
+          />
         )}
       </Stack>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -62,7 +76,20 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
             {token.symbol}
           </Typography>
         </Box>
-        <Typography variant="rxxlg24">{amount}</Typography>
+        {amount ? (
+          <Typography variant="rxxlg24" lineHeight="28px">
+            {amount}
+          </Typography>
+        ) : (
+          <Skeleton
+            sx={{
+              bgcolor: 'cool.100',
+            }}
+            animation="wave"
+            height={28}
+            width="110px"
+          />
+        )}
       </Stack>
     </Box>
   );
@@ -71,17 +98,23 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
 const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
   const dispatch = useAppDispatch();
   const { account } = useWeb3React();
+  const { countdown, reset } = useCountdownQuote();
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
   }));
 
-  const { typedValue, swapInfo, slippage, tokenPriceInUsd, loadingQuote, txFeeCalculation } =
-    useAppSelector((state) => state.swap);
+  const { typedValue, swapInfo, slippage, tokenPriceInUsd, txFeeCalculation } = useAppSelector(
+    (state) => state.swap
+  );
 
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
   const [slippageModalOpen, setSlippageModalOpen] = useState<boolean>(false);
+  const [isRefresh, setIsRefresh] = useState<boolean>(false);
+  const [quoteUpdated, setQuoteUpdated] = useState<boolean>(false);
+
+  const refreshTimeInterval = countdown > 0 && countdown <= 7;
 
   useEffect(() => {
     const outputAmount = swapInfo?.toTokenAmount;
@@ -93,7 +126,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
       setInputPrice(input.toFixed(4));
       setOutputPrice(output.toFixed(4));
     }
-  }, [swapInfo?.toTokenAmount, typedValue, loadingQuote]);
+  }, [swapInfo?.toTokenAmount, typedValue]);
 
   useEffect(() => {
     if (!INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
@@ -108,7 +141,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
         gasLimit: txFeeCalculation?.gasLimit,
       })
     );
-  }, [INPUT, OUTPUT, account, typedValue, loadingQuote]);
+  }, [INPUT, OUTPUT, account, typedValue, isRefresh]);
 
   const txData: TransactionRequest = {
     from: swapInfo?.tx?.from,
@@ -129,6 +162,16 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
     }
   }, [swapCallback]);
 
+  const onRefresh = () => {
+    setIsRefresh(!isRefresh);
+    setQuoteUpdated(false);
+    reset();
+  };
+
+  useEffect(() => {
+    if (isOpen && countdown === 1) setQuoteUpdated(true);
+  }, [countdown]);
+
   const inputUsdcPrice =
     tokenPriceInUsd &&
     tokenPriceInUsd.input &&
@@ -140,7 +183,13 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
 
   return isOpen ? (
     <>
-      <Modal headerType={ModalHeaderType.Confirm} goBack={goBack} isOpen={isOpen}>
+      <Modal
+        headerType={ModalHeaderType.Confirm}
+        goBack={() => {
+          goBack();
+          setQuoteUpdated(false);
+        }}
+        isOpen={isOpen}>
         <Stack direction="column">
           <Box>
             <SwapTokenBox
@@ -164,91 +213,150 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
               usdcPrice={outputUsdcPrice}
             />
             <Stack>
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
                     color: 'dark.700',
-                    mb: '9px',
+                    lineHeight: '14px',
                   }}>
                   1 {INPUT && INPUT.symbol} price
                 </Typography>
-                <Box>
-                  {tokenPriceInUsd && (
+                <Box sx={{ display: 'flex', columnGap: '4px' }}>
+                  {tokenPriceInUsd ? (
                     <Typography
                       variant="rxs12"
                       sx={{
+                        lineHeight: '14px',
                         color: 'dark.700',
                       }}>
                       ~${inputUsdcPrice}
                     </Typography>
+                  ) : (
+                    <Skeleton
+                      sx={{
+                        bgcolor: 'cool.100',
+                      }}
+                      animation="wave"
+                      height={14}
+                      width="60px"
+                    />
                   )}
-                  <Typography variant="rxs12">{` ${inputPrice}  ${
-                    INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)
-                  }`}</Typography>
+                  {inputPrice ? (
+                    <Typography variant="rxs12" lineHeight="14px">{` ${inputPrice}  ${
+                      INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)
+                    }`}</Typography>
+                  ) : (
+                    <Skeleton
+                      sx={{
+                        bgcolor: 'cool.100',
+                      }}
+                      animation="wave"
+                      height={14}
+                      width="80px"
+                    />
+                  )}
                 </Box>
               </Stack>
 
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
                     color: 'dark.700',
-                    mb: '9px',
+                    lineHeight: '14px',
                   }}>
                   1 {OUTPUT && OUTPUT.symbol} price
                 </Typography>
-                <Box>
-                  {tokenPriceInUsd && (
+                <Box sx={{ display: 'flex', columnGap: '4px' }}>
+                  {tokenPriceInUsd ? (
                     <Typography
                       variant="rxs12"
                       sx={{
+                        lineHeight: '14px',
                         color: 'dark.700',
                       }}>
                       ~${outputUsdcPrice}
                     </Typography>
+                  ) : (
+                    <Skeleton
+                      sx={{
+                        bgcolor: 'cool.100',
+                      }}
+                      animation="wave"
+                      height={14}
+                      width="50px"
+                    />
                   )}
-                  <Typography variant="rxs12">{` ${outputPrice}  ${
-                    OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)
-                  }`}</Typography>
+                  {outputPrice ? (
+                    <Typography variant="rxs12" lineHeight="14px">{` ${outputPrice}  ${
+                      OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)
+                    }`}</Typography>
+                  ) : (
+                    <Skeleton
+                      sx={{
+                        bgcolor: 'cool.100',
+                      }}
+                      animation="wave"
+                      height={14}
+                      width="70px"
+                    />
+                  )}
                 </Box>
               </Stack>
 
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
                     color: 'dark.700',
-                    mb: '9px',
+                    lineHeight: '14px',
                   }}>
                   Gas price
                 </Typography>
-                <Typography variant="rxs12">
+                <Typography variant="rxs12" lineHeight="14px">
                   {parseFloat(formatUnits(swapInfo?.tx?.gasPrice || '0x00', 'gwei')).toFixed(2)}{' '}
                   Gwei
                 </Typography>
               </Stack>
-              <Stack direction="row" justifyContent="space-between" alignItems="center">
+
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
                     color: 'dark.700',
-                    mb: '9px',
+                    lineHeight: '14px',
                   }}>
                   Slippage
                 </Typography>
-                <Box>
+                <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   <Link
-                    sx={{
-                      mr: '10px',
-                    }}
                     variant="rxs12"
+                    lineHeight="14px"
                     href="#"
                     underline="none"
                     onClick={() => setSlippageModalOpen(true)}>
                     Edit
                   </Link>
-                  <Typography variant="rxs12">{slippage}%</Typography>
+                  <Typography variant="rxs12" lineHeight="14px">
+                    {slippage}%
+                  </Typography>
                 </Box>
               </Stack>
             </Stack>
@@ -263,11 +371,29 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
               <rect width="386" height="1" fill="#E3E7EE" />
             </svg>
           </Box>
-          <MainButton
-            type={MainButtonType.Confirm}
-            onClick={handleSendTx}
-            disabled={!(account && typedValue && swapInfo?.tx?.data)}
-          />
+          {refreshTimeInterval || quoteUpdated ? (
+            <Stack direction="column" spacing={1}>
+              <RefreshRateWarningMsg
+                inputTokenSymbol={INPUT.symbol}
+                outputTokenSymbol={OUTPUT.symbol}
+                quoteUpdated={quoteUpdated}
+              />
+              <MainButton
+                type={MainButtonType.Refresh}
+                onClick={onRefresh}
+                disabled={!(account && typedValue && swapInfo?.tx?.data)}
+                rateExpired={quoteUpdated}
+              />
+            </Stack>
+          ) : (
+            !quoteUpdated && (
+              <MainButton
+                type={MainButtonType.Confirm}
+                onClick={handleSendTx}
+                disabled={!(account && typedValue && swapInfo?.tx?.data)}
+              />
+            )
+          )}
         </Stack>
       </Modal>
       <Modal
