@@ -124,6 +124,26 @@ const theme = createTheme({
         disableRipple: true, // No more ripple, on the whole application 💣!
       },
     },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        root: {
+          margin: 0,
+          '&.MuiFormControlLabel-root .MuiFormControlLabel-label': {
+            width: '100%',
+          },
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: '#6C86AD',
+          '&.Mui-checked': {
+            color: '#2F8AF5',
+          },
+        },
+      },
+    },
     MuiAccordion: {
       styleOverrides: {
         root: {

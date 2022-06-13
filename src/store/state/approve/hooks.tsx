@@ -75,7 +75,7 @@ export function useApproval() {
         spender.address
       );
       dispatch(setLastTxHash(tx.hash));
-      dispatch(updateTokenInfo(updatedBalance[INPUT.address]));
+      updatedBalance && dispatch(updateTokenInfo(updatedBalance));
     } catch ({ message }) {
       dispatch(setTxErrorMessage(message));
       console.error('Attempt to send transaction failed:', message);

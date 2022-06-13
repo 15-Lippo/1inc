@@ -122,8 +122,21 @@ const tokensSlice = createSlice({
       state.tokenInfoFetched = true;
     },
     updateTokenInfo(state, action) {
-      state.tokens[action.payload.address].userBalance = action.payload.balance;
-      state.tokens[action.payload.address].userAllowance = action.payload.allowance;
+      const { tokens } = state;
+      console.log('==> payload: ', action.payload);
+
+      const native = '0x0000000000000000000000000000000000000000';
+      const tokenAddress = Object.keys(action.payload)[0];
+
+      if (tokenAddress === native) {
+        tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userBalance =
+          action.payload[native].balance;
+        tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userAllowance =
+          action.payload[native].allowance;
+      } else {
+        tokens[tokenAddress].userBalance = action.payload[tokenAddress].balance;
+        tokens[tokenAddress].userAllowance = action.payload[tokenAddress].allowance;
+      }
     },
   },
   extraReducers: (tokens) => {

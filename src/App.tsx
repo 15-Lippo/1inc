@@ -13,10 +13,11 @@ import SendBox from './components/SendBox';
 import SettingsModal from './components/SettingsModal';
 import WalletConnect from './components/WalletConnect';
 import { SupportedChainId } from './constants/chains';
+import { SupportedGasOptions, useGasPriceOptions } from './hooks/useGasPriceOptions';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus } from './store/state/approve/approveSlice';
 import { useApproval } from './store/state/approve/hooks';
-import { Field, selectCurrency } from './store/state/swap/swapSlice';
+import { Field, selectCurrency, setGasPriceInfo } from './store/state/swap/swapSlice';
 import { useTokens } from './store/state/tokens/useTokens';
 import { setExplorer } from './store/state/user/userSlice';
 
@@ -28,8 +29,10 @@ export interface IWidgetProps {
 function App() {
   const dispatch = useAppDispatch();
   const { account, chainId } = useWeb3React();
+  const { gasOptions, blockNum } = useGasPriceOptions();
   const { addresses } = useTokens();
   const { status, approve } = useApproval();
+  const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const { INPUT, OUTPUT, typedValue, tokensList } = useAppSelector((state) => ({
     INPUT: state.swap.INPUT,
     OUTPUT: state.swap.OUTPUT,
@@ -40,6 +43,13 @@ function App() {
 
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Set default high gas price option:
+    if (gasPriceInfo?.price === '0' || !gasPriceInfo?.price) {
+      dispatch(setGasPriceInfo(gasOptions[SupportedGasOptions.High]));
+    }
+  }, [gasOptions, blockNum]);
 
   useEffect(() => {
     const setDefaultTokens = () => {
@@ -90,7 +100,11 @@ function App() {
         isOpen={isSettingsOpen}
         goBack={() => setSettingsOpen(false)}
       />
-      <SettingsModal isOpen={isSettingsOpen} goBack={() => setSettingsOpen(false)} />
+      <SettingsModal
+        gasOptions={gasOptions}
+        isOpen={isSettingsOpen}
+        goBack={() => setSettingsOpen(false)}
+      />
       <ConfirmSwapModal goBack={() => setConfirmModalOpen(false)} isOpen={isConfirmOpen} />
     </>
   );

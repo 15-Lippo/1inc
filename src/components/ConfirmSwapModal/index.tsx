@@ -1,4 +1,3 @@
-import { TransactionRequest } from '@ethersproject/providers';
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Stack, Typography } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
@@ -99,6 +98,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
   const dispatch = useAppDispatch();
   const { account } = useWeb3React();
   const { countdown, reset } = useCountdownQuote();
+  const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
@@ -141,18 +141,25 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
         gasLimit: txFeeCalculation?.gasLimit,
       })
     );
-  }, [INPUT, OUTPUT, account, typedValue, isRefresh]);
+  }, [
+    INPUT,
+    OUTPUT,
+    account,
+    typedValue,
+    isRefresh,
+    slippage,
+    gasPriceInfo?.price,
+    txFeeCalculation?.gasLimit,
+  ]);
 
-  const txData: TransactionRequest = {
+  const swapCallback = useSwapCallback({
     from: swapInfo?.tx?.from,
     to: swapInfo?.tx?.to,
     data: swapInfo?.tx?.data,
     value: swapInfo?.tx?.value,
     gasLimit: txFeeCalculation?.gasLimit,
-    gasPrice: txFeeCalculation?.maxFeePerGas,
-  };
-
-  const swapCallback = useSwapCallback(txData);
+    gasPrice: gasPriceInfo?.price,
+  });
 
   const handleSendTx = useCallback(() => {
     try {

@@ -119,7 +119,13 @@ export interface SwapState {
     readonly output: string;
     readonly perNativeToken: string;
   };
-  readonly txFeeCalculation?: {
+  readonly txFeeCalculation: {
+    readonly gasPriceInfo: {
+      label: string;
+      range: string;
+      timeLabel: string;
+      price: string;
+    };
     readonly gasLimit?: string;
     readonly maxFeePerGas?: string;
     readonly txFee?: string;
@@ -189,7 +195,13 @@ export const initialState: SwapState = {
     perNativeToken: '',
   },
   txFeeCalculation: {
-    gasLimit: '',
+    gasPriceInfo: {
+      label: '',
+      range: '-- / -- - 0.00 Gwei',
+      timeLabel: '',
+      price: '0',
+    },
+    gasLimit: '100000',
     maxFeePerGas: '',
     txFee: '',
   },
@@ -248,6 +260,13 @@ const swapSlice = createSlice({
         txFeeCalculation: { ...state.txFeeCalculation, gasLimit },
       };
     },
+    setGasPriceInfo(state, { payload: gasPriceInfo }) {
+      console.log('setGasPriceInfo', gasPriceInfo);
+      return {
+        ...state,
+        txFeeCalculation: { ...state.txFeeCalculation, gasPriceInfo },
+      };
+    },
     setMaxFeePerGas(state, { payload: maxFeePerGas }) {
       return {
         ...state,
@@ -289,6 +308,7 @@ export const {
   setGasLimit,
   setMaxFeePerGas,
   setTxFee,
+  setGasPriceInfo,
 } = swapSlice.actions;
 
 const { reducer } = swapSlice;

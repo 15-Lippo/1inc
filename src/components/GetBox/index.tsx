@@ -9,7 +9,7 @@ import SelectTokenButton from '../Buttons/SelectTokenButton';
 import SelectTokenModal from '../SelectTokenModal';
 
 const GetBox = () => {
-  const { estimateGasLimit, getFeeData } = useCalculateTxCost();
+  const { estimateGasLimit } = useCalculateTxCost();
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
   const {
     quoteInfo,
@@ -23,7 +23,6 @@ const GetBox = () => {
   const explorer = useAppSelector((state) => state.user.explorer);
 
   useEffect(() => {
-    getFeeData();
     if (swapInfo && swapInfo?.tx?.data) estimateGasLimit();
   }, [swapInfo?.tx?.data]);
 

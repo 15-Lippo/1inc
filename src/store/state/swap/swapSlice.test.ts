@@ -11,7 +11,13 @@ const restValues = {
     perNativeToken: '',
   },
   txFeeCalculation: {
-    gasLimit: '',
+    gasPriceInfo: {
+      label: '',
+      range: '-- / -- - 0.00 Gwei',
+      timeLabel: '',
+      price: '0',
+    },
+    gasLimit: '100000',
     maxFeePerGas: '',
     txFee: '',
   },
@@ -152,6 +158,14 @@ describe('swapSlice', () => {
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
+      txFeeCalculation: {
+        gasPriceInfo: {
+          label: '',
+          range: '-- / -- - 0.00 Gwei',
+          timeLabel: '',
+          price: '0',
+        },
+      },
     };
 
     expect(
@@ -169,6 +183,14 @@ describe('swapSlice', () => {
       independentField: 'INPUT',
       recipient: null,
       slippage: 1,
+      txFeeCalculation: {
+        gasPriceInfo: {
+          label: '',
+          range: '-- / -- - 0.00 Gwei',
+          timeLabel: '',
+          price: '0',
+        },
+      },
     });
   });
 

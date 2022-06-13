@@ -15,10 +15,12 @@ import { SlippageButtonsGroup, StyledToggleButtonGroup } from '../Buttons/Slippa
 import GasStation from '../icons/GasStation';
 import SlippageWaves from '../icons/SlippageWaves';
 import Modal, { ModalHeaderType } from '../Modal';
+import UseRadioGroup from '../UseRadioGroup';
 
 interface SettingsModalProps {
   isOpen: boolean;
   goBack: () => void;
+  gasOptions: any;
 }
 
 interface SettingsModeProps {
@@ -62,7 +64,7 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
   );
 };
 
-const SettingsModal = ({ isOpen, goBack }: SettingsModalProps) => {
+const SettingsModal = ({ gasOptions, isOpen, goBack }: SettingsModalProps) => {
   const { slippage } = useAppSelector((state) => state.swap);
   const [mode, setMode] = useState<'basic' | 'advanced'>('basic');
 
@@ -97,6 +99,7 @@ const SettingsModal = ({ isOpen, goBack }: SettingsModalProps) => {
         </AccordionSummary>
         <AccordionDetails>
           <SettingsMode mode={mode} handleChangeMode={handleChangeMode} />
+          {mode === 'basic' ? <UseRadioGroup gasOptions={gasOptions} /> : null}
         </AccordionDetails>
       </Accordion>
       <Accordion

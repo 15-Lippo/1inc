@@ -18,21 +18,25 @@ export async function getTokenInfo(
   chainId: number,
   addresses: string[],
   spender: string
-): Promise<IUserTokenInfo> {
+): Promise<Promise<IUserTokenInfo> | undefined> {
   const tokenHelper = getContract(
     TOKEN_HELPER_ADDRESS[chainId as SupportedChainId],
     TokenHelper.abi,
     lib
   );
-  const tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
-  const result: IUserTokenInfo = {};
-  for (let i = 0; i < addresses.length; i++) {
-    result[addresses[i]] = {
-      balance: tokenInfo[i].balance.toString(),
-      allowance: tokenInfo[i].allowance.toString(),
-    };
+  try {
+    const tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
+    const result: IUserTokenInfo = {};
+    for (let i = 0; i < addresses.length; i++) {
+      result[addresses[i]] = {
+        balance: tokenInfo[i].balance.toString(),
+        allowance: tokenInfo[i].allowance.toString(),
+      };
+    }
+    return result;
+  } catch (e) {
+    console.error('Attempt to batchTokenInfo failed: ', e);
   }
-  return result;
 }
 
 const chunkArray = (list: any[], chunkSize: number) => {
@@ -68,6 +72,7 @@ export async function getTokenBalances(
 
   const promises = [];
   for (const chunk of chunks) {
+    // After the first connect to ethereum mainnet fork all promises will return not right away. Please connect wallet an wait (5-10 min)
     promises.push(await getTokenInfo(lib, account, chainId, chunk, spender));
   }
   const result = await Promise.all(promises);
