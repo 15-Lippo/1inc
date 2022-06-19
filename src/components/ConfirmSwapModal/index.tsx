@@ -104,7 +104,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
   }));
 
-  const { typedValue, swapInfo, slippage, tokenPriceInUsd, txFeeCalculation } = useAppSelector(
+  const { typedValue, swapInfo, slippage, txFeeCalculation } = useAppSelector(
     (state) => state.swap
   );
 
@@ -180,13 +180,9 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
   }, [countdown]);
 
   const inputUsdcPrice =
-    tokenPriceInUsd &&
-    tokenPriceInUsd.input &&
-    parseFloat(formatUnits(tokenPriceInUsd.input, 6)).toFixed(2);
+    INPUT?.priceInUsd && parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2);
   const outputUsdcPrice =
-    tokenPriceInUsd &&
-    tokenPriceInUsd.output &&
-    parseFloat(formatUnits(tokenPriceInUsd.output, 6)).toFixed(2);
+    OUTPUT?.priceInUsd && parseFloat(formatUnits(OUTPUT?.priceInUsd, 6)).toFixed(2);
 
   return isOpen ? (
     <>
@@ -234,7 +230,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
                   1 {INPUT && INPUT.symbol} price
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  {tokenPriceInUsd ? (
+                  {inputUsdcPrice ? (
                     <Typography
                       variant="rxs12"
                       sx={{
@@ -284,7 +280,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
                   1 {OUTPUT && OUTPUT.symbol} price
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  {tokenPriceInUsd ? (
+                  {outputUsdcPrice ? (
                     <Typography
                       variant="rxs12"
                       sx={{

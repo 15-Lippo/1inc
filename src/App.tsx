@@ -12,8 +12,10 @@ import RateSection from './components/RateSection';
 import SendBox from './components/SendBox';
 import SettingsModal from './components/SettingsModal';
 import WalletConnect from './components/WalletConnect';
+import { FAVORITE_TOKENS } from './constants';
 import { SupportedChainId } from './constants/chains';
 import { SupportedGasOptions, useGasPriceOptions } from './hooks/useGasPriceOptions';
+import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus } from './store/state/approve/approveSlice';
 import { useApproval } from './store/state/approve/hooks';
@@ -40,6 +42,7 @@ function App() {
     tokensList: state.tokens.tokens,
     lastTxHash: state.transactions.lastTxHash,
   }));
+  const [, setFavoriteTokens] = useLocalStorage('favorite-tokens', FAVORITE_TOKENS);
 
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -67,6 +70,7 @@ function App() {
   }, [addresses.length, INPUT, OUTPUT]);
 
   useEffect(() => {
+    if (!localStorage.getItem('favorite-tokens')) setFavoriteTokens(FAVORITE_TOKENS);
     dispatch(setExplorer({ chainId: chainId || SupportedChainId.MAINNET }));
   }, [chainId]);
 

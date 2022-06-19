@@ -1,11 +1,16 @@
-import { Box, InputAdornment, TextField } from '@mui/material';
+import { Box, Divider, InputAdornment, Stack, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
+import { FAVORITE_TOKENS } from '../../constants';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, selectCurrency } from '../../store/state/swap/swapSlice';
-import { Token } from '../../store/state/tokens/tokensSlice';
+import { onPinnedToken, Token } from '../../store/state/tokens/tokensSlice';
+import { useTokenPriceInUsd } from '../../store/state/tokens/useTokenPriceInUsd';
 import Modal, { ModalHeaderType } from '../Modal';
+import PinnedToken from '../PinnedToken';
 import VirtualizedTokenList from '../VirtualizedTokenList';
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -37,19 +42,28 @@ export interface SelectTokenModalProps {
 }
 
 const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => {
+  const { chainId } = useWeb3React();
   const dispatch = useAppDispatch();
-  const { tokensList, tokenOnField, inputBalance } = useAppSelector((state) => ({
+  const { tokensList, tokenOnField, inputBalance, tokens } = useAppSelector((state) => ({
     tokensList: Object.values(state.tokens.tokens),
     tokenOnField: state.swap[field],
     inputBalance: state.tokens.tokens[state.swap[field]]?.userBalance || '0',
+    tokens: state.tokens.tokens,
   }));
+  const [favoriteTokens, setFavoriteTokens] = useLocalStorage('favorite-tokens', FAVORITE_TOKENS);
   const [data, setData] = useState<Token[]>([]);
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
+  const { balancesInUsd, priceTokenInUsd } = useTokenPriceInUsd({ isBalanceInUsd: true });
 
   useEffect(() => {
     setData(tokensList);
-  }, [tokensList.length, inputBalance]);
+  }, [tokensList.length, inputBalance, priceTokenInUsd]);
+
+  useEffect(() => {
+    if (!data.length || !chainId) return;
+    balancesInUsd();
+  }, [isOpen]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -82,6 +96,23 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
     closeModal();
   };
 
+  const onPinToken = (address: string) => {
+    if (chainId && favoriteTokens[chainId].length === 8) return;
+    chainId && favoriteTokens[chainId].push(address);
+    setFavoriteTokens({ ...favoriteTokens });
+    dispatch(onPinnedToken({ key: address, pinned: true }));
+  };
+
+  const onUnpinToken = (address: string) => {
+    chainId &&
+      favoriteTokens[chainId].splice(
+        favoriteTokens[chainId].findIndex((tokenAddress: string) => tokenAddress === address),
+        1
+      );
+    setFavoriteTokens({ ...favoriteTokens });
+    dispatch(onPinnedToken({ key: address, pinned: false }));
+  };
+
   return (
     <Modal headerType={ModalHeaderType.SelectToken} closeModal={closeModal} isOpen={isOpen}>
       <Box
@@ -109,10 +140,30 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
           margin="dense"
           fullWidth
         />
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 0 12px' }}>
+          {chainId
+            ? favoriteTokens[chainId].map((key: string) => (
+                <PinnedToken
+                  key={tokens[key].address}
+                  id={tokens[key].address}
+                  symbol={tokens[key].symbol}
+                  logo={tokens[key].logoURI}
+                  onChoose={onChoose}
+                  onUnpin={onUnpinToken}
+                />
+              ))
+            : null}
+        </Stack>
       </Box>
+      <Divider variant="middle" sx={{ borderColor: 'cool.300' }} />
       <VirtualizedTokenList
         tokensList={!searchValue ? data : filteredResults}
         onChoose={onChoose}
+        onPinToken={onPinToken}
+        onUnpinToken={onUnpinToken}
         selectedValue={tokenOnField}
       />
     </Modal>

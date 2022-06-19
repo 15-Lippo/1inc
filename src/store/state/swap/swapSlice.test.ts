@@ -5,11 +5,6 @@ export const initialState = swapInitialState;
 const restValues = {
   loading: 'idle',
   loadingQuote: 'idle',
-  tokenPriceInUsd: {
-    input: '',
-    output: '',
-    perNativeToken: '',
-  },
   txFeeCalculation: {
     gasPriceInfo: {
       label: '',

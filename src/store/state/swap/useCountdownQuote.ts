@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY } from '../../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useTokenPriceInUsd } from '../tokens/useTokenPriceInUsd';
 import { fetchQuote, Field } from './swapSlice';
 
 function useInterval(callback: any, delay: number) {
@@ -35,6 +36,7 @@ export const useCountdownQuote = () => {
     typedValue: state.swap.typedValue || '0',
     gasLimit: state.swap.txFeeCalculation?.gasLimit,
   }));
+  const { balancesInUsd } = useTokenPriceInUsd({ isMainModalTokenPriceInUsd: true });
   const [countdown, setCountdown] = useState<number>(REFRESH_QUOTE_DELAY);
 
   useEffect(() => {
@@ -51,17 +53,14 @@ export const useCountdownQuote = () => {
 
       dispatch(
         fetchQuote({
-          quoteInfo: {
-            fromTokenAddress: INPUT.address,
-            toTokenAddress: OUTPUT.address,
-            amount: typedValue,
-            gasLimit,
-          },
-          isTokenPriceInUsd: true,
-          fromTokenDecimals: INPUT.decimals,
-          toTokenDecimals: OUTPUT.decimals,
+          fromTokenAddress: INPUT.address,
+          toTokenAddress: OUTPUT.address,
+          amount: typedValue,
+          gasLimit,
         })
       );
+
+      balancesInUsd();
     }
   }, 1000);
 

@@ -18,7 +18,7 @@ const SendBox = () => {
       INPUT: state.tokens.tokens[state.swap.INPUT],
       status: state.approve.approveAllowanceInfo.status,
       typedValue: state.swap.typedValue,
-      inputTokenPriceInUsd: state.swap.tokenPriceInUsd?.input,
+      inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
       loadingQuote: state.swap.loadingQuote,
       explorer: state.user.explorer,
     }));

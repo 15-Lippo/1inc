@@ -1,27 +1,34 @@
-import { formatUnits } from '@ethersproject/units';
+import { BigNumber } from '@ethersproject/bignumber';
+import { commify, formatUnits } from '@ethersproject/units';
 import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
 import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { Token } from '../../store/state/tokens/tokensSlice';
+import PinButton from '../Buttons/PinButton';
 
 export interface VirtualizedTokenListProps {
   tokensList: Token[];
   selectedValue?: string;
   onChoose: (val: string) => void;
+  onPinToken: (val: string) => void;
+  onUnpinToken: (val: string) => void;
 }
 
 const VirtualizedTokenList = ({
   tokensList,
   selectedValue,
   onChoose,
+  onPinToken,
+  onUnpinToken,
 }: VirtualizedTokenListProps) => {
   function renderRow({ index, style }: ListChildComponentProps) {
-    const { symbol, name, logoURI, userBalance, address, decimals } = tokensList[index];
+    const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd } = tokensList[index];
 
-    const handleClick = () => {
-      onChoose(tokensList[index].address);
-    };
+    const balanceInUsd =
+      Number(userBalance) && Number(priceInUsd)
+        ? formatUnits(BigNumber.from(userBalance).mul(BigNumber.from(priceInUsd)), decimals + 6)
+        : '0';
 
     return (
       <ListItem
@@ -33,8 +40,9 @@ const VirtualizedTokenList = ({
         style={style}
         key={index}
         component="div"
+        secondaryAction={<PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />}
         disablePadding>
-        <ListItemButton onClick={handleClick} disabled={address === selectedValue}>
+        <ListItemButton onClick={() => onChoose(address)} disabled={address === selectedValue}>
           <ListItemAvatar>
             <Avatar src={logoURI} alt={symbol} />
           </ListItemAvatar>
@@ -48,18 +56,28 @@ const VirtualizedTokenList = ({
               color: 'dark.700',
             }}
             primary={name}
-            secondary={symbol}
+            secondary={`${
+              Number(userBalance)
+                ? `${parseFloat(formatUnits(userBalance || '0x00', decimals)).toFixed(4)}`
+                : ''
+            } ${symbol}`}
           />
           <ListItemText
             sx={{
-              flexDirection: 'row-reverse',
               display: 'flex',
+              flexDirection: 'row-reverse',
+              marginBottom: '21px',
             }}
             primaryTypographyProps={{
               typography: 'rm16',
               color: 'dark.900',
+              lineHeight: '19px',
             }}
-            primary={Number(userBalance) ? `${formatUnits(userBalance || '0x00', decimals)}` : ''}
+            primary={
+              Number(userBalance)
+                ? `$${balanceInUsd && commify(parseFloat(balanceInUsd).toFixed(2))}`
+                : '0'
+            }
           />
         </ListItemButton>
       </ListItem>

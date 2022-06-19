@@ -11,15 +11,9 @@ import SelectTokenModal from '../SelectTokenModal';
 const GetBox = () => {
   const { estimateGasLimit } = useCalculateTxCost();
   const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
-  const {
-    quoteInfo,
-    typedValue,
-    loadingQuote,
-    swapInfo,
-    tokenPriceInUsd,
-    txFeeCalculation,
-    OUTPUT,
-  } = useAppSelector((state) => state.swap);
+  const { quoteInfo, typedValue, loadingQuote, swapInfo, txFeeCalculation, OUTPUT } =
+    useAppSelector((state) => state.swap);
+  const tokens = useAppSelector((state) => state.tokens.tokens);
   const explorer = useAppSelector((state) => state.user.explorer);
 
   useEffect(() => {
@@ -33,17 +27,13 @@ const GetBox = () => {
   const txCostInTokenInput =
     txFeeCalculation?.txFee && parseFloat(formatUnits(txFeeCalculation?.txFee, 'ether')).toFixed(4);
 
-  const txCostInUsdPerToken = () => {
-    if (swapInfo?.fromToken?.address === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-      if (!tokenPriceInUsd?.input) return;
-      return parseFloat(formatUnits(tokenPriceInUsd?.input, 6)).toFixed(2);
-    } else {
-      if (!tokenPriceInUsd?.perNativeToken) return;
-      return parseFloat(formatUnits(tokenPriceInUsd?.perNativeToken, 6)).toFixed(2);
-    }
-  };
+  const txCostInUsdPerNativeToken =
+    tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']?.priceInUsd &&
+    parseFloat(
+      formatUnits(tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']?.priceInUsd, 6)
+    ).toFixed(2);
 
-  const txCostInUsd = Number(txCostInTokenInput) * Number(txCostInUsdPerToken());
+  const txCostInUsd = Number(txCostInTokenInput) * Number(txCostInUsdPerNativeToken);
 
   return (
     <Box

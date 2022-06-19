@@ -9,6 +9,8 @@ export interface IUserTokenInfo {
   [address: string]: {
     balance: string;
     allowance: string;
+    pinned: boolean;
+    priceInUsd?: string;
   };
 }
 
@@ -19,6 +21,8 @@ export async function getTokenInfo(
   addresses: string[],
   spender: string
 ): Promise<Promise<IUserTokenInfo> | undefined> {
+  //@ts-ignore
+  const favoriteTokens = JSON.parse(localStorage.getItem('favorite-tokens'));
   const tokenHelper = getContract(
     TOKEN_HELPER_ADDRESS[chainId as SupportedChainId],
     TokenHelper.abi,
@@ -31,6 +35,8 @@ export async function getTokenInfo(
       result[addresses[i]] = {
         balance: tokenInfo[i].balance.toString(),
         allowance: tokenInfo[i].allowance.toString(),
+        pinned: favoriteTokens[chainId].includes(addresses[i]),
+        priceInUsd: '',
       };
     }
     return result;

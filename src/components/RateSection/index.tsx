@@ -11,16 +11,13 @@ import { LightTooltip } from '../LightTooltip';
 
 const RateSection = () => {
   const { account } = useWeb3React();
-  const { INPUT, OUTPUT, inputAmount, outputAmount, loadingQuote, usdcPrice } = useAppSelector(
-    (state) => ({
-      INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
-      OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
-      inputAmount: state.swap.typedValue || '0',
-      outputAmount: state.swap.quoteInfo?.toTokenAmount || '0',
-      loadingQuote: state.swap.loadingQuote,
-      usdcPrice: state.swap.tokenPriceInUsd,
-    })
-  );
+  const { INPUT, OUTPUT, inputAmount, outputAmount, loadingQuote } = useAppSelector((state) => ({
+    INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
+    OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
+    inputAmount: state.swap.typedValue || '0',
+    outputAmount: state.swap.quoteInfo?.toTokenAmount || '0',
+    loadingQuote: state.swap.loadingQuote,
+  }));
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
   const [loading, setLoading] = useState<boolean>(true);
@@ -42,8 +39,13 @@ const RateSection = () => {
       : setLoading(true);
   }, [account, outputPrice]);
 
-  const outputInUsd =
-    usdcPrice && usdcPrice.output ? parseFloat(formatUnits(usdcPrice.output, 6)).toFixed(2) : '0';
+  const inputInUsd = INPUT?.priceInUsd
+    ? parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2)
+    : '0';
+
+  const outputInUsd = OUTPUT?.priceInUsd
+    ? parseFloat(formatUnits(OUTPUT?.priceInUsd, 6)).toFixed(2)
+    : '0';
 
   return (
     <Stack
@@ -72,7 +74,7 @@ const RateSection = () => {
               sx={{
                 lineHeight: '19px',
               }}>{`1 ${OUTPUT.symbol} = ${outputPrice} ${INPUT.symbol} ${
-              usdcPrice && `(~$${outputInUsd})`
+              OUTPUT?.priceInUsd && `(~$${outputInUsd})`
             }`}</Typography>
             <LightTooltip
               leaveDelay={200}
@@ -89,13 +91,13 @@ const RateSection = () => {
                     alignItems="center"
                     spacing={2}>
                     <Typography variant="rxs12">{`1 ${INPUT.symbol} price`}</Typography>
-                    {usdcPrice && (
+                    {INPUT?.priceInUsd && (
                       <Typography
                         variant="rxs12"
                         sx={{
                           color: 'dark.700',
                         }}>
-                        ~${parseFloat(formatUnits(usdcPrice.input, 6)).toFixed(2)}
+                        ~${inputInUsd}
                       </Typography>
                     )}
                     <Typography variant="rxs12">{`${inputPrice} ${
@@ -108,13 +110,13 @@ const RateSection = () => {
                     alignItems="center"
                     spacing={2}>
                     <Typography variant="rxs12">{`1 ${OUTPUT.symbol} price`}</Typography>
-                    {usdcPrice && (
+                    {OUTPUT?.priceInUsd && (
                       <Typography
                         variant="rxs12"
                         sx={{
                           color: 'dark.700',
                         }}>
-                        ~${parseFloat(formatUnits(usdcPrice.output, 6)).toFixed(2)}
+                        ~${outputInUsd}
                       </Typography>
                     )}
                     <Typography variant="rxs12">{` ${outputPrice}  ${

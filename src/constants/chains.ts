@@ -6,6 +6,7 @@ export enum SupportedChainId {
   BINANCE = 56,
   AVALANCHE = 43114,
   FANTOM = 250,
+  GNOSIS = 100,
   LOCALHOST = 1337,
 }
 

@@ -1,4 +1,3 @@
-import { parseUnits } from '@ethersproject/units';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   QuoteResponseDto,
@@ -11,75 +10,11 @@ import { SwapApi } from '../../../api';
 
 export const fetchQuote = createAsyncThunk(
   'swap/getQuoteInfo',
-  async (
-    param: {
-      quoteInfo: SwapFactoryCommonControllerGetQuoteRequest;
-      isTokenPriceInUsd?: boolean;
-      fromTokenDecimals: number;
-      toTokenDecimals?: number;
-    },
-    { getState }
-  ) => {
-    const state: any = getState();
-    const [, usdcToken]: any = Object.entries(state.tokens.tokens).find(
-      // @ts-ignore
-      ([, token]) => token.name === 'USD Coin'
-    );
-
-    const price = {
-      input: '',
-      output: '',
-      perNativeToken: '',
-    };
-
+  async (quoteInfo: SwapFactoryCommonControllerGetQuoteRequest) => {
     try {
-      const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(param.quoteInfo);
-
-      const responseInfo = await JSONApiResponse.raw.json();
-
-      if (param.quoteInfo.fromTokenAddress !== '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee') {
-        const PerEthJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
-          fromTokenAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-          toTokenAddress: usdcToken?.address,
-          amount: parseUnits('1', param.fromTokenDecimals).toString(),
-        });
-
-        const responseEthPrice =
-          param.isTokenPriceInUsd && (await PerEthJSONApiResponseUsdc.raw.json());
-        price.perNativeToken = responseEthPrice?.toTokenAmount;
-      }
-
-      if (param.quoteInfo.fromTokenAddress === usdcToken?.address) {
-        price.input = '1000000';
-      } else {
-        // get price for 1 token:
-        const InputJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
-          fromTokenAddress: param.quoteInfo.fromTokenAddress,
-          toTokenAddress: usdcToken?.address,
-          amount: parseUnits('1', param.fromTokenDecimals).toString(),
-        });
-        const responseInputPrice =
-          param.isTokenPriceInUsd && (await InputJSONApiResponseUsdc.raw.json());
-        price.input = responseInputPrice?.toTokenAmount;
-      }
-
-      if (param.quoteInfo.toTokenAddress === usdcToken?.address) {
-        price.output = '1000000';
-      } else {
-        const OutputJSONApiResponseUsdc = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
-          fromTokenAddress: param.quoteInfo.toTokenAddress,
-          toTokenAddress: usdcToken?.address,
-          amount: parseUnits('1', param.toTokenDecimals).toString(),
-        });
-        const responseOutputPrice =
-          param.isTokenPriceInUsd && (await OutputJSONApiResponseUsdc.raw.json());
-        price.output = responseOutputPrice?.toTokenAmount;
-      }
-
-      return {
-        info: responseInfo,
-        price,
-      };
+      const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(quoteInfo);
+      const response = await JSONApiResponse.raw.json();
+      return response;
     } catch (error) {
       console.error(error);
     }
@@ -114,11 +49,6 @@ export interface SwapState {
   readonly recipient: string | null;
   readonly quoteInfo?: QuoteResponseDto;
   readonly swapInfo?: SwapResponseDto;
-  readonly tokenPriceInUsd?: {
-    readonly input: string;
-    readonly output: string;
-    readonly perNativeToken: string;
-  };
   readonly txFeeCalculation: {
     readonly gasPriceInfo: {
       label: string;
@@ -188,11 +118,6 @@ export const initialState: SwapState = {
       gasPrice: '',
       gas: '',
     },
-  },
-  tokenPriceInUsd: {
-    input: '',
-    output: '',
-    perNativeToken: '',
   },
   txFeeCalculation: {
     gasPriceInfo: {
@@ -289,8 +214,7 @@ const swapSlice = createSlice({
     });
     user.addCase(fetchQuote.fulfilled, (state, action) => {
       if (action.payload) {
-        state.quoteInfo = action.payload.info;
-        state.tokenPriceInUsd = action.payload.price;
+        state.quoteInfo = action.payload;
         state.loadingQuote = 'succeeded';
       }
     });
