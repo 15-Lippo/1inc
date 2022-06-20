@@ -2,16 +2,19 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
 import { ApproveStatus } from '../../store/state/approve/approveSlice';
 import { Field } from '../../store/state/swap/swapSlice';
 import SelectTokenButton from '../Buttons/SelectTokenButton';
 import InputAmount from '../InputAmount';
-import SelectTokenModal from '../SelectTokenModal';
 
-const SendBox = () => {
+interface SendBoxProps {
+  onSelectToken: () => void;
+}
+
+const SendBox = ({ onSelectToken }: SendBoxProps) => {
   const { account } = useWeb3React();
   const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer } =
     useAppSelector((state) => ({
@@ -22,7 +25,6 @@ const SendBox = () => {
       loadingQuote: state.swap.loadingQuote,
       explorer: state.user.explorer,
     }));
-  const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
 
   const LockIcon = (
     <svg width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,10 +42,6 @@ const SendBox = () => {
       />
     </svg>
   );
-
-  const onCloseListModal = () => {
-    setSelectTokenModal(false);
-  };
 
   const userBalance = useMemo(() => {
     if (!INPUT) return '0';
@@ -99,9 +97,9 @@ const SendBox = () => {
         sx={{
           alignItems: 'center',
           display: 'flex',
-          margin: '6px 0 6px -6px',
+          margin: '6px 0 6px -9px',
         }}>
-        <SelectTokenButton onClick={() => setSelectTokenModal(true)} field={Field.INPUT} />
+        <SelectTokenButton onClick={onSelectToken} field={Field.INPUT} />
         <Box>{status === ApproveStatus.APPROVAL_NEEDED && LockIcon}</Box>
         <InputAmount inputId={Field.INPUT} />
       </Box>
@@ -129,12 +127,6 @@ const SendBox = () => {
           />
         )}
       </Box>
-
-      <SelectTokenModal
-        field={Field.INPUT}
-        onClose={onCloseListModal}
-        isOpen={isOpenSelectTokenModal}
-      />
     </Box>
   );
 };

@@ -16,7 +16,9 @@ export const fetchQuote = createAsyncThunk(
       const response = await JSONApiResponse.raw.json();
       return response;
     } catch (error) {
-      console.error(error);
+      // @ts-ignore
+      const e = await error.json();
+      return e;
     }
   }
 );
@@ -62,7 +64,7 @@ export interface SwapState {
   };
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
-  readonly error?: any;
+  readonly quoteError?: any;
 }
 
 export const initialState: SwapState = {
@@ -126,13 +128,13 @@ export const initialState: SwapState = {
       timeLabel: '',
       price: '0',
     },
-    gasLimit: '100000',
+    gasLimit: '130000',
     maxFeePerGas: '',
     txFee: '',
   },
   loading: 'idle',
   loadingQuote: 'idle',
-  error: null,
+  quoteError: null,
 };
 
 const swapSlice = createSlice({
@@ -210,12 +212,19 @@ const swapSlice = createSlice({
       state.loadingQuote = 'pending';
     });
     user.addCase(fetchQuote.rejected, (state, action) => {
-      state.loadingQuote = 'failed';
+      if (state.loadingQuote === 'pending') {
+        state.loadingQuote = 'idle';
+        state.quoteError = action.error;
+      }
     });
     user.addCase(fetchQuote.fulfilled, (state, action) => {
-      if (action.payload) {
-        state.quoteInfo = action.payload;
+      if (action.payload?.statusCode && action.payload?.statusCode !== 200) {
+        state.loadingQuote = 'failed';
+        state.quoteError = action.payload.description;
+      } else {
         state.loadingQuote = 'succeeded';
+        state.quoteError = null;
+        state.quoteInfo = action.payload;
       }
     });
     user.addCase(fetchSwap.fulfilled, (state, action) => {

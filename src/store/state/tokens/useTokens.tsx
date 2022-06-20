@@ -13,6 +13,10 @@ export const useTokens = () => {
     // tokenInfoFetched: state.tokens.tokenInfoFetched,
     spender: state.approve.spender,
   }));
+
+  // track count of tokens to update balances after an import new custom token to the main list
+  const countOfTokens = Object.keys(tokens).length;
+
   const addresses = useMemo(() => Object.keys(tokens), [JSON.stringify(tokens)]);
 
   useEffect(() => {
@@ -33,7 +37,7 @@ export const useTokens = () => {
 
     getBalances();
     console.log('...balances');
-  }, [account, spender.address, chainId]);
+  }, [account, spender.address, chainId, countOfTokens]);
 
   return { tokens, addresses };
 };

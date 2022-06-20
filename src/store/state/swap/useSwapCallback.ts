@@ -19,6 +19,7 @@ export function useSwapCallback(swapTxInfo: TransactionRequest) {
     if (!chainId || !INPUT || !OUTPUT || !account) return;
 
     try {
+      dispatch(setTxErrorMessage(''));
       dispatch(setIsWaitingTx(true));
       const signer = library.getSigner(account);
       const tx = await signer.sendTransaction(swapTxInfo);

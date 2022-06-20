@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setSlippage } from '../../../store/state/swap/swapSlice';
 import theme from '../../../theme/config';
-import { StyledTextField } from '../../SelectTokenModal';
+import { StyledSearchField } from '../../SelectTokenModal';
 import SlippageWarningMsg from '../../SlippageWarningMsg';
 
 export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
@@ -104,7 +104,7 @@ export const SlippageButtonsGroup = () => {
             3%
           </ToggleButton>
         </StyledToggleButtonGroup>
-        <StyledTextField
+        <StyledSearchField
           InputProps={{ inputProps: { min: 0, max: 50 } }}
           value={customSlippage}
           sx={{

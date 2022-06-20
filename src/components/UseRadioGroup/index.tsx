@@ -35,11 +35,11 @@ const StyledFormControlLabel = styled((props: FormControlLabelProps) => (
   padding: '15px',
   backgroundColor: theme.palette.cool[100],
   marginBottom: '1px',
-  '&:first-child': {
+  '&:first-of-type': {
     borderTopLeftRadius: '12px',
     borderTopRightRadius: '12px',
   },
-  '&:last-child': {
+  '&:last-of-type': {
     borderBottomLeftRadius: '12px',
     borderBottomRightRadius: '12px',
   },

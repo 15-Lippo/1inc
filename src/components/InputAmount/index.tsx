@@ -17,7 +17,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
       border: 'none',
     },
     '& .MuiOutlinedInput-input': {
-      paddingRight: '0',
+      padding: '0',
       textAlign: 'right',
     },
   },

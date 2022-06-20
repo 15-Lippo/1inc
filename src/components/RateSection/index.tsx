@@ -55,7 +55,7 @@ const RateSection = () => {
       spacing={1}
       sx={{
         color: 'dark.700',
-        mb: '24px',
+        mb: '8px',
       }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
         <Typography variant="rxs12">Rate</Typography>
@@ -90,7 +90,7 @@ const RateSection = () => {
                     justifyContent="space-between"
                     alignItems="center"
                     spacing={2}>
-                    <Typography variant="rxs12">{`1 ${INPUT.symbol} price`}</Typography>
+                    <Typography variant="rxs12">{`${INPUT.symbol} price`}</Typography>
                     {INPUT?.priceInUsd && (
                       <Typography
                         variant="rxs12"
@@ -109,7 +109,7 @@ const RateSection = () => {
                     justifyContent="space-between"
                     alignItems="center"
                     spacing={2}>
-                    <Typography variant="rxs12">{`1 ${OUTPUT.symbol} price`}</Typography>
+                    <Typography variant="rxs12">{`${OUTPUT.symbol} price`}</Typography>
                     {OUTPUT?.priceInUsd && (
                       <Typography
                         variant="rxs12"
@@ -120,7 +120,7 @@ const RateSection = () => {
                       </Typography>
                     )}
                     <Typography variant="rxs12">{` ${outputPrice}  ${
-                      OUTPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol
+                      OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol
                     }`}</Typography>
                   </Stack>
                 </Stack>

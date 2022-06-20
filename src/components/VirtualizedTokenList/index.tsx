@@ -1,21 +1,34 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { commify, formatUnits } from '@ethersproject/units';
-import { Avatar, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+} from '@mui/material';
 import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { Token } from '../../store/state/tokens/tokensSlice';
 import PinButton from '../Buttons/PinButton';
+import NoLogoURI from '../icons/NoLogoURI';
+import NoTokenFoundIcon from '../icons/NoTokenFoundIcon';
 
 export interface VirtualizedTokenListProps {
+  loading?: boolean;
   tokensList: Token[];
   selectedValue?: string;
-  onChoose: (val: string) => void;
-  onPinToken: (val: string) => void;
-  onUnpinToken: (val: string) => void;
+  onChoose?: (val: string) => void;
+  onPinToken?: (val: string) => void;
+  onUnpinToken?: (val: string) => void;
 }
 
 const VirtualizedTokenList = ({
+  loading,
   tokensList,
   selectedValue,
   onChoose,
@@ -23,8 +36,16 @@ const VirtualizedTokenList = ({
   onUnpinToken,
 }: VirtualizedTokenListProps) => {
   function renderRow({ index, style }: ListChildComponentProps) {
-    const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd } = tokensList[index];
+    const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd, button } =
+      tokensList[index];
 
+    const handleClick = () => {
+      // ListItemButton must be unavailable until the token object has an import button
+      if (button?.label) return;
+      if (onChoose) {
+        onChoose(tokensList[index].address);
+      }
+    };
     const balanceInUsd =
       Number(userBalance) && Number(priceInUsd)
         ? formatUnits(BigNumber.from(userBalance).mul(BigNumber.from(priceInUsd)), decimals + 6)
@@ -40,15 +61,20 @@ const VirtualizedTokenList = ({
         style={style}
         key={index}
         component="div"
-        secondaryAction={<PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />}
+        secondaryAction={
+          onPinToken &&
+          onUnpinToken && <PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />
+        }
         disablePadding>
-        <ListItemButton onClick={() => onChoose(address)} disabled={address === selectedValue}>
-          <ListItemAvatar>
-            <Avatar src={logoURI} alt={symbol} />
-          </ListItemAvatar>
+        <ListItemButton onClick={handleClick} disabled={address === selectedValue}>
+          {address && (
+            <ListItemAvatar>
+              {logoURI ? <Avatar src={logoURI} alt={symbol} /> : <NoLogoURI />}
+            </ListItemAvatar>
+          )}
           <ListItemText
             primaryTypographyProps={{
-              typography: 'rm16',
+              typography: 'mm16',
               color: 'dark.900',
             }}
             secondaryTypographyProps={{
@@ -74,20 +100,62 @@ const VirtualizedTokenList = ({
               lineHeight: '19px',
             }}
             primary={
-              Number(userBalance)
+              button?.label
+                ? ''
+                : Number(userBalance)
                 ? `$${balanceInUsd && commify(parseFloat(balanceInUsd).toFixed(2))}`
                 : '0'
             }
           />
+          {button && (
+            <Button
+              variant="contained"
+              sx={{
+                '&.MuiButton-root': {
+                  backgroundColor: 'blue.500',
+                },
+                '&:hover': {
+                  backgroundColor: 'blue.70',
+                  boxShadow: 'none',
+                },
+                borderRadius: '8px',
+                textTransform: 'none',
+                boxShadow: 'none',
+              }}
+              onClick={() => button.handleClick(tokensList[index])}>
+              {button.label}
+            </Button>
+          )}
         </ListItemButton>
       </ListItem>
     );
   }
 
   return (
-    <FixedSizeList height={400} width={'100%'} itemSize={72} itemCount={tokensList.length}>
-      {renderRow}
-    </FixedSizeList>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        overflow: 'scroll',
+      }}>
+      {loading ? (
+        <Box
+          sx={{
+            height: '100%',
+            alignItems: 'center',
+            display: 'flex',
+          }}>
+          <CircularProgress sx={{ color: 'blue.500' }} />
+        </Box>
+      ) : tokensList.length ? (
+        <FixedSizeList height={400} width={'100%'} itemSize={72} itemCount={tokensList.length}>
+          {renderRow}
+        </FixedSizeList>
+      ) : (
+        <NoTokenFoundIcon />
+      )}
+    </Box>
   );
 };
 

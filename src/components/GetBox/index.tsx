@@ -1,16 +1,18 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
 import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
 import SelectTokenButton from '../Buttons/SelectTokenButton';
-import SelectTokenModal from '../SelectTokenModal';
 
-const GetBox = () => {
+interface GetBoxProps {
+  onSelectToken: () => void;
+}
+
+const GetBox = ({ onSelectToken }: GetBoxProps) => {
   const { estimateGasLimit } = useCalculateTxCost();
-  const [isOpenSelectTokenModal, setSelectTokenModal] = useState<boolean>(false);
   const { quoteInfo, typedValue, loadingQuote, swapInfo, txFeeCalculation, OUTPUT } =
     useAppSelector((state) => state.swap);
   const tokens = useAppSelector((state) => state.tokens.tokens);
@@ -19,10 +21,6 @@ const GetBox = () => {
   useEffect(() => {
     if (swapInfo && swapInfo?.tx?.data) estimateGasLimit();
   }, [swapInfo?.tx?.data]);
-
-  const onCloseListModal = () => {
-    setSelectTokenModal(false);
-  };
 
   const txCostInTokenInput =
     txFeeCalculation?.txFee && parseFloat(formatUnits(txFeeCalculation?.txFee, 'ether')).toFixed(4);
@@ -40,7 +38,7 @@ const GetBox = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        padding: '15px',
+        padding: '15px 15px 8px',
         margin: '13px 0',
         border: '1px solid',
         borderColor: 'cool.100',
@@ -59,9 +57,9 @@ const GetBox = () => {
 
       <Box
         sx={{
-          margin: '10px 0 24px -6px',
+          margin: '10px 0 24px -9px',
         }}>
-        <SelectTokenButton onClick={() => setSelectTokenModal(true)} field={Field.OUTPUT} />
+        <SelectTokenButton onClick={onSelectToken} field={Field.OUTPUT} />
       </Box>
 
       <Box
@@ -72,7 +70,7 @@ const GetBox = () => {
           border: '1px solid',
           borderColor: 'blue.500',
           borderRadius: '8px 12px 12px 12px',
-          padding: '17px',
+          padding: '17px 12px 12px',
           color: 'dark.900',
         }}>
         <Box
@@ -143,12 +141,6 @@ const GetBox = () => {
           )}
         </Box>
       </Box>
-
-      <SelectTokenModal
-        field={Field.OUTPUT}
-        onClose={onCloseListModal}
-        isOpen={isOpenSelectTokenModal}
-      />
     </Box>
   );
 };

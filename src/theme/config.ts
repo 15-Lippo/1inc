@@ -16,6 +16,7 @@ declare module '@mui/material/Typography' {
     // medium
     mxlg20: true;
     mlg18: true;
+    mm16: true;
 
     //semi-bold
     sblg18: true;
@@ -34,6 +35,7 @@ interface ExtendedTypographyOptions extends TypographyOptions {
   // medium
   mxlg20: CSSProperties;
   mlg18: CSSProperties;
+  mm16: CSSProperties;
 
   //semi-bold
   sblg18: CSSProperties;
@@ -55,11 +57,13 @@ declare module '@mui/material/styles' {
     blue: {
       700: CSSProperties['color'];
       500: CSSProperties['color'];
+      70: CSSProperties['color'];
       40: CSSProperties['color'];
       16: CSSProperties['color'];
     };
     red: {
       500: CSSProperties['color'];
+      70: CSSProperties['color'];
       16: CSSProperties['color'];
     };
     yellow: {
@@ -88,11 +92,13 @@ declare module '@mui/material/styles' {
     blue: {
       700: CSSProperties['color'];
       500: CSSProperties['color'];
+      70: CSSProperties['color'];
       40: CSSProperties['color'];
       16: CSSProperties['color'];
     };
     red: {
       500: CSSProperties['color'];
+      70: CSSProperties['color'];
       16: CSSProperties['color'];
     };
     yellow: {
@@ -199,11 +205,13 @@ const theme = createTheme({
     blue: {
       700: '#0056B3',
       500: '#2F8AF5',
+      70: 'rgba(47,138,245,0.7)',
       40: 'rgba(47,138,245,0.4)',
       16: 'rgba(47,138,245,0.16)',
     },
     red: {
       500: '#E3402A',
+      70: 'rgba(227, 64, 42, 0.7)',
       16: 'rgba(193,61,84,0.16)',
     },
     yellow: {
@@ -211,7 +219,7 @@ const theme = createTheme({
       20: 'rgba(255, 156, 8, 0.2)',
     },
     green: {
-      500: '#00897B',
+      500: 'rgba(0, 137, 123, 1)',
     },
     gradient: {
       500: 'linear-gradient(270deg, rgba(3, 97, 206, 0.49) 0%, #2F8AF5 51.04%, #0FBEE4 100%)',
@@ -247,6 +255,10 @@ const theme = createTheme({
     mlg18: {
       fontWeight: 500,
       fontSize: '18px',
+    },
+    mm16: {
+      fontWeight: 500,
+      fontSize: '16px',
     },
     sblg18: {
       fontWeight: 600,

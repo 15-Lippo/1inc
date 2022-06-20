@@ -193,22 +193,28 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
           setQuoteUpdated(false);
         }}
         isOpen={isOpen}>
-        <Stack direction="column">
-          <Box>
+        <Box
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}>
+          <Stack direction="column">
             <SwapTokenBox
               field={Field.INPUT}
               token={INPUT}
               amount={formatUnits(typedValue || '0x00')}
               usdcPrice={inputUsdcPrice}
             />
-            <Box
-              sx={{
+            <SwitchTokensIcon
+              style={{
                 position: 'absolute',
                 left: '50%',
+                top: '31.5%',
                 transform: 'translate(-50%, -50%)',
-              }}>
-              <SwitchTokensIcon />
-            </Box>
+              }}
+            />
             <SwapTokenBox
               field={Field.OUTPUT}
               token={OUTPUT}
@@ -330,8 +336,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
                   Gas price
                 </Typography>
                 <Typography variant="rxs12" lineHeight="14px">
-                  {parseFloat(formatUnits(swapInfo?.tx?.gasPrice || '0x00', 'gwei')).toFixed(2)}{' '}
-                  Gwei
+                  {parseFloat(formatUnits(gasPriceInfo?.price || '0x00', 'gwei')).toFixed(2)} Gwei
                 </Typography>
               </Stack>
 
@@ -362,18 +367,16 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
                   </Typography>
                 </Box>
               </Stack>
+              <hr
+                color="#E3E7EE"
+                style={{
+                  margin: '19px 0',
+                  height: '1px',
+                  borderWidth: 0,
+                }}
+              />
             </Stack>
-            <svg
-              style={{
-                marginBottom: '10px',
-              }}
-              height="1"
-              viewBox="0 0 386 1"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <rect width="386" height="1" fill="#E3E7EE" />
-            </svg>
-          </Box>
+          </Stack>
           {refreshTimeInterval || quoteUpdated ? (
             <Stack direction="column" spacing={1}>
               <RefreshRateWarningMsg
@@ -397,7 +400,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
               />
             )
           )}
-        </Stack>
+        </Box>
       </Modal>
       <Modal
         goBack={() => setSlippageModalOpen(false)}
@@ -406,7 +409,9 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
           minHeight: '537px',
         }}
         headerType={ModalHeaderType.Slippage}>
-        <SlippageButtonsGroup />
+        <Box sx={{ height: '100%' }}>
+          <SlippageButtonsGroup />
+        </Box>
       </Modal>
       <SignTxModal />
       <TxSentModal />

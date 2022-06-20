@@ -77,77 +77,84 @@ const SettingsModal = ({ gasOptions, isOpen, goBack }: SettingsModalProps) => {
 
   return (
     <Modal headerType={ModalHeaderType.AdvancedSettings} isOpen={isOpen} goBack={goBack}>
-      <Accordion
-        defaultExpanded
+      <Box
         sx={{
-          mt: '15px',
+          overflow: 'scroll',
+          MsOverflowStyle: 'none' /* Internet Explorer 10+ */,
+          scrollbarWidth: 'none',
         }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="slippage-accordion">
-          <>
-            <GasStation />
-            <Typography
-              sx={{
-                marginLeft: '5px',
-              }}
-              variant="rm16">
-              Gas price
-            </Typography>
-          </>
-        </AccordionSummary>
-        <AccordionDetails>
-          <SettingsMode mode={mode} handleChangeMode={handleChangeMode} />
-          {mode === 'basic' ? <UseRadioGroup gasOptions={gasOptions} /> : null}
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        defaultExpanded
-        sx={{
-          mt: '15px',
-        }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="slippage-accordion">
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-              mr: '5px',
-            }}>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-              }}>
-              <SlippageWaves />
+        <Accordion
+          defaultExpanded
+          sx={{
+            mt: '15px',
+          }}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="slippage-accordion">
+            <>
+              <GasStation />
               <Typography
                 sx={{
                   marginLeft: '5px',
                 }}
+                variant="sbm16">
+                Gas price
+              </Typography>
+            </>
+          </AccordionSummary>
+          <AccordionDetails>
+            <SettingsMode mode={mode} handleChangeMode={handleChangeMode} />
+            {mode === 'basic' ? <UseRadioGroup gasOptions={gasOptions} /> : null}
+          </AccordionDetails>
+        </Accordion>
+        <Accordion
+          defaultExpanded
+          sx={{
+            mt: '15px',
+          }}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="slippage-accordion">
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                mr: '5px',
+              }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}>
+                <SlippageWaves />
+                <Typography
+                  sx={{
+                    marginLeft: '5px',
+                  }}
+                  variant="sbm16">
+                  Slippage tolerance
+                </Typography>
+              </Box>
+              <Typography
+                sx={{
+                  typography: 'rsm14',
+                  color: 'dark.700',
+                  marginLeft: '5px',
+                }}
                 variant="rm16">
-                Slippage tolerance
+                {slippage}%
               </Typography>
             </Box>
-            <Typography
-              sx={{
-                typography: 'rsm14',
-                color: 'dark.700',
-                marginLeft: '5px',
-              }}
-              variant="rm16">
-              {slippage}%
-            </Typography>
-          </Box>
-        </AccordionSummary>
-        <AccordionDetails>
-          <SlippageButtonsGroup />
-        </AccordionDetails>
-      </Accordion>
+          </AccordionSummary>
+          <AccordionDetails>
+            <SlippageButtonsGroup />
+          </AccordionDetails>
+        </Accordion>
+      </Box>
     </Modal>
   );
 };

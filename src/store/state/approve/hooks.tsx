@@ -16,6 +16,7 @@ import {
 export function useApproval() {
   const dispatch = useAppDispatch();
   const { library, account, chainId } = useWeb3React();
+  const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const { INPUT, typedValue, approveTransactionInfo, approveAllowanceInfo, spender } =
     useAppSelector((state) => ({
       typedValue: state.swap.typedValue,
@@ -61,9 +62,14 @@ export function useApproval() {
     if (!approveTransactionInfo.data || !account || !chainId || !INPUT.address) return;
 
     try {
+      dispatch(setTxErrorMessage(''));
       dispatch(setIsWaitingTx(true));
       const signer = library.getSigner(account).connectUnchecked();
-      const tx = await signer.sendTransaction(approveTransactionInfo);
+      const txData = {
+        ...approveTransactionInfo,
+        gasPrice: gasPriceInfo?.price,
+      };
+      const tx = await signer.sendTransaction(txData);
 
       await tx.wait();
 

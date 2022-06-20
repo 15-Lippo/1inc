@@ -37,13 +37,7 @@ const TxSentModal = () => {
 
   return (
     <Modal headerType={ModalHeaderType.Sent} isOpen={!!txHash} closeModal={closeModal}>
-      <Stack
-        sx={{
-          m: '52px 0 159px',
-        }}
-        direction="column"
-        justifyContent="space-between"
-        alignItems="center">
+      <Stack direction="column" justifyContent="space-between" alignItems="center">
         {SentArray}
         <Typography
           sx={{

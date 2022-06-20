@@ -3,12 +3,14 @@ import './App.css';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
+import AddTokenModal from './components/AddTokenModal';
 import MainButton, { MainButtonType } from './components/Buttons/MainButton';
 import SwitchTokensButton from './components/Buttons/SwitchTokensButton';
 import ConfirmSwapModal from './components/ConfirmSwapModal';
 import GetBox from './components/GetBox';
 import Modal, { ModalHeaderType } from './components/Modal';
 import RateSection from './components/RateSection';
+import SelectTokenModal from './components/SelectTokenModal';
 import SendBox from './components/SendBox';
 import SettingsModal from './components/SettingsModal';
 import WalletConnect from './components/WalletConnect';
@@ -35,7 +37,8 @@ function App() {
   const { addresses } = useTokens();
   const { status, approve } = useApproval();
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
-  const { INPUT, OUTPUT, typedValue, tokensList } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, typedValue, tokensList, quoteError } = useAppSelector((state) => ({
+    quoteError: state.swap.quoteError,
     INPUT: state.swap.INPUT,
     OUTPUT: state.swap.OUTPUT,
     typedValue: state.swap.typedValue,
@@ -46,6 +49,11 @@ function App() {
 
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
+  const [isAddTokenOpen, setAddTokenOpen] = useState<boolean>(false);
+  const [isSelectTokenOpen, setSelectTokenOpen] = useState({
+    field: Field.INPUT,
+    open: false,
+  });
 
   useEffect(() => {
     // Set default high gas price option:
@@ -79,6 +87,7 @@ function App() {
 
     if (!account) return <WalletConnect />;
     if (!Number(typedValue)) return <MainButton type={MainButtonType.EnterAmount} />;
+    if (quoteError && account) return <MainButton type={MainButtonType.Error} />;
     if (status === ApproveStatus.APPROVAL_NEEDED)
       return <MainButton type={MainButtonType.Approve} onClick={approve} />;
     if (Number(typedValue) > Number(balance))
@@ -93,12 +102,28 @@ function App() {
         isOpen
         hide={isConfirmOpen || isSettingsOpen}
         openSettings={() => setSettingsOpen(true)}>
-        <SendBox />
-        <SwitchTokensButton />
-        <GetBox />
+        <>
+          <SendBox onSelectToken={() => setSelectTokenOpen({ field: Field.INPUT, open: true })} />
+          <SwitchTokensButton />
+          <GetBox onSelectToken={() => setSelectTokenOpen({ field: Field.OUTPUT, open: true })} />
+        </>
         <RateSection />
         {mainButtonByType()}
       </Modal>
+      <SelectTokenModal
+        field={isSelectTokenOpen.field}
+        onClose={() => setSelectTokenOpen({ ...isSelectTokenOpen, open: false })}
+        isOpen={isSelectTokenOpen.open}
+        onOpenCustomToken={() => {
+          setSelectTokenOpen({ ...isSelectTokenOpen, open: false });
+          setAddTokenOpen(true);
+        }}
+      />
+      <AddTokenModal
+        field={isSelectTokenOpen.field}
+        goBack={() => setAddTokenOpen(false)}
+        isOpen={isAddTokenOpen}
+      />
       <Modal
         headerType={ModalHeaderType.AdvancedSettings}
         isOpen={isSettingsOpen}

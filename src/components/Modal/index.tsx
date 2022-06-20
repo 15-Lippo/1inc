@@ -18,6 +18,8 @@ export enum ModalHeaderType {
   GasPrice = 'Gas price',
   SelectToken = 'Select a token',
   AdvancedSettings = 'Advanced settings',
+  AddToken = 'Add a token',
+  Import = 'Import a token',
 }
 
 export interface ModalProps {
@@ -47,24 +49,25 @@ const Modal = ({
     <Box
       sx={{
         ...sx,
-        display: hide ? 'none' : '',
+        width: 'inherit',
+        height: 'inherit',
+        justifyContent:
+          headerType === ModalHeaderType.AdvancedSettings ? 'flex-start' : 'space-between',
+        flexDirection: 'column',
+        display: hide ? 'none' : 'flex',
         boxShadow: '0px 12px 24px #E2E9F6',
         borderRadius: '24px',
         position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
         bgcolor: 'background.default',
         zIndex: '1',
-        padding: headerType === ModalHeaderType.SelectToken ? '11px 0 14px' : '11px 16px 14px',
+        padding:
+          headerType === ModalHeaderType.SelectToken || headerType === ModalHeaderType.AddToken
+            ? '11px 0'
+            : '11px 16px 14px',
         boxSizing: 'border-box',
       }}>
       {headerType === ModalHeaderType.Main ? (
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          marginBottom="7px">
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography
             sx={{
               typography: 'sbm16',
@@ -95,7 +98,10 @@ const Modal = ({
             display: 'flex',
             alignItems: 'center',
             height: '2.5em',
-            m: headerType === ModalHeaderType.SelectToken ? '0 16px' : '',
+            m:
+              headerType === ModalHeaderType.SelectToken || headerType === ModalHeaderType.AddToken
+                ? '0 16px'
+                : '0 0 20px',
           }}>
           {goBack && (
             <Box sx={{ position: 'absolute' }}>

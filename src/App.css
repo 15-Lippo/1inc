@@ -1,9 +1,5 @@
 /* USE THESE STYLES FOR ONLY FOR DEVELOPMENT */
 #root {
   width: 418px;
-  position: relative;
-  margin-top: 100px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: 537px;
 }

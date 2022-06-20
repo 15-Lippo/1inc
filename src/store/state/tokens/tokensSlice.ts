@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
 import { ProtocolsResponseDto } from '@yozh-io/1inch-widget-api-client';
 
-import { InfoApi } from '../../../api';
+// @ts-ignore
+import { CoinsApi, InfoApi } from '../../../api';
 import { MAIN_TOKENS } from '../../../constants';
+import { LocalStorageKeys } from '../../../utils/localStorageKeys';
 
 export interface Token {
   symbol: string;
@@ -14,7 +16,40 @@ export interface Token {
   userAllowance?: string;
   pinned?: boolean;
   priceInUsd?: string;
+  button?: any;
 }
+
+export const fetchCoinInfoById = createAsyncThunk(
+  'tokens/getCoinInfo',
+  async (coinName: string) => {
+    try {
+      const id = coinName.replace(/\s+/g, '-').toLowerCase();
+
+      const params = {
+        localization: 'false',
+        tickets: false,
+        marketData: false,
+        communityData: false,
+        developerData: false,
+        sparkline: false,
+      };
+
+      const JSONApiResponse = await CoinsApi.coinsIdGet(
+        id,
+        params.localization,
+        params.tickets,
+        params.marketData,
+        params.communityData,
+        params.developerData,
+        params.sparkline
+      );
+
+      return await JSONApiResponse.json();
+    } catch (e) {
+      console.error(e);
+    }
+  }
+);
 
 export const fetchLiquiditySources = createAsyncThunk(
   'tokens/getLiquiditySourcesInfo',
@@ -33,23 +68,29 @@ export const fetchTokens = createAsyncThunk(
   'tokens/getTokensInfo',
   async (userData, { rejectWithValue }) => {
     try {
+      const existingTokens =
+        // @ts-ignore
+        JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
+
       const JSONApiResponse = await InfoApi.chainTokensControllerGetTokensRaw();
       const response = await JSONApiResponse.raw.json();
 
-      const sortable = await Object.entries(response.tokens).sort(([, a], [, b]) => {
-        // @ts-ignore
-        const fa = a.name,
+      const sortable = await Object.entries({ ...response.tokens, ...existingTokens }).sort(
+        ([, a], [, b]) => {
           // @ts-ignore
-          fb = b.name;
+          const fa = a.name,
+            // @ts-ignore
+            fb = b.name;
 
-        if (MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
-        if (MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
+          if (MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
+          if (MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
 
-        // compare ignoring case:
-        if (fa.localeCompare(fb) > 0) return 1;
-        if (fa.localeCompare(fb) < 0) return -1;
-        return 0;
-      });
+          // compare ignoring case:
+          if (fa.localeCompare(fb) > 0) return 1;
+          if (fa.localeCompare(fb) < 0) return -1;
+          return 0;
+        }
+      );
 
       return sortable.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
     } catch (error) {
@@ -72,6 +113,10 @@ export const fetchPresets = createAsyncThunk(
 );
 
 export interface TokensState {
+  lastImportedTokenInfo: {
+    image: '';
+    loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+  };
   // eslint-disable-next-line @typescript-eslint/ban-types
   tokens: { [key: string]: Token };
   fetchingTokens: boolean;
@@ -81,6 +126,10 @@ export interface TokensState {
 }
 
 export const initialState: TokensState = {
+  lastImportedTokenInfo: {
+    image: '',
+    loading: 'idle',
+  },
   tokens: {},
   fetchingTokens: false,
   tokenInfoFetched: false,
@@ -92,6 +141,16 @@ const tokensSlice = createSlice({
   name: 'tokens',
   initialState,
   reducers: {
+    addTokenToAllTokens(state, action) {
+      const { tokens } = state;
+      return {
+        ...state,
+        tokens: {
+          ...tokens,
+          [action.payload.address]: action.payload,
+        },
+      };
+    },
     updateAllTokenBalances(state, action) {
       const { tokens } = state;
       for (const address in action.payload) {
@@ -129,19 +188,16 @@ const tokensSlice = createSlice({
     },
     updateTokenInfo(state, action) {
       const { tokens } = state;
-      console.log('==> payload: ', action.payload);
 
       const native = '0x0000000000000000000000000000000000000000';
+      const inchNative = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
       const tokenAddress = Object.keys(action.payload)[0];
 
       if (tokenAddress === native) {
-        tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userBalance =
-          action.payload[native].balance;
-        tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userAllowance =
-          action.payload[native].allowance;
-        tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].pinned = action.payload[native].pinned;
-        tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].priceInUsd =
-          action.payload[native].priceInUsd;
+        tokens[inchNative].userBalance = action.payload[native].balance;
+        tokens[inchNative].userAllowance = action.payload[native].allowance;
+        tokens[inchNative].pinned = action.payload[native].pinned;
+        tokens[inchNative].priceInUsd = action.payload[native].priceInUsd;
       } else {
         tokens[tokenAddress].userBalance = action.payload[tokenAddress].balance;
         tokens[tokenAddress].userAllowance = action.payload[tokenAddress].allowance;
@@ -181,6 +237,27 @@ const tokensSlice = createSlice({
     },
   },
   extraReducers: (tokens) => {
+    tokens.addCase(fetchCoinInfoById.fulfilled, (state, action) => {
+      if (action.payload) {
+        const { image } = action.payload;
+        state.lastImportedTokenInfo = {
+          image: image?.large || image?.small || image?.thumb,
+          loading: 'succeeded',
+        };
+      }
+    });
+    tokens.addCase(fetchCoinInfoById.pending, (state, action) => {
+      state.lastImportedTokenInfo = {
+        image: '',
+        loading: 'pending',
+      };
+    });
+    tokens.addCase(fetchCoinInfoById.rejected, (state, action) => {
+      state.lastImportedTokenInfo = {
+        image: '',
+        loading: 'failed',
+      };
+    });
     tokens.addCase(fetchLiquiditySources.fulfilled, (state, action) => {
       state.liquiditySourcesInfo = action.payload;
     });
@@ -200,8 +277,13 @@ const tokensSlice = createSlice({
   },
 });
 
-export const { updateAllTokenBalances, updateTokenInfo, onPinnedToken, updatePriceTokenInUsd } =
-  tokensSlice.actions;
+export const {
+  addTokenToAllTokens,
+  updateAllTokenBalances,
+  updateTokenInfo,
+  onPinnedToken,
+  updatePriceTokenInUsd,
+} = tokensSlice.actions;
 
 const { reducer } = tokensSlice;
 

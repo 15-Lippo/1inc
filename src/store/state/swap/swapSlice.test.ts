@@ -12,12 +12,12 @@ const restValues = {
       timeLabel: '',
       price: '0',
     },
-    gasLimit: '100000',
+    gasLimit: '130000',
     maxFeePerGas: '',
     txFee: '',
   },
   slippage: 1,
-  error: null,
+  quoteError: null,
   quoteInfo: {
     fromToken: {
       symbol: '',

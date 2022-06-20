@@ -1,4 +1,4 @@
-import { CircularProgress, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -26,27 +26,22 @@ const SignTxModal = () => {
       headerType={txErrorMessage ? ModalHeaderType.Failed : ModalHeaderType.Sign}
       isOpen={isWaitingTx}
       closeModal={closeModal}>
-      <Stack
+      <Box
         sx={{
-          m: '52px 0 110px',
-        }}
-        direction="column"
-        justifyContent="space-between"
-        alignItems="center">
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
         {txErrorMessage ? <TxFailedIcon /> : <StyledCircularProgress size={94} thickness={2} />}
-        <Typography
-          align="center"
-          variant="rm16"
-          sx={{
-            mt: '52px',
-            color: txErrorMessage ? 'red.500' : 'dark.900',
-          }}>
-          {txErrorMessage ? txErrorMessage : 'Please, sign transaction in your wallet'}
-        </Typography>
-      </Stack>
-      <Stack>
-        <MainButton type={MainButtonType.Close} onClick={closeModal} />
-      </Stack>
+      </Box>
+      <Typography
+        align="center"
+        variant="rm16"
+        sx={{
+          color: txErrorMessage ? 'red.500' : 'dark.900',
+        }}>
+        {txErrorMessage ? txErrorMessage : 'Please, sign transaction in your wallet'}
+      </Typography>
+      <MainButton type={MainButtonType.Close} onClick={closeModal} />
     </Modal>
   );
 };

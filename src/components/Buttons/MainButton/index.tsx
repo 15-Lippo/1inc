@@ -18,6 +18,8 @@ export enum MainButtonType {
   InsufficientBalance,
   Loading,
   Explorer,
+  Import,
+  Error,
 }
 
 const styledButtonType = {
@@ -52,11 +54,22 @@ const styledButtonType = {
       background: theme.palette.gradient[52],
     },
   }),
+  [MainButtonType.Import]: (theme: Theme) => ({
+    background: theme.palette.blue[500],
+    color: theme.palette.common.white,
+    '&:hover': {
+      background: theme.palette.blue[70],
+    },
+  }),
   [MainButtonType.Refresh]: (theme: Theme, rateExpired?: boolean) => ({
     background: rateExpired ? theme.palette.red[500] : theme.palette.blue[500],
     color: theme.palette.common.white,
     '&:hover': {
-      background: rateExpired ? theme.palette.red[500] : theme.palette.blue[500],
+      background: rateExpired ? theme.palette.red[70] : theme.palette.blue[70],
+    },
+    '&:disabled': {
+      background: theme.palette.cool[100],
+      color: theme.palette.dark[500],
     },
   }),
   [MainButtonType.Confirm]: (theme: Theme) => ({
@@ -97,6 +110,12 @@ const styledButtonType = {
       background: theme.palette.blue[500],
     },
   }),
+  [MainButtonType.Error]: (theme: Theme) => ({
+    '&:disabled': {
+      background: theme.palette.cool[100],
+      color: theme.palette.dark[500],
+    },
+  }),
 };
 
 const StyledMainButton = styled(LoadingButton)<{
@@ -123,8 +142,9 @@ const MainButton = ({
   explorerName,
   sx,
 }: MainButtonProps) => {
-  const { token } = useAppSelector((state) => {
+  const { token, quoteError } = useAppSelector((state) => {
     return {
+      quoteError: state.swap.quoteError,
       token: state.tokens.tokens[state.swap[Field.INPUT]],
     };
   });
@@ -157,6 +177,8 @@ const MainButton = ({
     [MainButtonType.InsufficientBalance]: `Insufficient ${token && token.symbol} balance`,
     [MainButtonType.Loading]: '',
     [MainButtonType.Explorer]: `View on ${explorerName}`,
+    [MainButtonType.Import]: 'Import',
+    [MainButtonType.Error]: `${quoteError}`,
   };
 
   return (
@@ -177,6 +199,7 @@ const MainButton = ({
       loading={type === MainButtonType.Loading}
       loadingIndicator={<CircularProgress size={30} />}
       disabled={
+        type === MainButtonType.Error ||
         type === MainButtonType.EnterAmount ||
         type === MainButtonType.InsufficientBalance ||
         disabled

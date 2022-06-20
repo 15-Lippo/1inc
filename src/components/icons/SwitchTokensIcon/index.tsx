@@ -1,7 +1,12 @@
-const SwitchTokensIcon = () => {
+import { CSSProperties } from 'react';
+interface IconProps {
+  style?: CSSProperties | undefined;
+}
+const SwitchTokensIcon = ({ style }: IconProps) => {
   return (
     <svg
       style={{
+        ...style,
         transition: 'transform .4s ease-in-out',
       }}
       id="switch-tokens"

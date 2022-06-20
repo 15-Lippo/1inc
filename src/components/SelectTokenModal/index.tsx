@@ -9,11 +9,12 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, selectCurrency } from '../../store/state/swap/swapSlice';
 import { onPinnedToken, Token } from '../../store/state/tokens/tokensSlice';
 import { useTokenPriceInUsd } from '../../store/state/tokens/useTokenPriceInUsd';
+import AddToken from '../Buttons/AddToken';
 import Modal, { ModalHeaderType } from '../Modal';
 import PinnedToken from '../PinnedToken';
 import VirtualizedTokenList from '../VirtualizedTokenList';
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledSearchField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: theme.palette.cool[100],
     '& ::placeholder': {
@@ -39,10 +40,11 @@ export interface SelectTokenModalProps {
   isOpen: boolean;
   onClose: () => void;
   field: Field;
+  onOpenCustomToken: () => void;
 }
 
-const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => {
-  const { chainId } = useWeb3React();
+const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectTokenModalProps) => {
+  const { account, chainId } = useWeb3React();
   const dispatch = useAppDispatch();
   const { tokensList, tokenOnField, inputBalance, tokens } = useAppSelector((state) => ({
     tokensList: Object.values(state.tokens.tokens),
@@ -69,14 +71,14 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
     const { value } = e.target;
     setSearchValue(value);
     const filteredData = data.filter((item) => {
-      if (value.startsWith('0x0')) {
-        return item.address.toLowerCase().startsWith(value.toLowerCase());
+      if (value.startsWith('0x')) {
+        return item.address.toLowerCase().includes(value.toLowerCase());
+      } else {
+        return (
+          item.name.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.symbol.toLowerCase().startsWith(value.toLowerCase())
+        );
       }
-
-      return (
-        item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-        item.symbol.toLowerCase().startsWith(value.toLowerCase())
-      );
     });
     setFilteredResults(filteredData);
   };
@@ -119,7 +121,7 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
         sx={{
           m: '0 16px',
         }}>
-        <StyledTextField
+        <StyledSearchField
           id="search-token"
           variant="outlined"
           aria-label="search-token"
@@ -166,6 +168,32 @@ const SelectTokenModal = ({ isOpen, onClose, field }: SelectTokenModalProps) => 
         onUnpinToken={onUnpinToken}
         selectedValue={tokenOnField}
       />
+      {searchValue && !filteredResults.length && (
+        <Box
+          sx={{
+            width: 'inherit',
+            position: 'absolute',
+            left: '50%',
+            bottom: -5,
+            transform: 'translate(-50%, -50%)',
+          }}>
+          <hr
+            color="#E3E7EE"
+            style={{
+              margin: 0,
+              height: '1px',
+              borderWidth: 0,
+            }}
+          />
+          <AddToken
+            walletIsConnected={!!account}
+            onClick={() => {
+              setSearchValue('');
+              onOpenCustomToken();
+            }}
+          />
+        </Box>
+      )}
     </Modal>
   );
 };
