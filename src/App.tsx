@@ -134,7 +134,11 @@ function App() {
         isOpen={isSettingsOpen}
         goBack={() => setSettingsOpen(false)}
       />
-      <ConfirmSwapModal goBack={() => setConfirmModalOpen(false)} isOpen={isConfirmOpen} />
+      <ConfirmSwapModal
+        goBack={() => setConfirmModalOpen(false)}
+        isOpen={isConfirmOpen}
+        gasOptions={gasOptions}
+      />
     </>
   );
 }

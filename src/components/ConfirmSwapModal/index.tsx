@@ -10,6 +10,7 @@ import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import { SlippageButtonsGroup } from '../Buttons/SlippageButtonsGroup';
+import GasPriceOptions from '../GasPriceOptions';
 import SwitchTokensIcon from '../icons/SwitchTokensIcon';
 import Modal, { ModalHeaderType } from '../Modal';
 import RefreshRateWarningMsg from '../RefreshRateWarningMsg';
@@ -19,6 +20,7 @@ import TxSentModal from '../TxSentModal';
 export interface SelectTokenModalProps {
   isOpen: boolean;
   goBack: () => void;
+  gasOptions: any;
 }
 interface SwapTokenBoxProps {
   field: Field;
@@ -94,7 +96,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
   );
 };
 
-const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
+const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps) => {
   const dispatch = useAppDispatch();
   const { account } = useWeb3React();
   const { countdown, reset } = useCountdownQuote();
@@ -111,6 +113,7 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
   const [slippageModalOpen, setSlippageModalOpen] = useState<boolean>(false);
+  const [gasPriceModalOpen, setGasPriceModalOpen] = useState<boolean>(false);
   const [isRefresh, setIsRefresh] = useState<boolean>(false);
   const [quoteUpdated, setQuoteUpdated] = useState<boolean>(false);
 
@@ -335,9 +338,19 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
                   }}>
                   Gas price
                 </Typography>
-                <Typography variant="rxs12" lineHeight="14px">
-                  {parseFloat(formatUnits(gasPriceInfo?.price || '0x00', 'gwei')).toFixed(2)} Gwei
-                </Typography>
+                <Box sx={{ display: 'flex', columnGap: '4px' }}>
+                  <Link
+                    variant="rxs12"
+                    lineHeight="14px"
+                    href="#"
+                    underline="none"
+                    onClick={() => setGasPriceModalOpen(true)}>
+                    Edit
+                  </Link>
+                  <Typography variant="rxs12" lineHeight="14px">
+                    {parseFloat(formatUnits(gasPriceInfo?.price || '0x00', 'gwei')).toFixed(2)} Gwei
+                  </Typography>
+                </Box>
               </Stack>
 
               <Stack
@@ -405,12 +418,17 @@ const ConfirmSwapModal = ({ isOpen, goBack }: SelectTokenModalProps) => {
       <Modal
         goBack={() => setSlippageModalOpen(false)}
         isOpen={slippageModalOpen}
-        sx={{
-          minHeight: '537px',
-        }}
         headerType={ModalHeaderType.Slippage}>
         <Box sx={{ height: '100%' }}>
           <SlippageButtonsGroup />
+        </Box>
+      </Modal>
+      <Modal
+        goBack={() => setGasPriceModalOpen(false)}
+        isOpen={gasPriceModalOpen}
+        headerType={ModalHeaderType.GasPrice}>
+        <Box sx={{ height: '100%' }}>
+          <GasPriceOptions gasOptions={gasOptions} />
         </Box>
       </Modal>
       <SignTxModal />
