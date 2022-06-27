@@ -125,6 +125,16 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
     setUnderstanding(!understanding);
   };
 
+  const onChoose = (address: string) => {
+    dispatch(
+      selectCurrency({
+        currency: address,
+        field,
+      })
+    );
+    closeAddTokenModal();
+  };
+
   const importToken = async () => {
     // button for import is no needed in the main token list
     if (tokenToImport.token.button) delete tokenToImport.token.button;
@@ -137,6 +147,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
 
     dispatch(addTokenToAllTokens(tokenToImport.token));
     closeImportConfirmationModal();
+    onChoose(tokenToImport.token.address);
   };
 
   const closeImportConfirmationModal = () => {
@@ -147,16 +158,6 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
     setSearchInput('');
     setSearchToken(null);
     goBack();
-  };
-
-  const onChoose = (address: string) => {
-    dispatch(
-      selectCurrency({
-        currency: address,
-        field,
-      })
-    );
-    closeAddTokenModal();
   };
 
   return (

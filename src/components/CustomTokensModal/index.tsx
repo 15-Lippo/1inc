@@ -77,6 +77,16 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
       );
   };
 
+  const onChoose = (address: string) => {
+    dispatch(
+      selectCurrency({
+        currency: address,
+        field: Field.INPUT,
+      })
+    );
+    goBack();
+  };
+
   return (
     <Modal
       onSearch={onSearch}
@@ -85,6 +95,7 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
       isOpen={isOpen}
       goBack={goBack}>
       <VirtualizedTokenList
+        onChoose={onChoose}
         onRemoveCustomToken={onRemoveCustomToken}
         tokensList={!searchValue ? tokensList : filteredResults}
       />
