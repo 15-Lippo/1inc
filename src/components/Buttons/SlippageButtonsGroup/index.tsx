@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setSlippage } from '../../../store/state/swap/swapSlice';
 import theme from '../../../theme/config';
-import { StyledSearchField } from '../../SelectTokenModal';
+import { StyledSearchField } from '../../Modal';
 import SlippageWarningMsg from '../../SlippageWarningMsg';
 
 export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({

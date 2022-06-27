@@ -13,7 +13,10 @@ import {
 import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
+import { useAppSelector } from '../../store/hooks';
 import { Token } from '../../store/state/tokens/tokensSlice';
+import CloseButton from '../Buttons/CloseButton';
+import LinkButton from '../Buttons/LinkButton';
 import PinButton from '../Buttons/PinButton';
 import NoLogoURI from '../icons/NoLogoURI';
 import NoTokenFoundIcon from '../icons/NoTokenFoundIcon';
@@ -25,6 +28,7 @@ export interface VirtualizedTokenListProps {
   onChoose?: (val: string) => void;
   onPinToken?: (val: string) => void;
   onUnpinToken?: (val: string) => void;
+  onRemoveCustomToken?: (val: string) => void;
 }
 
 const VirtualizedTokenList = ({
@@ -34,10 +38,17 @@ const VirtualizedTokenList = ({
   onChoose,
   onPinToken,
   onUnpinToken,
+  onRemoveCustomToken,
 }: VirtualizedTokenListProps) => {
+  const { explorer } = useAppSelector((state) => state.user);
+
   function renderRow({ index, style }: ListChildComponentProps) {
     const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd, button } =
       tokensList[index];
+
+    const openExplorer = () => {
+      window.open(`${explorer.link}/token/${address}`, '_blank');
+    };
 
     const handleClick = () => {
       // ListItemButton must be unavailable until the token object has an import button
@@ -62,8 +73,15 @@ const VirtualizedTokenList = ({
         key={index}
         component="div"
         secondaryAction={
-          onPinToken &&
-          onUnpinToken && <PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />
+          onRemoveCustomToken ? (
+            <>
+              <CloseButton size="28" onClick={() => onRemoveCustomToken(address)} />
+              <LinkButton onClick={openExplorer} />
+            </>
+          ) : (
+            onPinToken &&
+            onUnpinToken && <PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />
+          )
         }
         disablePadding>
         <ListItemButton onClick={handleClick} disabled={address === selectedValue}>
@@ -100,7 +118,7 @@ const VirtualizedTokenList = ({
               lineHeight: '19px',
             }}
             primary={
-              button?.label
+              button?.label || onRemoveCustomToken
                 ? ''
                 : Number(userBalance)
                 ? `$${balanceInUsd && commify(parseFloat(balanceInUsd).toFixed(2))}`

@@ -184,6 +184,36 @@ const theme = createTheme({
         },
       },
     },
+    MuiMenuList: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+          width: '100%',
+        },
+      },
+    },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: {
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          padding: '10px 0',
+          '&$selected': {
+            backgroundColor: 'transparent',
+          },
+          '&:hover': {
+            backgroundColor: 'transparent',
+          },
+        },
+      },
+    },
   },
   palette: {
     background: {

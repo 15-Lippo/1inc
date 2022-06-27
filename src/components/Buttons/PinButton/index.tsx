@@ -29,7 +29,7 @@ interface Props {
 }
 
 const PinButton = ({ id, onPin, onUnpin }: Props) => {
-  const pinned = useAppSelector((state) => state.tokens.tokens[id].pinned);
+  const pinned = useAppSelector((state) => state.tokens.tokens[id]?.pinned);
 
   return (
     <StyledIconButton id={id} edge="end" onClick={() => (pinned ? onUnpin(id) : onPin(id))}>

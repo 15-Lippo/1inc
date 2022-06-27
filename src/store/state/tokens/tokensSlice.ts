@@ -141,6 +141,20 @@ const tokensSlice = createSlice({
   name: 'tokens',
   initialState,
   reducers: {
+    removeTokenFromAllTokens(state, action) {
+      const { tokens } = state;
+      const filtered = {};
+      Object.keys(tokens).filter((prop) => {
+        if (prop !== action.payload) {
+          // @ts-ignore
+          return (filtered[prop] = tokens[prop]);
+        }
+      });
+      return {
+        ...state,
+        tokens: filtered,
+      };
+    },
     addTokenToAllTokens(state, action) {
       const { tokens } = state;
       return {
@@ -279,6 +293,7 @@ const tokensSlice = createSlice({
 
 export const {
   addTokenToAllTokens,
+  removeTokenFromAllTokens,
   updateAllTokenBalances,
   updateTokenInfo,
   onPinnedToken,

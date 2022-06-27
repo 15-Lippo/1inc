@@ -17,15 +17,16 @@ const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
 interface Props {
   disabled?: boolean;
   onClick: () => void;
+  size?: string;
 }
 
-const CloseButton = ({ disabled, onClick }: Props) => {
+const CloseButton = ({ disabled, onClick, size }: Props) => {
   return (
     <StyledIconButton disabled={disabled} disableRipple aria-label="close" onClick={onClick}>
       <svg
         id="close-button"
-        width="36"
-        height="36"
+        width={size}
+        height={size}
         viewBox="0 0 36 36"
         fill="none"
         xmlns="http://www.w3.org/2000/svg">
@@ -56,6 +57,7 @@ const CloseButton = ({ disabled, onClick }: Props) => {
 
 CloseButton.defaultProps = {
   disabled: false,
+  size: '36',
 };
 
 export default CloseButton;

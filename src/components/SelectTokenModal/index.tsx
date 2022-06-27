@@ -1,5 +1,4 @@
-import { Box, Divider, InputAdornment, Stack, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Divider, Stack } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
@@ -13,28 +12,6 @@ import AddToken from '../Buttons/AddToken';
 import Modal, { ModalHeaderType } from '../Modal';
 import PinnedToken from '../PinnedToken';
 import VirtualizedTokenList from '../VirtualizedTokenList';
-
-export const StyledSearchField = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
-    background: theme.palette.cool[100],
-    '& ::placeholder': {
-      opacity: 'none',
-      color: '#3E4D63',
-    },
-    borderRadius: '12px',
-    '& fieldset': {
-      color: theme.palette.dark[900],
-      borderRadius: '12px',
-      borderColor: theme.palette.cool[100],
-    },
-    '&:hover fieldset': {
-      borderColor: theme.palette.blue[500],
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.blue[500],
-    },
-  },
-}));
 
 export interface SelectTokenModalProps {
   isOpen: boolean;
@@ -116,50 +93,30 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   };
 
   return (
-    <Modal headerType={ModalHeaderType.SelectToken} closeModal={closeModal} isOpen={isOpen}>
-      <Box
-        sx={{
-          m: '0 16px',
-        }}>
-        <StyledSearchField
-          id="search-token"
-          variant="outlined"
-          aria-label="search-token"
-          type="search"
-          value={searchValue}
-          placeholder={'Search by name or paste address'}
-          onChange={onSearch}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <img
-                  alt="svgImg"
-                  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMzAiIGhlaWdodD0iMzAiCnZpZXdCb3g9IjAgMCAxNzIgMTcyIgpzdHlsZT0iIGZpbGw6IzAwMDAwMDsiPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIGZvbnQtZmFtaWx5PSJub25lIiBmb250LXdlaWdodD0ibm9uZSIgZm9udC1zaXplPSJub25lIiB0ZXh0LWFuY2hvcj0ibm9uZSIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0wLDE3MnYtMTcyaDE3MnYxNzJ6IiBmaWxsPSJub25lIj48L3BhdGg+PGcgZmlsbD0iIzliYWZjZCI+PHBhdGggZD0iTTc0LjUzMzMzLDE3LjJjLTMxLjU5NjQyLDAgLTU3LjMzMzMzLDI1LjczNjkyIC01Ny4zMzMzMyw1Ny4zMzMzM2MwLDMxLjU5NjQyIDI1LjczNjkyLDU3LjMzMzMzIDU3LjMzMzMzLDU3LjMzMzMzYzEzLjczOTk4LDAgMjYuMzU4MzQsLTQuODc5MTUgMzYuMjQ3NjYsLTEyLjk3ODM5bDM0LjIzMjAzLDM0LjIzMjAzYzEuNDM4MDIsMS40OTc3OCAzLjU3MzQsMi4xMDExMyA1LjU4MjYsMS41NzczNWMyLjAwOTIsLTAuNTIzNzggMy41NzgyNiwtMi4wOTI4NCA0LjEwMjA0LC00LjEwMjA0YzAuNTIzNzgsLTIuMDA5MiAtMC4wNzk1NywtNC4xNDQ1OCAtMS41NzczNSwtNS41ODI2bC0zNC4yMzIwMywtMzQuMjMyMDNjOC4wOTkyNCwtOS44ODkzMiAxMi45NzgzOSwtMjIuNTA3NjggMTIuOTc4MzksLTM2LjI0NzY2YzAsLTMxLjU5NjQyIC0yNS43MzY5MiwtNTcuMzMzMzMgLTU3LjMzMzMzLC01Ny4zMzMzM3pNNzQuNTMzMzMsMjguNjY2NjdjMjUuMzk5MzcsMCA0NS44NjY2NywyMC40NjczIDQ1Ljg2NjY3LDQ1Ljg2NjY3YzAsMjUuMzk5MzcgLTIwLjQ2NzI5LDQ1Ljg2NjY3IC00NS44NjY2Nyw0NS44NjY2N2MtMjUuMzk5MzcsMCAtNDUuODY2NjcsLTIwLjQ2NzI5IC00NS44NjY2NywtNDUuODY2NjdjMCwtMjUuMzk5MzcgMjAuNDY3MywtNDUuODY2NjcgNDUuODY2NjcsLTQ1Ljg2NjY3eiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+"
-                />
-              </InputAdornment>
-            ),
-          }}
-          margin="dense"
-          fullWidth
-        />
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 0 12px' }}>
-          {chainId
-            ? favoriteTokens[chainId].map((key: string) => (
-                <PinnedToken
-                  key={tokens[key].address}
-                  id={tokens[key].address}
-                  symbol={tokens[key].symbol}
-                  logo={tokens[key].logoURI}
-                  onChoose={onChoose}
-                  onUnpin={onUnpinToken}
-                />
-              ))
-            : null}
-        </Stack>
-      </Box>
+    <Modal
+      onSearch={onSearch}
+      searchValue={searchValue}
+      headerType={ModalHeaderType.SelectToken}
+      closeModal={closeModal}
+      isOpen={isOpen}>
+      <Stack
+        direction="row"
+        flexWrap="wrap"
+        sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 16px 12px' }}>
+        {chainId
+          ? favoriteTokens[chainId].map((key: string) => (
+              <PinnedToken
+                key={tokens[key].address}
+                id={tokens[key].address}
+                symbol={tokens[key].symbol}
+                logo={tokens[key].logoURI}
+                onChoose={onChoose}
+                onUnpin={onUnpinToken}
+              />
+            ))
+          : null}
+      </Stack>
+
       <Divider variant="middle" sx={{ borderColor: 'cool.300' }} />
       <VirtualizedTokenList
         tokensList={!searchValue ? data : filteredResults}

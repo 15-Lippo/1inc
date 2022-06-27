@@ -82,11 +82,20 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           underline="hover">
           You sell
         </Link>
-        {account && (
+        {account && !Number(userBalance) ? (
+          <Skeleton
+            sx={{
+              bgcolor: 'common.white',
+            }}
+            animation="wave"
+            width="100px"
+          />
+        ) : (
           <Typography
             variant="rxs12"
             sx={{
               color: 'dark.700',
+              lineHeight: '19px',
             }}>
             Balance: {userBalance}
           </Typography>
@@ -97,7 +106,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
         sx={{
           alignItems: 'center',
           display: 'flex',
-          margin: '6px 0 6px -9px',
+          margin: '0 0 6px -9px',
         }}>
         <SelectTokenButton onClick={onSelectToken} field={Field.INPUT} />
         <Box>{status === ApproveStatus.APPROVAL_NEEDED && LockIcon}</Box>

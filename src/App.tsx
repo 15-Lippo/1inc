@@ -14,7 +14,7 @@ import SelectTokenModal from './components/SelectTokenModal';
 import SendBox from './components/SendBox';
 import SettingsModal from './components/SettingsModal';
 import WalletConnect from './components/WalletConnect';
-import { FAVORITE_TOKENS } from './constants';
+import { DEFAULT_TOKENS, FAVORITE_TOKENS } from './constants';
 import { SupportedChainId } from './constants/chains';
 import { SupportedGasOptions, useGasPriceOptions } from './hooks/useGasPriceOptions';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -60,26 +60,28 @@ function App() {
     if (gasPriceInfo?.price === '0' || !gasPriceInfo?.price) {
       dispatch(setGasPriceInfo(gasOptions[SupportedGasOptions.High]));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gasOptions, blockNum]);
 
   useEffect(() => {
     const setDefaultTokens = () => {
-      const input = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
-      const output = '0x111111111117dc0aa78b770fa6a738034120c302';
-
-      if (input) dispatch(selectCurrency({ currency: input, field: Field.INPUT }));
-      if (output) dispatch(selectCurrency({ currency: output, field: Field.OUTPUT }));
+      if (DEFAULT_TOKENS[Field.INPUT])
+        dispatch(selectCurrency({ currency: DEFAULT_TOKENS[Field.INPUT], field: Field.INPUT }));
+      if (DEFAULT_TOKENS[Field.OUTPUT])
+        dispatch(selectCurrency({ currency: DEFAULT_TOKENS[Field.OUTPUT], field: Field.OUTPUT }));
     };
 
     if (!addresses.length) return;
     if (INPUT && OUTPUT) return;
     console.log('set default tokens ...');
     setDefaultTokens();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addresses.length, INPUT, OUTPUT]);
 
   useEffect(() => {
     if (!localStorage.getItem('favorite-tokens')) setFavoriteTokens(FAVORITE_TOKENS);
     dispatch(setExplorer({ chainId: chainId || SupportedChainId.MAINNET }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId]);
 
   const mainButtonByType = () => {
@@ -119,25 +121,26 @@ function App() {
           setAddTokenOpen(true);
         }}
       />
-      <AddTokenModal
-        field={isSelectTokenOpen.field}
-        goBack={() => setAddTokenOpen(false)}
-        isOpen={isAddTokenOpen}
-      />
       <Modal
         headerType={ModalHeaderType.AdvancedSettings}
         isOpen={isSettingsOpen}
         goBack={() => setSettingsOpen(false)}
       />
       <SettingsModal
+        onOpenAddCustomToken={() => setAddTokenOpen(true)}
         gasOptions={gasOptions}
         isOpen={isSettingsOpen}
         goBack={() => setSettingsOpen(false)}
       />
+      <AddTokenModal
+        field={isSelectTokenOpen.field}
+        goBack={() => setAddTokenOpen(false)}
+        isOpen={isAddTokenOpen}
+      />
       <ConfirmSwapModal
+        gasOptions={gasOptions}
         goBack={() => setConfirmModalOpen(false)}
         isOpen={isConfirmOpen}
-        gasOptions={gasOptions}
       />
     </>
   );
