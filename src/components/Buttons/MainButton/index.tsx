@@ -13,9 +13,11 @@ export enum MainButtonType {
   Swap,
   Approve,
   Refresh,
+  MustRefresh,
   Confirm,
   Close,
   InsufficientBalance,
+  InsufficientNativeTokenBalance,
   Loading,
   Explorer,
   Import,
@@ -61,11 +63,22 @@ const styledButtonType = {
       background: theme.palette.blue[70],
     },
   }),
-  [MainButtonType.Refresh]: (theme: Theme, rateExpired?: boolean) => ({
-    background: rateExpired ? theme.palette.red[500] : theme.palette.blue[500],
+  [MainButtonType.Refresh]: (theme: Theme) => ({
+    background: theme.palette.blue[500],
     color: theme.palette.common.white,
     '&:hover': {
-      background: rateExpired ? theme.palette.red[70] : theme.palette.blue[70],
+      background: theme.palette.blue[70],
+    },
+    '&:disabled': {
+      background: theme.palette.cool[100],
+      color: theme.palette.dark[500],
+    },
+  }),
+  [MainButtonType.MustRefresh]: (theme: Theme) => ({
+    background: theme.palette.red[500],
+    color: theme.palette.common.white,
+    '&:hover': {
+      background: theme.palette.red[70],
     },
     '&:disabled': {
       background: theme.palette.cool[100],
@@ -96,6 +109,12 @@ const styledButtonType = {
       color: theme.palette.dark[500],
     },
   }),
+  [MainButtonType.InsufficientNativeTokenBalance]: (theme: Theme) => ({
+    '&:disabled': {
+      background: theme.palette.cool[100],
+      color: theme.palette.dark[500],
+    },
+  }),
   [MainButtonType.Loading]: (theme: Theme) => ({
     background: theme.palette.blue[16],
     color: theme.palette.blue[500],
@@ -120,10 +139,7 @@ const styledButtonType = {
 
 const StyledMainButton = styled(LoadingButton)<{
   typeStyledButton: keyof typeof styledButtonType;
-  rateExpired?: boolean;
-}>(({ theme, typeStyledButton, rateExpired }) =>
-  styledButtonType[typeStyledButton](theme, rateExpired)
-);
+}>(({ theme, typeStyledButton }) => styledButtonType[typeStyledButton](theme));
 
 export interface MainButtonProps {
   type: MainButtonType;
@@ -172,9 +188,11 @@ const MainButton = ({
     [MainButtonType.Swap]: 'Swap',
     [MainButtonType.Approve]: `Give permission to swap ${token && token.symbol}`,
     [MainButtonType.Refresh]: 'Refresh rate',
+    [MainButtonType.MustRefresh]: 'Refresh rate',
     [MainButtonType.Confirm]: 'Confirm swap',
     [MainButtonType.Close]: 'Close',
     [MainButtonType.InsufficientBalance]: `Insufficient ${token && token.symbol} balance`,
+    [MainButtonType.InsufficientNativeTokenBalance]: 'Insufficient native token balance',
     [MainButtonType.Loading]: '',
     [MainButtonType.Explorer]: `View on ${explorerName}`,
     [MainButtonType.Import]: 'Import',
@@ -183,8 +201,7 @@ const MainButton = ({
 
   return (
     <StyledMainButton
-      typeStyledButton={type}
-      rateExpired={rateExpired}
+      typeStyledButton={rateExpired ? MainButtonType.MustRefresh : type}
       sx={{
         ...sx,
         padding: '12px 0',
@@ -202,6 +219,7 @@ const MainButton = ({
         type === MainButtonType.Error ||
         type === MainButtonType.EnterAmount ||
         type === MainButtonType.InsufficientBalance ||
+        type === MainButtonType.InsufficientNativeTokenBalance ||
         disabled
       }
       onClick={onClick}

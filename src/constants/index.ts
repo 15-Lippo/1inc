@@ -13,6 +13,8 @@ export const TOKEN_HELPER_ADDRESS = {
   [SupportedChainId.GNOSIS]: '',
 };
 
+export const LAST_ETH_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+
 export const REFRESH_QUOTE_DELAY = 15;
 
 export const DEFAULT_TOKENS = {

@@ -1,9 +1,11 @@
 import './App.css';
 
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
 import AddTokenModal from './components/AddTokenModal';
+import AlertModal from './components/AlertModal';
 import MainButton, { MainButtonType } from './components/Buttons/MainButton';
 import SwitchTokensButton from './components/Buttons/SwitchTokensButton';
 import ConfirmSwapModal from './components/ConfirmSwapModal';
@@ -16,11 +18,13 @@ import SettingsModal from './components/SettingsModal';
 import WalletConnect from './components/WalletConnect';
 import { DEFAULT_TOKENS, FAVORITE_TOKENS } from './constants';
 import { SupportedChainId } from './constants/chains';
+import { useAlertMessage } from './hooks/useAlertMessage';
 import { SupportedGasOptions, useGasPriceOptions } from './hooks/useGasPriceOptions';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { ApproveStatus } from './store/state/approve/approveSlice';
 import { useApproval } from './store/state/approve/hooks';
+import { useCalculateApprovalCost } from './store/state/approve/useCalculateApprovalCost';
 import { Field, selectCurrency, setGasPriceInfo } from './store/state/swap/swapSlice';
 import { useTokens } from './store/state/tokens/useTokens';
 import { setExplorer } from './store/state/user/userSlice';
@@ -37,15 +41,19 @@ function App() {
   const { addresses } = useTokens();
   const { status, approve } = useApproval();
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
-  const { INPUT, OUTPUT, typedValue, tokensList, quoteError } = useAppSelector((state) => ({
-    quoteError: state.swap.quoteError,
-    INPUT: state.swap.INPUT,
-    OUTPUT: state.swap.OUTPUT,
-    typedValue: state.swap.typedValue,
-    tokensList: state.tokens.tokens,
-    lastTxHash: state.transactions.lastTxHash,
-  }));
+  const { INPUT, OUTPUT, typedValue, tokensList, quoteError, approveTransactionInfo, txFee } =
+    useAppSelector((state) => ({
+      quoteError: state.swap.quoteError,
+      INPUT: state.swap.INPUT,
+      OUTPUT: state.swap.OUTPUT,
+      typedValue: state.swap.typedValue,
+      tokensList: state.tokens.tokens,
+      lastTxHash: state.transactions.lastTxHash,
+      approveTransactionInfo: state.approve.approveTransactionInfo,
+      txFee: state.swap.txFeeCalculation.txFee,
+    }));
   const [, setFavoriteTokens] = useLocalStorage('favorite-tokens', FAVORITE_TOKENS);
+  const { approvalTxFee, estimateGasLimit: estimateApprovalCost } = useCalculateApprovalCost();
 
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -54,6 +62,7 @@ function App() {
     field: Field.INPUT,
     open: false,
   });
+  const { errorMessage, setErrorMessage, shouldOpenModal, clearMessage } = useAlertMessage();
 
   useEffect(() => {
     // Set default high gas price option:
@@ -84,21 +93,49 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId]);
 
-  const mainButtonByType = () => {
-    const balance = tokensList[INPUT]?.userBalance || '0';
+  const hasEnoughBalanceByAddress = (paymentCost: BigNumberish, tokenAddress: string): boolean => {
+    const balance = tokensList[tokenAddress].userBalance || '0';
+    return BigNumber.from(paymentCost).lte(balance);
+  };
 
+  useEffect(() => {
+    estimateApprovalCost();
+  }, [approveTransactionInfo.data]);
+
+  const handleApproveClick = () => {
+    if (!hasEnoughBalanceByAddress(approvalTxFee, DEFAULT_TOKENS[Field.INPUT])) {
+      setErrorMessage({
+        text: 'Insufficient balance to pay for gas',
+        title: 'Alert',
+      });
+      return;
+    }
+    approve();
+  };
+
+  const hasEnoughNativeTokenBalanceToSwap = () => {
+    let paymentCost = BigNumber.from(txFee);
+    if (INPUT === DEFAULT_TOKENS[Field.INPUT]) {
+      paymentCost = paymentCost.add(typedValue);
+    }
+    return hasEnoughBalanceByAddress(paymentCost, DEFAULT_TOKENS[Field.INPUT]);
+  };
+
+  const mainButtonByType = () => {
     if (!account) return <WalletConnect />;
     if (!Number(typedValue)) return <MainButton type={MainButtonType.EnterAmount} />;
     if (quoteError && account) return <MainButton type={MainButtonType.Error} />;
     if (status === ApproveStatus.APPROVAL_NEEDED)
-      return <MainButton type={MainButtonType.Approve} onClick={approve} />;
-    if (Number(typedValue) > Number(balance))
+      return <MainButton type={MainButtonType.Approve} onClick={handleApproveClick} />;
+    if (!hasEnoughBalanceByAddress(typedValue, INPUT))
       return <MainButton type={MainButtonType.InsufficientBalance} />;
+    if (!hasEnoughNativeTokenBalanceToSwap())
+      return <MainButton type={MainButtonType.InsufficientNativeTokenBalance} />;
     return <MainButton type={MainButtonType.Swap} onClick={() => setConfirmModalOpen(true)} />;
   };
 
   return (
-    <>
+    <div style={{ position: 'relative', height: 'inherit', width: 'inherit' }}>
       <Modal
         headerType={ModalHeaderType.Main}
         isOpen
@@ -142,7 +179,13 @@ function App() {
         goBack={() => setConfirmModalOpen(false)}
         isOpen={isConfirmOpen}
       />
-    </>
+      <AlertModal
+        open={shouldOpenModal()}
+        onClose={clearMessage}
+        text={errorMessage.text}
+        title={errorMessage.title}
+      />
+    </div>
   );
 }
 
