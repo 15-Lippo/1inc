@@ -1,9 +1,10 @@
 import { Box, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import { SxProps } from '@mui/system';
-import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import BackButton from '../Buttons/BackButton';
 import CloseButton from '../Buttons/CloseButton';
 import RefreshQuoteButton from '../Buttons/RefreshQuoteButton';
@@ -24,7 +25,7 @@ export enum ModalHeaderType {
   Custom = 'Custom tokens',
 }
 
-export interface ModalProps {
+interface ModalProps {
   headerType: ModalHeaderType;
   isOpen: boolean;
   closeModal?: () => void;
@@ -37,7 +38,7 @@ export interface ModalProps {
   sx?: SxProps;
 }
 
-export const StyledSearchField = styled(TextField)(({ theme }) => ({
+export const StyledSearchField: StyledComponent<any> = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: theme.palette.cool[100],
     '& ::placeholder': {
@@ -59,7 +60,7 @@ export const StyledSearchField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const Modal = ({
+export const Modal = ({
   headerType,
   isOpen,
   closeModal,
@@ -71,7 +72,7 @@ const Modal = ({
   hide,
   sx,
 }: ModalProps) => {
-  const { account } = useWeb3React();
+  const { account } = useActiveWeb3React();
 
   const searchFieldText = {
     [ModalHeaderType.SelectToken]: 'Search by name or paste address',
@@ -85,8 +86,7 @@ const Modal = ({
         ...sx,
         width: 'inherit',
         height: 'inherit',
-        justifyContent:
-          headerType === ModalHeaderType.AdvancedSettings ? 'flex-start' : 'space-between',
+        justifyContent: headerType === ModalHeaderType.AdvancedSettings ? 'flex-start' : 'space-between',
         flexDirection: 'column',
         display: hide ? 'none' : 'flex',
         boxShadow: '0px 12px 24px #E2E9F6',
@@ -129,7 +129,7 @@ const Modal = ({
           </Stack>
         </Stack>
       ) : (
-        <>
+        <React.Fragment>
           <Box
             sx={{
               display: 'flex',
@@ -193,11 +193,9 @@ const Modal = ({
               />
             </Box>
           ) : null}
-        </>
+        </React.Fragment>
       )}
       {children}
     </Box>
   ) : null;
 };
-
-export default Modal;

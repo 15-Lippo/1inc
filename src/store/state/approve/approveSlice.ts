@@ -33,7 +33,7 @@ export const fetchApproveTransaction = createAsyncThunk(
 
 export const fetchApproveSpender = createAsyncThunk(
   'approve/getApproveSpenderInfo',
-  async (approveInfo, { rejectWithValue }) => {
+  async (_approveInfo, { rejectWithValue }) => {
     try {
       const JSONApiResponse = await ApproveApi.approveFactoryControllerGetSpenderRaw();
       const response = await JSONApiResponse.raw.json();

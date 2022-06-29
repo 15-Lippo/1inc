@@ -22,13 +22,7 @@ export function useTokenPriceInUsd({ isBalanceInUsd, isMainModalTokenPriceInUsd 
   const [usdcTokenAddress, setUsdcTokenAddress] = useState<string>('');
 
   const balancesInUsd = () => {
-    const fetchTokenUsdValue = async ({
-      fromAddress,
-      decimals,
-    }: {
-      fromAddress: string;
-      decimals: number;
-    }) => {
+    const fetchTokenUsdValue = async ({ fromAddress, decimals }: { fromAddress: string; decimals: number }) => {
       const usdcToken = Object.entries(tokens).find(([, token]) => token.name === 'USD Coin');
 
       if (!usdcToken) return;

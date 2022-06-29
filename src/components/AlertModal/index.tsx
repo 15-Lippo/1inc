@@ -5,7 +5,7 @@ import React from 'react';
 
 import WarningIcon from '../icons/Warning';
 
-export interface AlertModalProps {
+interface AlertModalProps {
   text: string;
   title: string;
   open: boolean;

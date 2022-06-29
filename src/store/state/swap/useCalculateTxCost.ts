@@ -1,15 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { TransactionRequest } from '@ethersproject/providers';
-import { useWeb3React } from '@web3-react/core';
 import { useCallback, useEffect, useState } from 'react';
 
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
 import { calculateGasMargin, calculateTxFee } from '../../../utils';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setGasLimit, setTxFee } from './swapSlice';
 
 export const useCalculateTxCost = () => {
   const dispatch = useAppDispatch();
-  const { account, library } = useWeb3React();
+  const { account, library } = useActiveWeb3React();
   const swapInfo = useAppSelector((state) => state.swap.swapInfo);
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const slippage = useAppSelector((state) => state.swap.slippage);
@@ -20,7 +20,7 @@ export const useCalculateTxCost = () => {
   }, [gasLimitFromProvider]);
 
   const estimateGasLimit = useCallback(async () => {
-    if (!account || !swapInfo?.tx?.data) return;
+    if (!account || !swapInfo?.tx?.data || !library) return;
 
     const tx: TransactionRequest = !Number(swapInfo?.tx?.value)
       ? {

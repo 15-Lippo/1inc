@@ -1,8 +1,9 @@
 import { IconButton, IconButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
-const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   '&:hover #back-button #background-back': {
     fill: theme.palette.cool[100],
   },
@@ -22,13 +23,7 @@ interface Props {
 const BackButton = ({ disabled, onClick }: Props) => {
   return (
     <StyledIconButton disabled={disabled} disableRipple aria-label="back-button" onClick={onClick}>
-      <svg
-        id="back-button"
-        width="36"
-        height="36"
-        viewBox="0 0 36 36"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg">
+      <svg id="back-button" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           id="background-back"
           d="M0 12C0 5.37258 5.37258 0 12 0H24C30.6274 0 36 5.37258 36 12V24C36 30.6274 30.6274 36 24 36H12C5.37258 36 0 30.6274 0 24V12Z"

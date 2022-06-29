@@ -21,7 +21,7 @@ import PinButton from '../Buttons/PinButton';
 import NoLogoURI from '../icons/NoLogoURI';
 import NoTokenFoundIcon from '../icons/NoTokenFoundIcon';
 
-export interface VirtualizedTokenListProps {
+interface VirtualizedTokenListProps {
   loading?: boolean;
   tokensList: Token[];
   selectedValue?: string;
@@ -43,8 +43,7 @@ const VirtualizedTokenList = ({
   const { explorer } = useAppSelector((state) => state.user);
 
   function renderRow({ index, style }: ListChildComponentProps) {
-    const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd, button } =
-      tokensList[index];
+    const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd, button } = tokensList[index];
 
     const openExplorer = () => {
       window.open(`${explorer.link}/token/${address}`, '_blank');
@@ -74,21 +73,18 @@ const VirtualizedTokenList = ({
         component="div"
         secondaryAction={
           onRemoveCustomToken ? (
-            <>
+            <React.Fragment>
               <CloseButton size="28" onClick={() => onRemoveCustomToken(address)} />
               <LinkButton onClick={openExplorer} />
-            </>
+            </React.Fragment>
           ) : (
-            onPinToken &&
-            onUnpinToken && <PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />
+            onPinToken && onUnpinToken && <PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />
           )
         }
         disablePadding>
         <ListItemButton onClick={handleClick} disabled={address === selectedValue}>
           {address && (
-            <ListItemAvatar>
-              {logoURI ? <Avatar src={logoURI} alt={symbol} /> : <NoLogoURI />}
-            </ListItemAvatar>
+            <ListItemAvatar>{logoURI ? <Avatar src={logoURI} alt={symbol} /> : <NoLogoURI />}</ListItemAvatar>
           )}
           <ListItemText
             primaryTypographyProps={{
@@ -101,9 +97,7 @@ const VirtualizedTokenList = ({
             }}
             primary={name}
             secondary={`${
-              Number(userBalance)
-                ? `${parseFloat(formatUnits(userBalance || '0x00', decimals)).toFixed(4)}`
-                : ''
+              Number(userBalance) ? `${parseFloat(formatUnits(userBalance || '0x00', decimals)).toFixed(4)}` : ''
             } ${symbol}`}
           />
           <ListItemText

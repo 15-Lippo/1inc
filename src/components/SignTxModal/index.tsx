@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setIsWaitingTx, setTxErrorMessage } from '../../store/state/transactions/txSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import TxFailedIcon from '../icons/TxFailedIcon';
-import Modal, { ModalHeaderType } from '../Modal';
+import { Modal, ModalHeaderType } from '../Modal';
 
 const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
   color: theme.palette.blue[500],

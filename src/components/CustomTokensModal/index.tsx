@@ -1,15 +1,15 @@
 import { Box } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
 import { DEFAULT_TOKENS } from '../../constants';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, selectCurrency } from '../../store/state/swap/swapSlice';
 import { removeTokenFromAllTokens } from '../../store/state/tokens/tokensSlice';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import { LocalStorageKeys } from '../../utils/localStorageKeys';
 import AddToken from '../Buttons/AddToken';
-import Modal, { ModalHeaderType } from '../Modal';
+import { Modal, ModalHeaderType } from '../Modal';
 import VirtualizedTokenList from '../VirtualizedTokenList';
 
 interface CustomTokensModalProps {
@@ -20,7 +20,7 @@ interface CustomTokensModalProps {
 
 const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomTokensModalProps) => {
   const dispatch = useAppDispatch();
-  const { account } = useWeb3React();
+  const { account } = useActiveWeb3React();
   const [customTokens, setCustomTokens] = useState({});
   const [searchValue, setSearchValue] = useState<string>('');
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
@@ -34,8 +34,7 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
   const tokensList = Object.values(customTokens) as Token[];
 
   useEffect(() => {
-    const existingTokens =
-      JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens) as string) ?? {};
+    const existingTokens = JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens) as string) ?? {};
     setCustomTokens(existingTokens);
   }, [allTokens.length]);
 

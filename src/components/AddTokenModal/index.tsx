@@ -1,29 +1,17 @@
 import { isAddress } from '@ethersproject/address';
-import {
-  Avatar,
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Stack,
-  Typography,
-} from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
+import { Avatar, Box, Checkbox, FormControlLabel, FormGroup, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import ERC20ABI from '../../abi/ERC20ABI.json';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, selectCurrency } from '../../store/state/swap/swapSlice';
-import {
-  addTokenToAllTokens,
-  fetchCoinInfoById,
-  Token,
-} from '../../store/state/tokens/tokensSlice';
+import { addTokenToAllTokens, fetchCoinInfoById, Token } from '../../store/state/tokens/tokensSlice';
 import { getContract } from '../../utils/contract';
 import { LocalStorageKeys } from '../../utils/localStorageKeys';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import NoLogoURI from '../icons/NoLogoURI';
-import Modal, { ModalHeaderType } from '../Modal';
+import { Modal, ModalHeaderType } from '../Modal';
 import VirtualizedTokenList from '../VirtualizedTokenList';
 
 interface AddTokenModalProps {
@@ -34,7 +22,7 @@ interface AddTokenModalProps {
 
 const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
   const dispatch = useAppDispatch();
-  const { library } = useWeb3React();
+  const { library } = useActiveWeb3React();
   const { lastImportedTokenInfo } = useAppSelector((state) => state.tokens);
   const { tokens } = useAppSelector((state) => state.tokens);
 
@@ -103,14 +91,12 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
 
   useEffect(() => {
     findTokenData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput]);
 
   useEffect(() => {
     // add logoURI key to imported token
     if (searchToken?.address && !searchToken.logoURI)
       setSearchToken({ ...searchToken, logoURI: lastImportedTokenInfo?.image });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput, searchToken?.address, lastImportedTokenInfo?.image]);
 
   const onSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +147,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <Modal
         onSearch={onSearch}
         searchValue={searchInput}
@@ -179,10 +165,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
           tokensList={searchToken?.address ? [searchToken] : []}
         />
       </Modal>
-      <Modal
-        headerType={ModalHeaderType.Import}
-        isOpen={tokenToImport.open}
-        goBack={closeImportConfirmationModal}>
+      <Modal headerType={ModalHeaderType.Import} isOpen={tokenToImport.open} goBack={closeImportConfirmationModal}>
         <Box
           sx={{
             p: '18px',
@@ -228,8 +211,8 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
               Trade at your own risk!
             </Typography>
             <Typography sx={{ mb: '14px' }} variant="rsm14">
-              Anyone can create a token, including creating fake versions of existing tokens that
-              claim to represent projects
+              Anyone can create a token, including creating fake versions of existing tokens that claim to represent
+              projects
             </Typography>
             <Typography sx={{ mb: '14px' }} variant="rsm14">
               If you purchase this token, you may not be able to sell it back
@@ -250,7 +233,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
         </Box>
         <MainButton disabled={!understanding} type={MainButtonType.Import} onClick={importToken} />
       </Modal>
-    </>
+    </React.Fragment>
   );
 };
 

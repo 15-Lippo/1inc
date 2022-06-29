@@ -11,6 +11,7 @@
  * Do not edit the file manually.
  */
 
+// @ts-ignore
 import * as isomorphicFetch from 'isomorphic-fetch';
 import * as url from 'url';
 
@@ -87,7 +88,8 @@ export class RequiredError extends Error {
  * CoinsApi - fetch parameter creator
  * @export
  */
-export const CoinsApiFetchParamCreator = function (configuration?: Configuration) {
+// configuration?: Configuration
+export const CoinsApiFetchParamCreator = function () {
   return {
     /**
      * Get current data (name, price, market, ... including exchange tickers) for a coin.<br><br> **IMPORTANT**:  Ticker object is limited to 100 items, to get more tickers, use `/coins/{id}/tickers`  Ticker `is_stale` is true when ticker that has not been updated/unchanged from the exchange for a while.  Ticker `is_anomaly` is true if ticker's price is outliered by our system.  You are responsible for managing how you want to display these information (e.g. footnote, different background, change opacity, hide)
@@ -114,10 +116,7 @@ export const CoinsApiFetchParamCreator = function (configuration?: Configuration
     ): FetchArgs {
       // verify required parameter 'id' is not null or undefined
       if (id === null || id === undefined) {
-        throw new RequiredError(
-          'id',
-          'Required parameter id was null or undefined when calling coinsIdGet.'
-        );
+        throw new RequiredError('id', 'Required parameter id was null or undefined when calling coinsIdGet.');
       }
       const localVarPath = `/coins/{id}`.replace(`{${'id'}}`, encodeURIComponent(String(id)));
       const localVarUrlObj = url.parse(localVarPath, true);
@@ -149,12 +148,7 @@ export const CoinsApiFetchParamCreator = function (configuration?: Configuration
         localVarQueryParameter['sparkline'] = sparkline;
       }
 
-      localVarUrlObj.query = Object.assign(
-        {},
-        localVarUrlObj.query,
-        localVarQueryParameter,
-        options.query
-      );
+      localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
       // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
       // @ts-ignore
       delete localVarUrlObj.search;
@@ -183,12 +177,7 @@ export const CoinsApiFetchParamCreator = function (configuration?: Configuration
         localVarQueryParameter['include_platform'] = includePlatform;
       }
 
-      localVarUrlObj.query = Object.assign(
-        {},
-        localVarUrlObj.query,
-        localVarQueryParameter,
-        options.query
-      );
+      localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
       // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
       // @ts-ignore
       delete localVarUrlObj.search;
@@ -231,6 +220,7 @@ export const CoinsApiFp = function (configuration?: Configuration) {
       sparkline?: boolean,
       options?: any
     ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      // @ts-ignore
       const localVarFetchArgs = CoinsApiFetchParamCreator(configuration).coinsIdGet(
         id,
         localization,
@@ -242,15 +232,13 @@ export const CoinsApiFp = function (configuration?: Configuration) {
         options
       );
       return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-        return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then(
-          (response) => {
-            if (response.status >= 200 && response.status < 300) {
-              return response;
-            } else {
-              throw response;
-            }
+        return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
           }
-        );
+        });
       };
     },
     /**
@@ -260,24 +248,17 @@ export const CoinsApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    coinsListGet(
-      includePlatform?: boolean,
-      options?: any
-    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-      const localVarFetchArgs = CoinsApiFetchParamCreator(configuration).coinsListGet(
-        includePlatform,
-        options
-      );
+    coinsListGet(includePlatform?: boolean, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      // @ts-ignore
+      const localVarFetchArgs = CoinsApiFetchParamCreator(configuration).coinsListGet(includePlatform, options);
       return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-        return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then(
-          (response) => {
-            if (response.status >= 200 && response.status < 300) {
-              return response;
-            } else {
-              throw response;
-            }
+        return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
           }
-        );
+        });
       };
     },
   };
@@ -287,11 +268,7 @@ export const CoinsApiFp = function (configuration?: Configuration) {
  * CoinsApi - factory interface
  * @export
  */
-export const CoinsApiFactory = function (
-  configuration?: Configuration,
-  fetch?: FetchAPI,
-  basePath?: string
-) {
+export const CoinsApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
   return {
     /**
      * Get current data (name, price, market, ... including exchange tickers) for a coin.<br><br> **IMPORTANT**:  Ticker object is limited to 100 items, to get more tickers, use `/coins/{id}/tickers`  Ticker `is_stale` is true when ticker that has not been updated/unchanged from the exchange for a while.  Ticker `is_anomaly` is true if ticker's price is outliered by our system.  You are responsible for managing how you want to display these information (e.g. footnote, different background, change opacity, hide)
@@ -392,17 +369,15 @@ export class CoinsApi extends BaseAPI {
    * @memberof CoinsApi
    */
   public coinsListGet(includePlatform?: boolean, options?: any) {
-    return CoinsApiFp(this.configuration).coinsListGet(includePlatform, options)(
-      this.fetch,
-      this.basePath
-    );
+    return CoinsApiFp(this.configuration).coinsListGet(includePlatform, options)(this.fetch, this.basePath);
   }
 }
 /**
  * SearchApi - fetch parameter creator
  * @export
  */
-export const SearchApiFetchParamCreator = function (configuration?: Configuration) {
+// configuration?: Configuration
+export const SearchApiFetchParamCreator = function () {
   return {
     /**
      * Search for coins, categories and markets listed on CoinGecko ordered by largest Market Cap first
@@ -414,10 +389,7 @@ export const SearchApiFetchParamCreator = function (configuration?: Configuratio
     searchGet(query: string, options: any = {}): FetchArgs {
       // verify required parameter 'query' is not null or undefined
       if (query === null || query === undefined) {
-        throw new RequiredError(
-          'query',
-          'Required parameter query was null or undefined when calling searchGet.'
-        );
+        throw new RequiredError('query', 'Required parameter query was null or undefined when calling searchGet.');
       }
       const localVarPath = `/search`;
       const localVarUrlObj = url.parse(localVarPath, true);
@@ -429,12 +401,7 @@ export const SearchApiFetchParamCreator = function (configuration?: Configuratio
         localVarQueryParameter['query'] = query;
       }
 
-      localVarUrlObj.query = Object.assign(
-        {},
-        localVarUrlObj.query,
-        localVarQueryParameter,
-        options.query
-      );
+      localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
       // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
       // @ts-ignore
       delete localVarUrlObj.search;
@@ -461,21 +428,17 @@ export const SearchApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    searchGet(
-      query: string,
-      options?: any
-    ): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+    searchGet(query: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+      // @ts-ignore
       const localVarFetchArgs = SearchApiFetchParamCreator(configuration).searchGet(query, options);
       return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-        return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then(
-          (response) => {
-            if (response.status >= 200 && response.status < 300) {
-              return response;
-            } else {
-              throw response;
-            }
+        return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          } else {
+            throw response;
           }
-        );
+        });
       };
     },
   };
@@ -485,11 +448,7 @@ export const SearchApiFp = function (configuration?: Configuration) {
  * SearchApi - factory interface
  * @export
  */
-export const SearchApiFactory = function (
-  configuration?: Configuration,
-  fetch?: FetchAPI,
-  basePath?: string
-) {
+export const SearchApiFactory = function (configuration?: Configuration, fetch?: FetchAPI, basePath?: string) {
   return {
     /**
      * Search for coins, categories and markets listed on CoinGecko ordered by largest Market Cap first

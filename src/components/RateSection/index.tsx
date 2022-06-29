@@ -1,8 +1,8 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Stack, Typography } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../store/state/swap/swapSlice';
 import RouteArrow from '../icons/RouteArrow';
@@ -10,7 +10,7 @@ import { TooltipIcon } from '../icons/TooltipIcon';
 import { LightTooltip } from '../LightTooltip';
 
 const RateSection = () => {
-  const { account } = useWeb3React();
+  const { account } = useActiveWeb3React();
   const { INPUT, OUTPUT, inputAmount, outputAmount, loadingQuote } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
@@ -34,18 +34,12 @@ const RateSection = () => {
   }, [INPUT?.address, OUTPUT?.address, account, loadingQuote]);
 
   useEffect(() => {
-    account && outputPrice !== '0' && loadingQuote === 'succeeded'
-      ? setLoading(false)
-      : setLoading(true);
+    account && outputPrice !== '0' && loadingQuote === 'succeeded' ? setLoading(false) : setLoading(true);
   }, [account, outputPrice]);
 
-  const inputInUsd = INPUT?.priceInUsd
-    ? parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2)
-    : '0';
+  const inputInUsd = INPUT?.priceInUsd ? parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2) : '0';
 
-  const outputInUsd = OUTPUT?.priceInUsd
-    ? parseFloat(formatUnits(OUTPUT?.priceInUsd, 6)).toFixed(2)
-    : '0';
+  const outputInUsd = OUTPUT?.priceInUsd ? parseFloat(formatUnits(OUTPUT?.priceInUsd, 6)).toFixed(2) : '0';
 
   return (
     <Stack
@@ -85,11 +79,7 @@ const RateSection = () => {
               }}
               title={
                 <Stack direction="column" spacing={1} sx={{ padding: '5px' }}>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    spacing={2}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant="rxs12">{`${INPUT.symbol} price`}</Typography>
                     {INPUT?.priceInUsd && (
                       <Typography
@@ -104,11 +94,7 @@ const RateSection = () => {
                       INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol
                     }`}</Typography>
                   </Stack>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    spacing={2}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant="rxs12">{`${OUTPUT.symbol} price`}</Typography>
                     {OUTPUT?.priceInUsd && (
                       <Typography

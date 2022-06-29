@@ -3,7 +3,7 @@ import React from 'react';
 
 import { StyledToggleButtonGroup } from '../Buttons/SlippageButtonsGroup';
 
-export interface SettingsModeProps {
+interface SettingsModeProps {
   mode: 'basic' | 'advanced';
   handleChangeMode: (event: React.MouseEvent<HTMLElement>, newMode: 'basic' | 'advanced') => void;
 }

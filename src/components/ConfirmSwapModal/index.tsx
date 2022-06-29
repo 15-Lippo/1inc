@@ -1,8 +1,8 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Stack, Typography } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
 import { useCountdownQuote } from '../../store/state/swap/useCountdownQuote';
@@ -12,12 +12,12 @@ import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import { SlippageButtonsGroup } from '../Buttons/SlippageButtonsGroup';
 import GasPriceOptions from '../GasPriceOptions';
 import SwitchTokensIcon from '../icons/SwitchTokensIcon';
-import Modal, { ModalHeaderType } from '../Modal';
+import { Modal, ModalHeaderType } from '../Modal';
 import RefreshRateWarningMsg from '../RefreshRateWarningMsg';
 import SignTxModal from '../SignTxModal';
 import TxSentModal from '../TxSentModal';
 
-export interface SelectTokenModalProps {
+interface ConfirmSwapModalProps {
   isOpen: boolean;
   goBack: () => void;
   gasOptions: any;
@@ -96,9 +96,9 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
   );
 };
 
-const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps) => {
+const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
   const dispatch = useAppDispatch();
-  const { account } = useWeb3React();
+  const { account } = useActiveWeb3React();
   const { countdown, reset } = useCountdownQuote();
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
@@ -106,9 +106,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
   }));
 
-  const { typedValue, swapInfo, slippage, txFeeCalculation } = useAppSelector(
-    (state) => state.swap
-  );
+  const { typedValue, swapInfo, slippage, txFeeCalculation } = useAppSelector((state) => state.swap);
 
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
@@ -144,16 +142,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
         gasLimit: txFeeCalculation?.gasLimit,
       })
     );
-  }, [
-    INPUT,
-    OUTPUT,
-    account,
-    typedValue,
-    isRefresh,
-    slippage,
-    gasPriceInfo?.price,
-    txFeeCalculation?.gasLimit,
-  ]);
+  }, [INPUT, OUTPUT, account, typedValue, isRefresh, slippage, gasPriceInfo?.price, txFeeCalculation?.gasLimit]);
 
   const swapCallback = useSwapCallback({
     from: swapInfo?.tx?.from,
@@ -182,13 +171,11 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
     if (isOpen && countdown === 1) setQuoteUpdated(true);
   }, [countdown]);
 
-  const inputUsdcPrice =
-    INPUT?.priceInUsd && parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2);
-  const outputUsdcPrice =
-    OUTPUT?.priceInUsd && parseFloat(formatUnits(OUTPUT?.priceInUsd, 6)).toFixed(2);
+  const inputUsdcPrice = INPUT?.priceInUsd && parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2);
+  const outputUsdcPrice = OUTPUT?.priceInUsd && parseFloat(formatUnits(OUTPUT?.priceInUsd, 6)).toFixed(2);
 
   return isOpen ? (
-    <>
+    <React.Fragment>
       <Modal
         headerType={ModalHeaderType.Confirm}
         goBack={() => {
@@ -225,11 +212,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
               usdcPrice={outputUsdcPrice}
             />
             <Stack>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ mb: '9px' }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
@@ -275,11 +258,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
                 </Box>
               </Stack>
 
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ mb: '9px' }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
@@ -325,11 +304,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
                 </Box>
               </Stack>
 
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ mb: '9px' }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
@@ -353,11 +328,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
                 </Box>
               </Stack>
 
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ mb: '9px' }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
                 <Typography
                   variant="rxs12"
                   sx={{
@@ -433,7 +404,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: SelectTokenModalProps)
       </Modal>
       <SignTxModal />
       <TxSentModal />
-    </>
+    </React.Fragment>
   ) : null;
 };
 

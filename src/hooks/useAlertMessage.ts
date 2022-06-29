@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export interface AlertProps {
+interface AlertProps {
   title: string;
   text: string;
 }

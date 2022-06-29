@@ -19,41 +19,38 @@ export interface Token {
   button?: any;
 }
 
-export const fetchCoinInfoById = createAsyncThunk(
-  'tokens/getCoinInfo',
-  async (coinName: string) => {
-    try {
-      const id = coinName.replace(/\s+/g, '-').toLowerCase();
+export const fetchCoinInfoById = createAsyncThunk('tokens/getCoinInfo', async (coinName: string) => {
+  try {
+    const id = coinName.replace(/\s+/g, '-').toLowerCase();
 
-      const params = {
-        localization: 'false',
-        tickets: false,
-        marketData: false,
-        communityData: false,
-        developerData: false,
-        sparkline: false,
-      };
+    const params = {
+      localization: 'false',
+      tickets: false,
+      marketData: false,
+      communityData: false,
+      developerData: false,
+      sparkline: false,
+    };
 
-      const JSONApiResponse = await CoinsApi.coinsIdGet(
-        id,
-        params.localization,
-        params.tickets,
-        params.marketData,
-        params.communityData,
-        params.developerData,
-        params.sparkline
-      );
+    const JSONApiResponse = await CoinsApi.coinsIdGet(
+      id,
+      params.localization,
+      params.tickets,
+      params.marketData,
+      params.communityData,
+      params.developerData,
+      params.sparkline
+    );
 
-      return await JSONApiResponse.json();
-    } catch (e) {
-      console.error(e);
-    }
+    return await JSONApiResponse.json();
+  } catch (e) {
+    console.error(e);
   }
-);
+});
 
 export const fetchLiquiditySources = createAsyncThunk(
   'tokens/getLiquiditySourcesInfo',
-  async (userData, { rejectWithValue }) => {
+  async (_userData, { rejectWithValue }) => {
     try {
       const JSONApiResponse = await InfoApi.chainProtocolControllerGetProtocolsImagesRaw();
       const response = await JSONApiResponse.raw.json();
@@ -64,53 +61,45 @@ export const fetchLiquiditySources = createAsyncThunk(
   }
 );
 
-export const fetchTokens = createAsyncThunk(
-  'tokens/getTokensInfo',
-  async (userData, { rejectWithValue }) => {
-    try {
-      const existingTokens =
+export const fetchTokens = createAsyncThunk('tokens/getTokensInfo', async (_userData, { rejectWithValue }) => {
+  try {
+    const existingTokens =
+      // @ts-ignore
+      JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
+
+    const JSONApiResponse = await InfoApi.chainTokensControllerGetTokensRaw();
+    const response = await JSONApiResponse.raw.json();
+
+    const sortable = await Object.entries({ ...response.tokens, ...existingTokens }).sort(([, a], [, b]) => {
+      // @ts-ignore
+      const fa = a.name,
         // @ts-ignore
-        JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
+        fb = b.name;
 
-      const JSONApiResponse = await InfoApi.chainTokensControllerGetTokensRaw();
-      const response = await JSONApiResponse.raw.json();
+      if (MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
+      if (MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
 
-      const sortable = await Object.entries({ ...response.tokens, ...existingTokens }).sort(
-        ([, a], [, b]) => {
-          // @ts-ignore
-          const fa = a.name,
-            // @ts-ignore
-            fb = b.name;
+      // compare ignoring case:
+      if (fa.localeCompare(fb) > 0) return 1;
+      if (fa.localeCompare(fb) < 0) return -1;
+      return 0;
+    });
 
-          if (MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
-          if (MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
-
-          // compare ignoring case:
-          if (fa.localeCompare(fb) > 0) return 1;
-          if (fa.localeCompare(fb) < 0) return -1;
-          return 0;
-        }
-      );
-
-      return sortable.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+    return sortable.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+  } catch (error) {
+    return rejectWithValue(error);
   }
-);
+});
 
-export const fetchPresets = createAsyncThunk(
-  'tokens/getPresetsInfo',
-  async (userData, { rejectWithValue }) => {
-    try {
-      const JSONApiResponse = await InfoApi.chainPresetsControllerGetPresetsRaw();
-      const response = await JSONApiResponse.raw.json();
-      return response;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+export const fetchPresets = createAsyncThunk('tokens/getPresetsInfo', async (_userData, { rejectWithValue }) => {
+  try {
+    const JSONApiResponse = await InfoApi.chainPresetsControllerGetPresetsRaw();
+    const response = await JSONApiResponse.raw.json();
+    return response;
+  } catch (error) {
+    return rejectWithValue(error);
   }
-);
+});
 
 export interface TokensState {
   lastImportedTokenInfo: {
@@ -169,12 +158,9 @@ const tokensSlice = createSlice({
       const { tokens } = state;
       for (const address in action.payload) {
         if (address.toLowerCase() === '0x0000000000000000000000000000000000000000') {
-          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userBalance =
-            action.payload[address].balance;
-          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userAllowance =
-            action.payload[address].allowance;
-          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].priceInUsd =
-            action.payload[address].priceInUsd;
+          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userBalance = action.payload[address].balance;
+          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userAllowance = action.payload[address].allowance;
+          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].priceInUsd = action.payload[address].priceInUsd;
           continue;
         }
 
@@ -219,10 +205,7 @@ const tokensSlice = createSlice({
         tokens[tokenAddress].priceInUsd = action.payload[tokenAddress].priceInUsd;
       }
     },
-    onPinnedToken(
-      state,
-      { payload: { key, pinned } }: { payload: { key: string; pinned: boolean } }
-    ) {
+    onPinnedToken(state, { payload: { key, pinned } }: { payload: { key: string; pinned: boolean } }) {
       return {
         ...state,
         tokens: {
@@ -234,10 +217,7 @@ const tokensSlice = createSlice({
         },
       };
     },
-    updatePriceTokenInUsd(
-      state,
-      { payload: { key, priceInUsd } }: { payload: { key: string; priceInUsd?: string } }
-    ) {
+    updatePriceTokenInUsd(state, { payload: { key, priceInUsd } }: { payload: { key: string; priceInUsd?: string } }) {
       return {
         ...state,
         tokens: {
@@ -260,13 +240,13 @@ const tokensSlice = createSlice({
         };
       }
     });
-    tokens.addCase(fetchCoinInfoById.pending, (state, action) => {
+    tokens.addCase(fetchCoinInfoById.pending, (state) => {
       state.lastImportedTokenInfo = {
         image: '',
         loading: 'pending',
       };
     });
-    tokens.addCase(fetchCoinInfoById.rejected, (state, action) => {
+    tokens.addCase(fetchCoinInfoById.rejected, (state) => {
       state.lastImportedTokenInfo = {
         image: '',
         loading: 'failed',
@@ -275,10 +255,10 @@ const tokensSlice = createSlice({
     tokens.addCase(fetchLiquiditySources.fulfilled, (state, action) => {
       state.liquiditySourcesInfo = action.payload;
     });
-    tokens.addCase(fetchTokens.pending, (state, action) => {
+    tokens.addCase(fetchTokens.pending, (state) => {
       state.fetchingTokens = true;
     });
-    tokens.addCase(fetchTokens.rejected, (state, action) => {
+    tokens.addCase(fetchTokens.rejected, (state) => {
       state.fetchingTokens = false;
     });
     tokens.addCase(fetchTokens.fulfilled, (state, action) => {

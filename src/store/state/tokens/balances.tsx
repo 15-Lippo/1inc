@@ -1,4 +1,4 @@
-import { Web3Provider } from '@ethersproject/providers';
+import { JsonRpcProvider } from '@ethersproject/providers';
 
 import TokenHelper from '../../../abi/TokenHelper.json';
 import { TOKEN_HELPER_ADDRESS } from '../../../constants';
@@ -15,19 +15,16 @@ export interface IUserTokenInfo {
 }
 
 export async function getTokenInfo(
-  lib: Web3Provider,
+  lib: JsonRpcProvider | undefined,
   account: string,
   chainId: number,
   addresses: string[],
   spender: string
 ): Promise<Promise<IUserTokenInfo> | undefined> {
+  if (!lib) return;
   //@ts-ignore
   const favoriteTokens = JSON.parse(localStorage.getItem('favorite-tokens'));
-  const tokenHelper = getContract(
-    TOKEN_HELPER_ADDRESS[chainId as SupportedChainId],
-    TokenHelper.abi,
-    lib
-  );
+  const tokenHelper = getContract(TOKEN_HELPER_ADDRESS[chainId as SupportedChainId], TokenHelper.abi, lib);
   try {
     const tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
     const result: IUserTokenInfo = {};
@@ -60,7 +57,7 @@ const chunkArray = (list: any[], chunkSize: number) => {
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
  */
 export async function getTokenBalances(
-  lib: Web3Provider,
+  lib: JsonRpcProvider | undefined,
   account: string,
   chainId: number,
   addresses: string[],

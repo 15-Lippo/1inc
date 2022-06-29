@@ -1,12 +1,12 @@
-import { useWeb3React } from '@web3-react/core';
 import { useEffect, useMemo } from 'react';
 
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenBalances } from './balances';
 import { fetchTokens, updateAllTokenBalances } from './tokensSlice';
 
 export const useTokens = () => {
-  const { library, account, chainId } = useWeb3React();
+  const { library, account, chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { tokens, spender } = useAppSelector((state) => ({
     tokens: state.tokens.tokens,

@@ -54,10 +54,7 @@ const PinnedToken = ({ id, symbol, logo, onChoose, onUnpin }: Props) => {
     <StyledListItem
       id={id}
       secondaryAction={
-        <StyledIconButtonRemove
-          className="removeButton"
-          aria-label="remove-button"
-          onClick={() => onUnpin(id)}>
+        <StyledIconButtonRemove className="removeButton" aria-label="remove-button" onClick={() => onUnpin(id)}>
           <svg
             id="remove-button"
             width="12"

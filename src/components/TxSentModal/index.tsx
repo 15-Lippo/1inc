@@ -1,17 +1,17 @@
 import { Stack, Typography } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
 import { EXPLORER_LINKS } from '../../constants';
 import { SupportedChainId } from '../../constants/chains';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { cleanLastTxHash } from '../../store/state/transactions/txSlice';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import { SentArray } from '../icons/SentArray';
-import Modal, { ModalHeaderType } from '../Modal';
+import { Modal, ModalHeaderType } from '../Modal';
 
 const TxSentModal = () => {
-  const { chainId } = useWeb3React();
+  const { chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT, txHash } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],

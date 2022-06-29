@@ -1,19 +1,19 @@
 import { Box, Divider, Stack } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 
 import { FAVORITE_TOKENS } from '../../constants';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, selectCurrency } from '../../store/state/swap/swapSlice';
 import { onPinnedToken, Token } from '../../store/state/tokens/tokensSlice';
 import { useTokenPriceInUsd } from '../../store/state/tokens/useTokenPriceInUsd';
 import AddToken from '../Buttons/AddToken';
-import Modal, { ModalHeaderType } from '../Modal';
+import { Modal, ModalHeaderType } from '../Modal';
 import PinnedToken from '../PinnedToken';
 import VirtualizedTokenList from '../VirtualizedTokenList';
 
-export interface SelectTokenModalProps {
+interface SelectTokenModalProps {
   isOpen: boolean;
   onClose: () => void;
   field: Field;
@@ -21,7 +21,7 @@ export interface SelectTokenModalProps {
 }
 
 const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectTokenModalProps) => {
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { tokensList, tokenOnField, inputBalance, tokens } = useAppSelector((state) => ({
     tokensList: Object.values(state.tokens.tokens),

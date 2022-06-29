@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers';
-import { useWeb3React } from '@web3-react/core';
 
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenInfo } from '../tokens/balances';
 import { updateAllTokenBalances } from '../tokens/tokensSlice';
@@ -8,7 +8,7 @@ import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transaction
 
 export function useSwapCallback(swapTxInfo: TransactionRequest) {
   const dispatch = useAppDispatch();
-  const { library, account, chainId } = useWeb3React();
+  const { library, account, chainId } = useActiveWeb3React();
   const { INPUT, OUTPUT, spender } = useAppSelector((state) => ({
     INPUT: state.swap.INPUT,
     OUTPUT: state.swap.OUTPUT,
@@ -16,7 +16,7 @@ export function useSwapCallback(swapTxInfo: TransactionRequest) {
   }));
 
   const swapCallback = async () => {
-    if (!chainId || !INPUT || !OUTPUT || !account) return;
+    if (!chainId || !INPUT || !OUTPUT || !account || !library) return;
 
     try {
       dispatch(setTxErrorMessage(''));

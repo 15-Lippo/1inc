@@ -29,21 +29,21 @@ const BpCheckedIcon = styled(BpIcon)(({ theme }) => ({
   },
 }));
 
-const StyledFormControlLabel = styled((props: FormControlLabelProps) => (
-  <FormControlLabel {...props} />
-))(({ theme }) => ({
-  padding: '15px',
-  backgroundColor: theme.palette.cool[100],
-  marginBottom: '1px',
-  '&:first-of-type': {
-    borderTopLeftRadius: '12px',
-    borderTopRightRadius: '12px',
-  },
-  '&:last-of-type': {
-    borderBottomLeftRadius: '12px',
-    borderBottomRightRadius: '12px',
-  },
-}));
+const StyledFormControlLabel = styled((props: FormControlLabelProps) => <FormControlLabel {...props} />)(
+  ({ theme }) => ({
+    padding: '15px',
+    backgroundColor: theme.palette.cool[100],
+    marginBottom: '1px',
+    '&:first-of-type': {
+      borderTopLeftRadius: '12px',
+      borderTopRightRadius: '12px',
+    },
+    '&:last-of-type': {
+      borderBottomLeftRadius: '12px',
+      borderBottomRightRadius: '12px',
+    },
+  })
+);
 
 export default function UseRadioGroup({ gasOptions }: any) {
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);

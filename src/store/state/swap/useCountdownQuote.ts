@@ -1,7 +1,7 @@
-import { useWeb3React } from '@web3-react/core';
 import { useEffect, useRef, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY } from '../../../constants';
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useTokenPriceInUsd } from '../tokens/useTokenPriceInUsd';
 import { fetchQuote, Field } from './swapSlice';
@@ -29,7 +29,7 @@ function useInterval(callback: any, delay: number) {
 
 export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
-  const { chainId, account } = useWeb3React();
+  const { chainId, account } = useActiveWeb3React();
   const { INPUT, OUTPUT, typedValue, gasLimit } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},

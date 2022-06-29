@@ -1,11 +1,13 @@
 import { IconButton, IconButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
+import React from 'react';
 
 import { useAppDispatch } from '../../../store/hooks';
 import { switchCurrencies } from '../../../store/state/swap/swapSlice';
 import SwitchTokensIcon from '../../icons/SwitchTokensIcon';
 
-const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(() => ({
   padding: 0,
   position: 'absolute',
   top: '36%',

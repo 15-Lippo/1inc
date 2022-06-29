@@ -1,16 +1,13 @@
 import { Paper, Typography } from '@mui/material';
+import React from 'react';
 
-export interface RefreshRateWarningMsgProps {
+interface RefreshRateWarningMsgProps {
   inputTokenSymbol: string;
   outputTokenSymbol: string;
   quoteUpdated: boolean;
 }
 
-const RefreshRateWarningMsg = ({
-  inputTokenSymbol,
-  outputTokenSymbol,
-  quoteUpdated,
-}: RefreshRateWarningMsgProps) => {
+const RefreshRateWarningMsg = ({ inputTokenSymbol, outputTokenSymbol, quoteUpdated }: RefreshRateWarningMsgProps) => {
   return (
     <Paper
       elevation={0}

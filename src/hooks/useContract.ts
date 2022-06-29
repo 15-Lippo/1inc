@@ -1,15 +1,15 @@
 import { Contract } from '@ethersproject/contracts';
-import { useWeb3React } from '@web3-react/core';
 import { useMemo } from 'react';
 
 import { getContract } from '../utils/contract';
+import useActiveWeb3React from './useActiveWeb3React';
 
 export function useContract<T extends Contract = Contract>(
   address: string | undefined,
   abi: any,
   signer = true
 ): T | null {
-  const { library, account, chainId } = useWeb3React();
+  const { library, account, chainId } = useActiveWeb3React();
 
   return useMemo(() => {
     if (!address || !library || !chainId) return null;

@@ -1,30 +1,24 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { useWeb3React } from '@web3-react/core';
 import { useCallback, useEffect, useMemo } from 'react';
 
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenInfo } from '../tokens/balances';
 import { updateTokenInfo } from '../tokens/tokensSlice';
 import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transactions/txSlice';
-import {
-  ApproveStatus,
-  fetchApproveSpender,
-  fetchApproveTransaction,
-  updateApproveStatus,
-} from './approveSlice';
+import { ApproveStatus, fetchApproveSpender, fetchApproveTransaction, updateApproveStatus } from './approveSlice';
 
 export function useApproval() {
   const dispatch = useAppDispatch();
-  const { library, account, chainId } = useWeb3React();
+  const { library, account, chainId } = useActiveWeb3React();
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
-  const { INPUT, typedValue, approveTransactionInfo, approveAllowanceInfo, spender } =
-    useAppSelector((state) => ({
-      typedValue: state.swap.typedValue,
-      INPUT: state.tokens.tokens[state.swap.INPUT],
-      approveTransactionInfo: state.approve.approveTransactionInfo,
-      approveAllowanceInfo: state.approve.approveAllowanceInfo,
-      spender: state.approve.spender,
-    }));
+  const { INPUT, typedValue, approveTransactionInfo, approveAllowanceInfo, spender } = useAppSelector((state) => ({
+    typedValue: state.swap.typedValue,
+    INPUT: state.tokens.tokens[state.swap.INPUT],
+    approveTransactionInfo: state.approve.approveTransactionInfo,
+    approveAllowanceInfo: state.approve.approveAllowanceInfo,
+    spender: state.approve.spender,
+  }));
 
   useEffect(() => {
     if (spender.address) return;
@@ -62,6 +56,7 @@ export function useApproval() {
     if (!approveTransactionInfo.data || !account || !chainId || !INPUT.address) return;
 
     try {
+      if (!library) return;
       dispatch(setTxErrorMessage(''));
       dispatch(setIsWaitingTx(true));
       const signer = library.getSigner(account).connectUnchecked();
@@ -73,13 +68,7 @@ export function useApproval() {
 
       await tx.wait();
 
-      const updatedBalance = await getTokenInfo(
-        library,
-        account,
-        chainId,
-        [INPUT.address],
-        spender.address
-      );
+      const updatedBalance = await getTokenInfo(library, account, chainId, [INPUT.address], spender.address);
       dispatch(setLastTxHash(tx.hash));
       updatedBalance && dispatch(updateTokenInfo(updatedBalance));
     } catch ({ message }) {

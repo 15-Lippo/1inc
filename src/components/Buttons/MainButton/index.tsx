@@ -1,6 +1,7 @@
 import { LoadingButton } from '@mui/lab';
 import { CircularProgress, Theme, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import { SxProps } from '@mui/system';
 import React from 'react';
 
@@ -137,11 +138,11 @@ const styledButtonType = {
   }),
 };
 
-const StyledMainButton = styled(LoadingButton)<{
+const StyledMainButton: StyledComponent<any> = styled(LoadingButton)<{
   typeStyledButton: keyof typeof styledButtonType;
 }>(({ theme, typeStyledButton }) => styledButtonType[typeStyledButton](theme));
 
-export interface MainButtonProps {
+interface MainButtonProps {
   type: MainButtonType;
   disabled?: boolean;
   onClick?: () => void;
@@ -150,14 +151,7 @@ export interface MainButtonProps {
   sx?: SxProps;
 }
 
-const MainButton = ({
-  type,
-  disabled,
-  onClick,
-  rateExpired,
-  explorerName,
-  sx,
-}: MainButtonProps) => {
+const MainButton = ({ type, disabled, onClick, rateExpired, explorerName, sx }: MainButtonProps) => {
   const { token, quoteError } = useAppSelector((state) => {
     return {
       quoteError: state.swap.quoteError,

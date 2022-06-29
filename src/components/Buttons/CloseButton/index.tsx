@@ -1,8 +1,9 @@
 import { IconButton, IconButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
-const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   '&:hover #close-button path': {
     fill: theme.palette.cool[100],
   },

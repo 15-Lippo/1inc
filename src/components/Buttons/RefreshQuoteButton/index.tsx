@@ -1,12 +1,13 @@
 import { IconButton, IconButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import React, { useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY } from '../../../constants';
 import { useAppSelector } from '../../../store/hooks';
 import { useCountdownQuote } from '../../../store/state/swap/useCountdownQuote';
 
-const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   borderRadius: '12px',
   marginRight: '5px',
   padding: '0',

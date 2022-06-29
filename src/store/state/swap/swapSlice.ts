@@ -17,8 +17,7 @@ export const fetchQuote = createAsyncThunk(
       return response;
     } catch (error) {
       // @ts-ignore
-      const e = await error.json();
-      return e;
+      return await error.json();
     }
   }
 );
@@ -188,7 +187,6 @@ const swapSlice = createSlice({
       };
     },
     setGasPriceInfo(state, { payload: gasPriceInfo }) {
-      console.log('setGasPriceInfo', gasPriceInfo);
       return {
         ...state,
         txFeeCalculation: { ...state.txFeeCalculation, gasPriceInfo },
@@ -208,7 +206,7 @@ const swapSlice = createSlice({
     },
   },
   extraReducers: (user) => {
-    user.addCase(fetchQuote.pending, (state, action) => {
+    user.addCase(fetchQuote.pending, (state) => {
       state.loadingQuote = 'pending';
     });
     user.addCase(fetchQuote.rejected, (state, action) => {

@@ -45,8 +45,7 @@ const txSlice = createSlice({
   },
 });
 
-export const { setTxErrorMessage, setIsWaitingTx, setLastTxHash, cleanLastTxHash } =
-  txSlice.actions;
+export const { setTxErrorMessage, setIsWaitingTx, setLastTxHash, cleanLastTxHash } = txSlice.actions;
 
 const { reducer } = txSlice;
 

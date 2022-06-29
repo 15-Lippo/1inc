@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useMemo } from 'react';
 
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppSelector } from '../../store/hooks';
 import { ApproveStatus } from '../../store/state/approve/approveSlice';
 import { Field } from '../../store/state/swap/swapSlice';
@@ -15,16 +15,15 @@ interface SendBoxProps {
 }
 
 const SendBox = ({ onSelectToken }: SendBoxProps) => {
-  const { account } = useWeb3React();
-  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer } =
-    useAppSelector((state) => ({
-      INPUT: state.tokens.tokens[state.swap.INPUT],
-      status: state.approve.approveAllowanceInfo.status,
-      typedValue: state.swap.typedValue,
-      inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
-      loadingQuote: state.swap.loadingQuote,
-      explorer: state.user.explorer,
-    }));
+  const { account } = useActiveWeb3React();
+  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer } = useAppSelector((state) => ({
+    INPUT: state.tokens.tokens[state.swap.INPUT],
+    status: state.approve.approveAllowanceInfo.status,
+    typedValue: state.swap.typedValue,
+    inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
+    loadingQuote: state.swap.loadingQuote,
+    explorer: state.user.explorer,
+  }));
 
   const LockIcon = (
     <svg width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,10 +50,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
 
   const valueInUsd =
     inputTokenPriceInUsd && typedValue
-      ? formatUnits(
-          BigNumber.from(inputTokenPriceInUsd).mul(BigNumber.from(typedValue)),
-          INPUT.decimals + 6
-        )
+      ? formatUnits(BigNumber.from(inputTokenPriceInUsd).mul(BigNumber.from(typedValue)), INPUT.decimals + 6)
       : '0';
 
   return (

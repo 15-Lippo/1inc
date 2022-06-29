@@ -1,8 +1,9 @@
 import { IconButton, IconButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
-const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   '&:hover #settings-button #background-settings': {
     fill: theme.palette.cool[100],
   },
@@ -21,11 +22,7 @@ interface Props {
 
 const SettingsButton = ({ disabled, onClick }: Props) => {
   return (
-    <StyledIconButton
-      disabled={disabled}
-      disableRipple
-      aria-label="settings-button"
-      onClick={onClick}>
+    <StyledIconButton disabled={disabled} disableRipple aria-label="settings-button" onClick={onClick}>
       <svg
         id="settings-button"
         width="36"

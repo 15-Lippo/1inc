@@ -1,11 +1,12 @@
 import { IconButton, IconButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
 import { useAppSelector } from '../../../store/hooks';
 import { PinIcon, UnpinIcon } from '../../icons/PinIcon';
 
-const StyledIconButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   margin: '0 0 18px',
   height: '16px',
   width: '16px',

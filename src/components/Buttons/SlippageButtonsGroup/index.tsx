@@ -1,5 +1,6 @@
-import { Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Paper, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import React, { useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
@@ -8,40 +9,40 @@ import theme from '../../../theme/config';
 import { StyledSearchField } from '../../Modal';
 import SlippageWarningMsg from '../../SlippageWarningMsg';
 
-export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  width: '100%',
-  display: 'flex',
-  '& .MuiToggleButtonGroup-grouped': {
-    margin: theme.spacing(0.5),
-    border: 0,
-    '&.Mui-disabled': {
+export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = styled(ToggleButtonGroup)(
+  ({ theme }) => ({
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    display: 'flex',
+    '& .MuiToggleButtonGroup-grouped': {
+      margin: theme.spacing(0.5),
       border: 0,
+      '&.Mui-disabled': {
+        border: 0,
+      },
+      '&:not(:first-of-type)': {
+        borderRadius: '8px',
+      },
+      '&:first-of-type': {
+        borderRadius: '8px',
+      },
+      '&.Mui-selected, &.Mui-selected:hover': {
+        backgroundColor: theme.palette.common.white,
+      },
+      '&:hover': {
+        backgroundColor: theme.palette.cool[100],
+      },
     },
-    '&:not(:first-of-type)': {
-      borderRadius: '8px',
-    },
-    '&:first-of-type': {
-      borderRadius: '8px',
-    },
-    '&.Mui-selected, &.Mui-selected:hover': {
-      backgroundColor: theme.palette.common.white,
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.cool[100],
-    },
-  },
-}));
+  })
+);
 
 export const SlippageButtonsGroup = () => {
   const dispatch = useAppDispatch();
   const { slippage } = useAppSelector((state) => state.swap);
-  const [customSlippage, setCustomSlippage] = useState<string>(
-    slippage > 3 ? slippage.toString() : ''
-  );
+  const [customSlippage, setCustomSlippage] = useState<string>(slippage > 3 ? slippage.toString() : '');
 
-  const handleChange = (event: React.MouseEvent<HTMLElement>, newPercent: string) => {
+  const handleChange = (_event: React.MouseEvent<HTMLElement>, newPercent: string) => {
     if (newPercent !== null) {
       setCustomSlippage('');
       dispatch(setSlippage({ percent: Number(newPercent) }));
@@ -55,7 +56,7 @@ export const SlippageButtonsGroup = () => {
     dispatch(setSlippage({ percent: checkedSlippage }));
   };
   return (
-    <>
+    <React.Fragment>
       <Paper
         elevation={0}
         sx={{
@@ -135,6 +136,6 @@ export const SlippageButtonsGroup = () => {
         />
       </Paper>
       <SlippageWarningMsg slippagePercent={slippage} />
-    </>
+    </React.Fragment>
   );
 };

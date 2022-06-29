@@ -1,6 +1,7 @@
 import { Box, Paper, Typography } from '@mui/material';
+import React from 'react';
 
-export interface Props {
+interface Props {
   slippagePercent: number;
 }
 
@@ -23,12 +24,7 @@ const SlippageWarningMsg = ({ slippagePercent }: Props) => {
             fill: slippagePercent >= 15 ? '#E3402A' : '#FF9C08',
           },
         }}>
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             id="warning-icon-bg"
             d="M6 0C2.69 0 0 2.69 0 6C0 9.31 2.69 12 6 12C9.31 12 12 9.31 12 6C12 2.69 9.31 0 6 0Z"

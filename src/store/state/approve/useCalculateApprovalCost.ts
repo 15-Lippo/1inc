@@ -1,15 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { useWeb3React } from '@web3-react/core';
 import { useCallback, useEffect, useState } from 'react';
 
+import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
 import { calculateTxFee } from '../../../utils';
 import { useAppSelector } from '../../hooks';
 
 export const useCalculateApprovalCost = () => {
-  const { account, library } = useWeb3React();
-  const [gasLimitFromProvider, setGasLimitFromProvider] = useState<BigNumber>(
-    BigNumber.from('150000')
-  );
+  const { account, library } = useActiveWeb3React();
+  const [gasLimitFromProvider, setGasLimitFromProvider] = useState<BigNumber>(BigNumber.from('150000'));
   const [approvalTxFee, setApprovalTxFee] = useState<string>('');
   const { gasPriceInfo, slippage, approveTransactionInfo } = useAppSelector((state) => ({
     gasPriceInfo: state.swap.txFeeCalculation?.gasPriceInfo,
@@ -18,7 +16,7 @@ export const useCalculateApprovalCost = () => {
   }));
 
   const estimateGasLimit = useCallback(async () => {
-    if (!account || !approveTransactionInfo.data || Number(approveTransactionInfo?.value)) return;
+    if (!account || !library || !approveTransactionInfo.data || Number(approveTransactionInfo?.value)) return;
     try {
       /**
        Returns estimated gas limit that would

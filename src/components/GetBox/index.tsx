@@ -13,8 +13,9 @@ interface GetBoxProps {
 
 const GetBox = ({ onSelectToken }: GetBoxProps) => {
   const { estimateGasLimit } = useCalculateTxCost();
-  const { quoteInfo, typedValue, loadingQuote, swapInfo, txFeeCalculation, OUTPUT } =
-    useAppSelector((state) => state.swap);
+  const { quoteInfo, typedValue, loadingQuote, swapInfo, txFeeCalculation, OUTPUT } = useAppSelector(
+    (state) => state.swap
+  );
   const tokens = useAppSelector((state) => state.tokens.tokens);
   const explorer = useAppSelector((state) => state.user.explorer);
 
@@ -27,9 +28,7 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
 
   const txCostInUsdPerNativeToken =
     tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']?.priceInUsd &&
-    parseFloat(
-      formatUnits(tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']?.priceInUsd, 6)
-    ).toFixed(2);
+    parseFloat(formatUnits(tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']?.priceInUsd, 6)).toFixed(2);
 
   const txCostInUsd = Number(txCostInTokenInput) * Number(txCostInUsdPerNativeToken);
 
@@ -104,9 +103,7 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
               sx={{
                 lineHeight: '24px',
               }}>
-              {parseFloat(
-                formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)
-              ).toFixed(6)}
+              {parseFloat(formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)).toFixed(6)}
             </Typography>
           ) : (
             <Skeleton

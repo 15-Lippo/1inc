@@ -1,6 +1,7 @@
 import { parseUnits } from '@ethersproject/units';
-import { TextField } from '@mui/material';
+import { StandardTextFieldProps, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
@@ -8,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, typeInput } from '../../store/state/swap/swapSlice';
 import { Token } from '../../store/state/tokens/tokensSlice';
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledTextField: StyledComponent<StandardTextFieldProps> = styled(TextField)(({ theme }) => ({
   width: '100%',
   '& .MuiOutlinedInput-root': {
     border: 'none',
@@ -27,7 +28,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-export interface SendProps {
+interface SendProps {
   inputId: Field;
 }
 
