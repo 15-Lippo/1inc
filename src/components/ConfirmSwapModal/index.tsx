@@ -1,5 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
-import { Box, Link, Skeleton, Stack, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
@@ -8,6 +8,7 @@ import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
 import { useCountdownQuote } from '../../store/state/swap/useCountdownQuote';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
+import AuxButton from '../Buttons/AuxButton';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import { SlippageButtonsGroup } from '../Buttons/SlippageButtonsGroup';
 import GasPriceOptions from '../GasPriceOptions';
@@ -78,7 +79,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
           </Typography>
         </Box>
         {amount ? (
-          <Typography variant="rxxlg24" lineHeight="28px">
+          <Typography variant="mxlg20" lineHeight="28px">
             {amount}
           </Typography>
         ) : (
@@ -314,14 +315,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                   Gas price
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  <Link
-                    variant="rxs12"
-                    lineHeight="14px"
-                    href="#"
-                    underline="none"
-                    onClick={() => setGasPriceModalOpen(true)}>
-                    Edit
-                  </Link>
+                  <AuxButton onClick={() => setGasPriceModalOpen(true)} text="Edit" />
                   <Typography variant="rxs12" lineHeight="14px">
                     {parseFloat(formatUnits(gasPriceInfo?.price || '0x00', 'gwei')).toFixed(2)} Gwei
                   </Typography>
@@ -338,14 +332,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                   Slippage
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  <Link
-                    variant="rxs12"
-                    lineHeight="14px"
-                    href="#"
-                    underline="none"
-                    onClick={() => setSlippageModalOpen(true)}>
-                    Edit
-                  </Link>
+                  <AuxButton onClick={() => setSlippageModalOpen(true)} text="Edit" />
                   <Typography variant="rxs12" lineHeight="14px">
                     {slippage}%
                   </Typography>

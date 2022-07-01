@@ -4,9 +4,10 @@ import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ApproveStatus } from '../../store/state/approve/approveSlice';
-import { Field } from '../../store/state/swap/swapSlice';
+import { Field, typeInput } from '../../store/state/swap/swapSlice';
+import AuxButton from '../Buttons/AuxButton';
 import SelectTokenButton from '../Buttons/SelectTokenButton';
 import InputAmount from '../InputAmount';
 
@@ -15,15 +16,19 @@ interface SendBoxProps {
 }
 
 const SendBox = ({ onSelectToken }: SendBoxProps) => {
+  const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
-  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer } = useAppSelector((state) => ({
-    INPUT: state.tokens.tokens[state.swap.INPUT],
-    status: state.approve.approveAllowanceInfo.status,
-    typedValue: state.swap.typedValue,
-    inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
-    loadingQuote: state.swap.loadingQuote,
-    explorer: state.user.explorer,
-  }));
+  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer, txFee } = useAppSelector(
+    (state) => ({
+      INPUT: state.tokens.tokens[state.swap.INPUT],
+      status: state.approve.approveAllowanceInfo.status,
+      typedValue: state.swap.typedValue,
+      inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
+      loadingQuote: state.swap.loadingQuote,
+      explorer: state.user.explorer,
+      txFee: state.swap.txFeeCalculation.txFee,
+    })
+  );
 
   const LockIcon = (
     <svg width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -52,6 +57,22 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
     inputTokenPriceInUsd && typedValue
       ? formatUnits(BigNumber.from(inputTokenPriceInUsd).mul(BigNumber.from(typedValue)), INPUT.decimals + 6)
       : '0';
+
+  const onMaxClick = () => {
+    const bal = INPUT.userBalance;
+    if (!Number(bal) || !Number(txFee)) {
+      return;
+    }
+    const maxAmount: string = BigNumber.from(bal)
+      .sub(txFee as string) // txFee is validated 3 lines above
+      .toString();
+    dispatch(
+      typeInput({
+        field: Field.INPUT,
+        typedValue: maxAmount,
+      })
+    );
+  };
 
   return (
     <Box
@@ -87,14 +108,17 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
             width="100px"
           />
         ) : (
-          <Typography
-            variant="rxs12"
-            sx={{
-              color: 'dark.700',
-              lineHeight: '19px',
-            }}>
-            Balance: {userBalance}
-          </Typography>
+          <Box sx={{ display: 'flex', columnGap: '4px' }}>
+            <Typography
+              variant="rxs12"
+              sx={{
+                color: 'dark.700',
+                lineHeight: '19px',
+              }}>
+              Balance: {userBalance}
+            </Typography>
+            <AuxButton onClick={onMaxClick} text="Max" sx={{ lineHeight: '19px' }} />
+          </Box>
         )}
       </Box>
 

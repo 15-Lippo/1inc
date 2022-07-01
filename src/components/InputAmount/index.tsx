@@ -1,9 +1,9 @@
-import { parseUnits } from '@ethersproject/units';
+import { formatEther, parseUnits } from '@ethersproject/units';
 import { StandardTextFieldProps, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Field, typeInput } from '../../store/state/swap/swapSlice';
@@ -34,32 +34,35 @@ interface SendProps {
 
 const InputAmount = ({ inputId }: SendProps) => {
   const dispatch = useAppDispatch();
-  const [amount, setAmount] = useState<string>('');
-  const { INPUT } = useAppSelector((state) => ({
+  const [amount, setAmount] = useState<string>('0');
+  const { INPUT, typedValue } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     typedValue: state.swap.typedValue,
   }));
   const [input, setInput] = useState<Token>(INPUT);
+  const debouncedTypedValueSetter = useRef(
+    _.debounce((value: string, field: Field) => {
+      const valueInWei = calcWeiAmount(value);
+      dispatch(typeInput({ field, typedValue: valueInWei }));
+    }, 1000)
+  );
 
   useEffect(() => {
     setInput(INPUT);
   }, [INPUT]);
 
-  const setTypedValueSwap = (value: string, field: Field) => {
-    setAmount(value);
-    const valueInWei = value ? parseUnits(value, input?.decimals).toString() : '';
-    dispatch(typeInput({ field, typedValue: valueInWei }));
+  const calcWeiAmount = (value: string) => (value ? parseUnits(value, input?.decimals).toString() : '');
+
+  const handleChange = ({ target }: any) => {
+    setAmount(target.value);
+    if (input?.address) debouncedTypedValueSetter.current(target.value, target.id);
   };
 
   useEffect(() => {
-    setTypedValueSwap(amount, Field.INPUT);
-  }, [input]);
-
-  const debounceTypedValueSwap = _.debounce(setTypedValueSwap, 1000);
-
-  const handleChange = ({ target }: any) => {
-    if (input?.address) debounceTypedValueSwap(target.value, target.id);
-  };
+    if (typedValue && calcWeiAmount(amount) !== typedValue) {
+      setAmount(formatEther(typedValue));
+    }
+  }, [typedValue]);
 
   return (
     <StyledTextField
@@ -68,12 +71,12 @@ const InputAmount = ({ inputId }: SendProps) => {
       }}
       sx={{
         '& input': {
-          typography: 'rxxlg24',
+          typography: 'mxlg20',
         },
       }}
       id={inputId}
       type="number"
-      defaultValue={0}
+      value={amount}
       onChange={handleChange}
     />
   );
