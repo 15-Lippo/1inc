@@ -79,7 +79,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
           </Typography>
         </Box>
         {amount ? (
-          <Typography variant="mxlg20" lineHeight="28px">
+          <Typography variant="mxlg20" lineHeight="24px">
             {amount}
           </Typography>
         ) : (

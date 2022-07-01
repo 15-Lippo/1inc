@@ -3,6 +3,7 @@ import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 
+import { NATIVE_TOKEN_ADDRESS } from '../../constants';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ApproveStatus } from '../../store/state/approve/approveSlice';
@@ -63,13 +64,14 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
     if (!Number(bal) || !Number(txFee)) {
       return;
     }
-    const maxAmount: string = BigNumber.from(bal)
-      .sub(txFee as string) // txFee is validated 3 lines above
-      .toString();
+    let maxAmount = BigNumber.from(bal);
+    if (INPUT.address === NATIVE_TOKEN_ADDRESS) {
+      maxAmount = maxAmount.sub(txFee as string); // txFee is validated 3 lines above
+    }
     dispatch(
       typeInput({
         field: Field.INPUT,
-        typedValue: maxAmount,
+        typedValue: maxAmount.toString(),
       })
     );
   };
