@@ -64,6 +64,10 @@ export interface SwapState {
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly quoteError?: any;
+  readonly referrerOptions: {
+    referrerAddress: string;
+    fee: string;
+  };
 }
 
 export const initialState: SwapState = {
@@ -134,6 +138,10 @@ export const initialState: SwapState = {
   loading: 'idle',
   loadingQuote: 'idle',
   quoteError: null,
+  referrerOptions: {
+    referrerAddress: '',
+    fee: '',
+  },
 };
 
 const swapSlice = createSlice({
@@ -204,6 +212,12 @@ const swapSlice = createSlice({
         txFeeCalculation: { ...state.txFeeCalculation, txFee },
       };
     },
+    setReferrerOptions(state, { payload: referrerOptions }) {
+      return {
+        ...state,
+        referrerOptions,
+      };
+    },
   },
   extraReducers: (user) => {
     user.addCase(fetchQuote.pending, (state) => {
@@ -240,6 +254,7 @@ export const {
   setMaxFeePerGas,
   setTxFee,
   setGasPriceInfo,
+  setReferrerOptions,
 } = swapSlice.actions;
 
 const { reducer } = swapSlice;

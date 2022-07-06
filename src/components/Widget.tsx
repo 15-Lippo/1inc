@@ -7,7 +7,10 @@ import { Provider } from 'react-redux';
 import { useActiveProvider } from '../connector';
 import { ActiveWeb3Provider } from '../hooks/useActiveWeb3React';
 import store from '../store';
+import { setReferrerOptions } from '../store/state/swap/swapSlice';
 import theme from '../theme/config';
+import { ReferrerOptions } from '../types';
+import { validateReferrerOptions } from '../utils/validateReferrerOptions';
 import SwapWidget from './SwapWidget';
 
 export type WidgetProps = {
@@ -16,10 +19,19 @@ export type WidgetProps = {
   // provider?: JsonRpcProvider;
   jsonRpcEndpoint?: string | JsonRpcProvider;
   // width?: string | number
+  referrerOptions?: ReferrerOptions;
 };
 
-export default function Widget({ jsonRpcEndpoint }: PropsWithChildren<WidgetProps>) {
+export default function Widget({ jsonRpcEndpoint, referrerOptions }: PropsWithChildren<WidgetProps>) {
   const provider = useActiveProvider();
+
+  if (referrerOptions) {
+    const validationMsg = validateReferrerOptions(referrerOptions);
+    if (validationMsg) throw new Error(validationMsg);
+
+    store.dispatch(setReferrerOptions(referrerOptions));
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <React.StrictMode>

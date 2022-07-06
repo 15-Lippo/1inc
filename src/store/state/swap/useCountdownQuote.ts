@@ -30,18 +30,19 @@ function useInterval(callback: any, delay: number) {
 export const useCountdownQuote = () => {
   const dispatch = useAppDispatch();
   const { chainId, account } = useActiveWeb3React();
-  const { INPUT, OUTPUT, typedValue, gasLimit } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, typedValue, gasLimit, referrerOptions } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     typedValue: state.swap.typedValue || '0',
     gasLimit: state.swap.txFeeCalculation?.gasLimit,
+    referrerOptions: state.swap.referrerOptions,
   }));
   const { balancesInUsd } = useTokenPriceInUsd({ isMainModalTokenPriceInUsd: true });
   const [countdown, setCountdown] = useState<number>(REFRESH_QUOTE_DELAY);
 
   useEffect(() => {
     setCountdown(0);
-  }, [INPUT?.address, OUTPUT?.address, typedValue, chainId, account]);
+  }, [INPUT?.address, OUTPUT?.address, typedValue, chainId, account, referrerOptions]);
 
   useInterval(() => {
     setCountdown(countdown - 1);
@@ -57,6 +58,7 @@ export const useCountdownQuote = () => {
           toTokenAddress: OUTPUT.address,
           amount: typedValue,
           gasLimit,
+          ...(referrerOptions.referrerAddress ? { fee: referrerOptions.fee } : {}),
         })
       );
 

@@ -65,6 +65,10 @@ const restValues = {
       gas: '',
     },
   },
+  referrerOptions: {
+    referrerAddress: '',
+    fee: '',
+  },
 };
 describe('swapSlice', () => {
   it('typeInput 0.1 in OUTPUT field', () => {
@@ -161,6 +165,10 @@ describe('swapSlice', () => {
           price: '0',
         },
       },
+      referrerOptions: {
+        referrerAddress: '',
+        fee: '',
+      },
     };
 
     expect(
@@ -185,6 +193,10 @@ describe('swapSlice', () => {
           timeLabel: '',
           price: '0',
         },
+      },
+      referrerOptions: {
+        referrerAddress: '',
+        fee: '',
       },
     });
   });

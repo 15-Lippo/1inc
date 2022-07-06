@@ -101,13 +101,13 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
   const { countdown, reset } = useCountdownQuote();
-  const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
-  const { INPUT, OUTPUT } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, gasPriceInfo } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
+    gasPriceInfo: state.swap.txFeeCalculation?.gasPriceInfo,
   }));
 
-  const { typedValue, swapInfo, slippage, txFeeCalculation } = useAppSelector((state) => state.swap);
+  const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions } = useAppSelector((state) => state.swap);
 
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
@@ -141,9 +141,20 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
         slippage,
         disableEstimate: true,
         gasLimit: txFeeCalculation?.gasLimit,
+        ...(referrerOptions.referrerAddress ? referrerOptions : {}),
       })
     );
-  }, [INPUT, OUTPUT, account, typedValue, isRefresh, slippage, gasPriceInfo?.price, txFeeCalculation?.gasLimit]);
+  }, [
+    INPUT,
+    OUTPUT,
+    account,
+    typedValue,
+    isRefresh,
+    slippage,
+    gasPriceInfo?.price,
+    txFeeCalculation?.gasLimit,
+    referrerOptions,
+  ]);
 
   const swapCallback = useSwapCallback({
     from: swapInfo?.tx?.from,

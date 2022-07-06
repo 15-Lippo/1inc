@@ -7,9 +7,10 @@
 These are the props you can pass into your `<Widget />` React component
 
 
-| Prop                              | Type               | Value                                                                                         | Default                          |
-| :-------------------------------- | :----------------  | :-------------------------------------------------------------------------------------------- | :------------------------------- |
-| **`jsonRpcEndpoint`**             | `string`           | In order for a software application to interact with the blockchain, it must connect to node. | http://localhost:8545/      |
+|         Prop          | Type                                     | Value                                                                                                                                         | Default                          |
+|:---------------------:|:-----------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
+| **`jsonRpcEndpoint`** | `string`                                 | In order for a software application to interact with the blockchain, it must connect to node.                                                 | http://localhost:8545/           |
+| **`referrerOptions`** | `{referrerAddress: string, fee: string}` | Fee is a number from 1 to 3 percent. <br/> After each swap, a percentage from swap amount equal to fee will be transferred to referrerAddress | `{referrerAddress: '', fee: ''}` |
 
 ## Developing
 
