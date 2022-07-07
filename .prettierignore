@@ -2,3 +2,6 @@
 build
 coverage
 src/api/coingeco-api/
+
+# Ignore file named `README.md`
+README.md

@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { useEffect, useState } from 'react';
 
+import { formatGweiFixed, parseGwei } from '../utils/conversion';
 import useActiveWeb3React from './useActiveWeb3React';
 
 export enum SupportedGasOptions {
@@ -10,10 +11,6 @@ export enum SupportedGasOptions {
   Medium = 'medium',
   Low = 'low',
 }
-
-const parseToGwei = (value: BigNumber) => {
-  return parseFloat(formatUnits(value, 'gwei')).toFixed(2);
-};
 
 export const useGasPriceOptions = () => {
   const { library } = useActiveWeb3React();
@@ -24,24 +21,28 @@ export const useGasPriceOptions = () => {
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '< 10 sec',
       price: '0',
+      baseFee: '0',
     },
     [SupportedGasOptions.High]: {
       label: 'High',
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '~ 12 sec',
       price: '0',
+      baseFee: '0',
     },
     [SupportedGasOptions.Medium]: {
       label: 'Medium',
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '~ 30 sec',
       price: '0',
+      baseFee: '0',
     },
     [SupportedGasOptions.Low]: {
       label: 'Low',
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '≥ 1 min',
       price: '0',
+      baseFee: '0',
     },
   });
 
@@ -54,7 +55,7 @@ export const useGasPriceOptions = () => {
     if (library) {
       const feeData = await library.getFeeData();
       if (feeData && feeData.gasPrice) {
-        const gasPriceGwei = parseToGwei(feeData.gasPrice);
+        const gasPriceGwei = formatGweiFixed(feeData.gasPrice);
 
         const percents = {
           oneHundred: BigNumber.from('100'),
@@ -79,27 +80,31 @@ export const useGasPriceOptions = () => {
         const gasOptions = {
           [SupportedGasOptions.Instant]: {
             label: 'Instant',
-            range: `${gasPriceGwei} - ${parseToGwei(instantOption)} Gwei`,
+            range: `${gasPriceGwei} - ${formatGweiFixed(instantOption)} Gwei`,
             timeLabel: '< 10 sec',
             price: formatUnits(instantOption, 'wei'),
+            baseFee: parseGwei(gasPriceGwei).toString(),
           },
           [SupportedGasOptions.High]: {
             label: 'High',
-            range: `${gasPriceGwei} - ${parseToGwei(highOption)} Gwei`,
+            range: `${gasPriceGwei} - ${formatGweiFixed(highOption)} Gwei`,
             timeLabel: '~ 12 sec',
             price: formatUnits(highOption, 'wei'),
+            baseFee: parseGwei(gasPriceGwei).toString(),
           },
           [SupportedGasOptions.Medium]: {
             label: 'Medium',
-            range: `${gasPriceGwei} - ${parseToGwei(mediumOption)} Gwei`,
+            range: `${gasPriceGwei} - ${formatGweiFixed(mediumOption)} Gwei`,
             timeLabel: '~ 30 sec',
             price: formatUnits(mediumOption, 'wei'),
+            baseFee: parseGwei(gasPriceGwei).toString(),
           },
           [SupportedGasOptions.Low]: {
             label: 'Low',
-            range: `${gasPriceGwei} - ${parseToGwei(lowOption)} Gwei`,
+            range: `${gasPriceGwei} - ${formatGweiFixed(lowOption)} Gwei`,
             timeLabel: '≥ 1 min',
             price: formatUnits(lowOption, 'wei'),
+            baseFee: parseGwei(gasPriceGwei).toString(),
           },
         };
         setOptions(gasOptions);

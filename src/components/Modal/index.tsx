@@ -8,6 +8,7 @@ import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import BackButton from '../Buttons/BackButton';
 import CloseButton from '../Buttons/CloseButton';
 import RefreshQuoteButton from '../Buttons/RefreshQuoteButton';
+import ResetSettingsButton from '../Buttons/ResetSettingsButton';
 import SettingsButton from '../Buttons/SettingsButton';
 
 export enum ModalHeaderType {
@@ -32,6 +33,7 @@ interface ModalProps {
   goBack?: () => void;
   openSettings?: () => void;
   onSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onReset?: () => void;
   searchValue?: string;
   children?: React.ReactNode;
   hide?: boolean;
@@ -66,6 +68,7 @@ export const Modal = ({
   closeModal,
   goBack,
   onSearch,
+  onReset,
   searchValue,
   openSettings,
   children,
@@ -132,6 +135,7 @@ export const Modal = ({
         <React.Fragment>
           <Box
             sx={{
+              position: 'relative',
               display: 'flex',
               alignItems: 'center',
               height: '2.5em',
@@ -143,7 +147,7 @@ export const Modal = ({
                   : '0 0 20px',
             }}>
             {goBack && (
-              <Box sx={{ position: 'absolute', top: 0 }}>
+              <Box sx={{ position: 'absolute', top: -11 }}>
                 <BackButton onClick={goBack} />
               </Box>
             )}
@@ -157,8 +161,13 @@ export const Modal = ({
               {headerType}
             </Typography>
             {closeModal && (
-              <Box sx={{ right: '8px', position: 'absolute', top: 0 }}>
+              <Box sx={{ position: 'absolute', right: -8, top: -9 }}>
                 <CloseButton onClick={closeModal} />
+              </Box>
+            )}
+            {onReset && (
+              <Box sx={{ position: 'absolute', right: 0, top: 2 }}>
+                <ResetSettingsButton onClick={onReset} />
               </Box>
             )}
           </Box>

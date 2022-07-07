@@ -56,7 +56,16 @@ export interface SwapState {
       range: string;
       timeLabel: string;
       price: string;
+      baseFee: string;
     };
+    readonly customGasPrice: {
+      label: string;
+      maxPriorityFee: string;
+      maxFee: string;
+      range: string;
+      timeLabel: string;
+    };
+    readonly gasPriceSettingsMode: 'basic' | 'advanced';
     readonly gasLimit?: string;
     readonly maxFeePerGas?: string;
     readonly txFee?: string;
@@ -130,7 +139,16 @@ export const initialState: SwapState = {
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '',
       price: '0',
+      baseFee: '0',
     },
+    customGasPrice: {
+      label: '',
+      maxFee: '0',
+      maxPriorityFee: '0',
+      range: '',
+      timeLabel: '',
+    },
+    gasPriceSettingsMode: 'basic',
     gasLimit: '130000',
     maxFeePerGas: '',
     txFee: '',
@@ -200,6 +218,18 @@ const swapSlice = createSlice({
         txFeeCalculation: { ...state.txFeeCalculation, gasPriceInfo },
       };
     },
+    setCustomGasPrice(state, { payload: customGasPrice }) {
+      return {
+        ...state,
+        txFeeCalculation: { ...state.txFeeCalculation, customGasPrice },
+      };
+    },
+    setGasPriceSettingsMode(state, { payload: mode }) {
+      return {
+        ...state,
+        txFeeCalculation: { ...state.txFeeCalculation, gasPriceSettingsMode: mode },
+      };
+    },
     setMaxFeePerGas(state, { payload: maxFeePerGas }) {
       return {
         ...state,
@@ -255,6 +285,8 @@ export const {
   setTxFee,
   setGasPriceInfo,
   setReferrerOptions,
+  setCustomGasPrice,
+  setGasPriceSettingsMode,
 } = swapSlice.actions;
 
 const { reducer } = swapSlice;

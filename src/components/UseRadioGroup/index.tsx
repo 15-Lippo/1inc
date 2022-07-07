@@ -3,12 +3,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { SupportedGasOptions } from '../../hooks/useGasPriceOptions';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setGasPriceInfo } from '../../store/state/swap/swapSlice';
+import { setCustomGasPrice, setGasPriceInfo } from '../../store/state/swap/swapSlice';
 
 const BpIcon = styled('span')(({ theme }) => ({
   borderRadius: '50%',
@@ -50,9 +49,22 @@ export default function UseRadioGroup({ gasOptions }: any) {
   const dispatch = useAppDispatch();
   const [value, setValue] = useState<string>(gasPriceInfo.label.toLowerCase());
 
+  useEffect(() => {
+    setValue(gasPriceInfo.label.toLowerCase());
+  }, [gasPriceInfo.label]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
     dispatch(setGasPriceInfo(gasOptions[value]));
+    dispatch(
+      setCustomGasPrice({
+        label: '',
+        maxPriorityFee: '0',
+        maxFee: '0',
+        range: '--/--',
+        timeLabel: 'N/A',
+      })
+    );
     setValue(value);
   };
 

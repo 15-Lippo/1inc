@@ -13,16 +13,17 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setCustomGasPrice, setGasPriceInfo, setGasPriceSettingsMode } from '../../store/state/swap/swapSlice';
+import { formatGweiFixed } from '../../utils/conversion';
 import { LocalStorageKeys } from '../../utils/localStorageKeys';
 import { SlippageButtonsGroup } from '../Buttons/SlippageButtonsGroup';
 import CustomTokensModal from '../CustomTokensModal';
+import GasPriceOptions from '../GasPriceOptions';
 import CustomTokensIcon from '../icons/CustomTokensIcon';
 import GasStation from '../icons/GasStation';
 import SlippageWaves from '../icons/SlippageWaves';
 import { Modal, ModalHeaderType } from '../Modal';
-import SettingsMode from '../SettingsMode';
-import UseRadioGroup from '../UseRadioGroup';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -32,13 +33,9 @@ interface SettingsModalProps {
 }
 
 const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: SettingsModalProps) => {
-  const { slippage } = useAppSelector((state) => state.swap);
-  const [mode, setMode] = useState<'basic' | 'advanced'>('basic');
+  const dispatch = useAppDispatch();
+  const { slippage, txFeeCalculation } = useAppSelector((state) => state.swap);
   const [isOpenCustomTokens, setOpenCustomTokens] = useState<boolean>(false);
-
-  const handleChangeMode = (_event: React.MouseEvent<HTMLElement>, newMode: 'basic' | 'advanced') => {
-    setMode(newMode);
-  };
 
   const countOfCustomTokens = () => {
     const existingTokens =
@@ -47,9 +44,26 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
     return Object.entries(existingTokens).length;
   };
 
+  const gasPriceGweiCustom =
+    Number(txFeeCalculation.customGasPrice.maxFee) && formatGweiFixed(txFeeCalculation.customGasPrice.maxFee);
+
+  const onReset = () => {
+    dispatch(setGasPriceSettingsMode('basic'));
+    dispatch(setGasPriceInfo(gasOptions['high']));
+    dispatch(
+      setCustomGasPrice({
+        label: '',
+        maxFee: '0',
+        maxPriorityFee: '0',
+        timeLabel: '--/--',
+        range: 'N/A',
+      })
+    );
+  };
+
   return (
     <React.Fragment>
-      <Modal headerType={ModalHeaderType.AdvancedSettings} isOpen={isOpen} goBack={goBack}>
+      <Modal headerType={ModalHeaderType.AdvancedSettings} isOpen={isOpen} goBack={goBack} onReset={onReset}>
         <Box
           sx={{
             overflow: 'scroll',
@@ -65,20 +79,43 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
               expandIcon={<ExpandMoreRoundedIcon />}
               aria-controls="panel1a-content"
               id="slippage-accordion">
-              <React.Fragment>
-                <GasStation />
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                  mr: '5px',
+                }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}>
+                  <GasStation />
+                  <Typography
+                    sx={{
+                      marginLeft: '5px',
+                    }}
+                    variant="sbm16">
+                    Gas price
+                  </Typography>
+                </Box>
                 <Typography
                   sx={{
+                    typography: 'rsm14',
+                    color: 'dark.700',
                     marginLeft: '5px',
                   }}
-                  variant="sbm16">
-                  Gas price
+                  variant="rm16">
+                  {txFeeCalculation.gasPriceSettingsMode === 'basic'
+                    ? `${txFeeCalculation.gasPriceInfo.label} (${txFeeCalculation.gasPriceInfo.range})`
+                    : `Custom (${gasPriceGweiCustom} Gwei)`}
                 </Typography>
-              </React.Fragment>
+              </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <SettingsMode mode={mode} handleChangeMode={handleChangeMode} />
-              {mode === 'basic' ? <UseRadioGroup gasOptions={gasOptions} /> : null}
+              <GasPriceOptions gasOptions={gasOptions} />
             </AccordionDetails>
           </Accordion>
           <Accordion

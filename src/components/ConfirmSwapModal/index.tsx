@@ -8,6 +8,7 @@ import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
 import { useCountdownQuote } from '../../store/state/swap/useCountdownQuote';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
 import { Token } from '../../store/state/tokens/tokensSlice';
+import { formatGweiFixed, formatUsdFixed } from '../../utils/conversion';
 import AuxButton from '../Buttons/AuxButton';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
 import { SlippageButtonsGroup } from '../Buttons/SlippageButtonsGroup';
@@ -101,10 +102,9 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
   const { countdown, reset } = useCountdownQuote();
-  const { INPUT, OUTPUT, gasPriceInfo } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
-    gasPriceInfo: state.swap.txFeeCalculation?.gasPriceInfo,
   }));
 
   const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions } = useAppSelector((state) => state.swap);
@@ -151,7 +151,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     typedValue,
     isRefresh,
     slippage,
-    gasPriceInfo?.price,
+    txFeeCalculation?.gasPriceInfo.price,
     txFeeCalculation?.gasLimit,
     referrerOptions,
   ]);
@@ -162,7 +162,12 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     data: swapInfo?.tx?.data,
     value: swapInfo?.tx?.value,
     gasLimit: txFeeCalculation?.gasLimit,
-    gasPrice: gasPriceInfo?.price,
+    ...(txFeeCalculation.gasPriceSettingsMode === 'basic'
+      ? { gasPrice: txFeeCalculation.gasPriceInfo.price }
+      : {
+          maxFeePerGas: txFeeCalculation.customGasPrice.maxFee,
+          maxPriorityFeePerGas: txFeeCalculation.customGasPrice.maxPriorityFee,
+        }),
   });
 
   const handleSendTx = useCallback(() => {
@@ -183,8 +188,14 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     if (isOpen && countdown === 1) setQuoteUpdated(true);
   }, [countdown]);
 
-  const inputUsdcPrice = INPUT?.priceInUsd && parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2);
-  const outputUsdcPrice = OUTPUT?.priceInUsd && parseFloat(formatUnits(OUTPUT?.priceInUsd, 6)).toFixed(2);
+  const inputUsdcPrice = INPUT?.priceInUsd && formatUsdFixed(INPUT?.priceInUsd);
+  const outputUsdcPrice = OUTPUT?.priceInUsd && formatUsdFixed(OUTPUT?.priceInUsd);
+
+  const gasPrice = formatGweiFixed(
+    txFeeCalculation.gasPriceSettingsMode === 'basic'
+      ? txFeeCalculation.gasPriceInfo.price
+      : txFeeCalculation.customGasPrice.maxFee
+  );
 
   return isOpen ? (
     <React.Fragment>
@@ -328,7 +339,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   <AuxButton onClick={() => setGasPriceModalOpen(true)} text="Edit" />
                   <Typography variant="rxs12" lineHeight="14px">
-                    {parseFloat(formatUnits(gasPriceInfo?.price || '0x00', 'gwei')).toFixed(2)} Gwei
+                    {`${gasPrice} Gwei`}
                   </Typography>
                 </Box>
               </Stack>

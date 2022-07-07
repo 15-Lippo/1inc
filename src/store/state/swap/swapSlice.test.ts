@@ -11,7 +11,16 @@ const restValues = {
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '',
       price: '0',
+      baseFee: '0',
     },
+    customGasPrice: {
+      label: '',
+      maxFee: '0',
+      maxPriorityFee: '0',
+      range: '',
+      timeLabel: '',
+    },
+    gasPriceSettingsMode: 'basic',
     gasLimit: '130000',
     maxFeePerGas: '',
     txFee: '',
@@ -151,28 +160,17 @@ describe('swapSlice', () => {
 
   it('selectCurrency in both fields', () => {
     const previousState = {
-      slippage: 1,
       [Field.OUTPUT]: '',
       [Field.INPUT]: '0x0000',
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
-      txFeeCalculation: {
-        gasPriceInfo: {
-          label: '',
-          range: '-- / -- - 0.00 Gwei',
-          timeLabel: '',
-          price: '0',
-        },
-      },
-      referrerOptions: {
-        referrerAddress: '',
-        fee: '',
-      },
+      ...restValues,
     };
 
     expect(
       reducer(
+        // @ts-ignore
         previousState,
         selectCurrency({
           field: Field.OUTPUT,
@@ -185,19 +183,7 @@ describe('swapSlice', () => {
       typedValue: '',
       independentField: 'INPUT',
       recipient: null,
-      slippage: 1,
-      txFeeCalculation: {
-        gasPriceInfo: {
-          label: '',
-          range: '-- / -- - 0.00 Gwei',
-          timeLabel: '',
-          price: '0',
-        },
-      },
-      referrerOptions: {
-        referrerAddress: '',
-        fee: '',
-      },
+      ...restValues,
     });
   });
 

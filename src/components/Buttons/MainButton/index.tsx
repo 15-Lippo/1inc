@@ -139,8 +139,8 @@ const styledButtonType = {
 };
 
 const StyledMainButton: StyledComponent<any> = styled(LoadingButton)<{
-  typeStyledButton: keyof typeof styledButtonType;
-}>(({ theme, typeStyledButton }) => styledButtonType[typeStyledButton](theme));
+  typestyledbutton: keyof typeof styledButtonType;
+}>(({ theme, typestyledbutton }) => styledButtonType[typestyledbutton](theme));
 
 interface MainButtonProps {
   type: MainButtonType;
@@ -195,7 +195,7 @@ const MainButton = ({ type, disabled, onClick, rateExpired, explorerName, sx }: 
 
   return (
     <StyledMainButton
-      typeStyledButton={rateExpired ? MainButtonType.MustRefresh : type}
+      typestyledbutton={rateExpired ? MainButtonType.MustRefresh : type}
       sx={{
         ...sx,
         padding: '12px 0',
