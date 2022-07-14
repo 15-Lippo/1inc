@@ -6,7 +6,7 @@ import { SxProps } from '@mui/system';
 import React from 'react';
 
 import { useAppSelector } from '../../../store/hooks';
-import { Field } from '../../../store/state/swap/swapSlice';
+import { Field } from '../../../types';
 
 export enum MainButtonType {
   Connect,

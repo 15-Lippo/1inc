@@ -2,8 +2,8 @@ import { parseUnits } from '@ethersproject/units';
 import { useState } from 'react';
 
 import { SwapApi } from '../../../api';
+import { Field } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { Field } from '../swap/swapSlice';
 import { updatePriceTokenInUsd } from './tokensSlice';
 
 interface Props {

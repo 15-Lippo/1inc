@@ -3,19 +3,22 @@ import './SwapWidget.css';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import React, { useEffect, useState } from 'react';
 
-import { DEFAULT_TOKENS, FAVORITE_TOKENS } from '../constants';
+import { DEFAULT_TOKENS, FAVORITE_TOKENS, REFRESH_QUOTE_DELAY_MS } from '../constants';
 import { SupportedChainId } from '../constants/chains';
 import useActiveWeb3React from '../hooks/useActiveWeb3React';
 import { useAlertMessage } from '../hooks/useAlertMessage';
 import { SupportedGasOptions, useGasPriceOptions } from '../hooks/useGasPriceOptions';
+import { useInterval } from '../hooks/useInterval';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ApproveStatus } from '../store/state/approve/approveSlice';
 import { useApproval } from '../store/state/approve/hooks';
 import { useCalculateApprovalCost } from '../store/state/approve/useCalculateApprovalCost';
-import { Field, selectCurrency, setGasPriceInfo } from '../store/state/swap/swapSlice';
+import { selectCurrency, setGasPriceInfo } from '../store/state/swap/swapSlice';
+import { useUpdateQuote } from '../store/state/swap/useUpdateQuote';
 import { useTokens } from '../store/state/tokens/useTokens';
 import { setExplorer } from '../store/state/user/userSlice';
+import { Field } from '../types';
 import AddTokenModal from './AddTokenModal';
 import AlertModal from './AlertModal';
 import MainButton, { MainButtonType } from './Buttons/MainButton';
@@ -36,18 +39,32 @@ function SwapWidget() {
   const { addresses } = useTokens();
   const { status, approve } = useApproval();
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
-  const { INPUT, OUTPUT, typedValue, tokensList, quoteError, approveTransactionInfo, txFee } = useAppSelector(
-    (state) => ({
-      quoteError: state.swap.quoteError,
-      INPUT: state.swap.INPUT,
-      OUTPUT: state.swap.OUTPUT,
-      typedValue: state.swap.typedValue,
-      tokensList: state.tokens.tokens,
-      lastTxHash: state.transactions.lastTxHash,
-      approveTransactionInfo: state.approve.approveTransactionInfo,
-      txFee: state.swap.txFeeCalculation.txFee,
-    })
-  );
+  const {
+    INPUT,
+    OUTPUT,
+    typedValue,
+    tokensList,
+    quoteError,
+    approveTransactionInfo,
+    txFee,
+    referrerOptions,
+    inputToken,
+    outputToken,
+    lastQuoteUpdateTimestamp,
+  } = useAppSelector((state) => ({
+    quoteError: state.swap.quoteError,
+    INPUT: state.swap.INPUT,
+    OUTPUT: state.swap.OUTPUT,
+    typedValue: state.swap.typedValue,
+    tokensList: state.tokens.tokens,
+    lastTxHash: state.transactions.lastTxHash,
+    approveTransactionInfo: state.approve.approveTransactionInfo,
+    txFee: state.swap.txFeeCalculation.txFee,
+    referrerOptions: state.swap.referrerOptions,
+    inputToken: state.tokens.tokens[state.swap[Field.INPUT]] || {},
+    outputToken: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
+    lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
+  }));
   const [, setFavoriteTokens] = useLocalStorage('favorite-tokens', FAVORITE_TOKENS);
   const { approvalTxFee, estimateGasLimit: estimateApprovalCost } = useCalculateApprovalCost();
 
@@ -59,6 +76,7 @@ function SwapWidget() {
     open: false,
   });
   const { errorMessage, setErrorMessage, shouldOpenModal, clearMessage } = useAlertMessage();
+  const updateQuote = useUpdateQuote();
 
   useEffect(() => {
     // Set default high gas price option:
@@ -126,6 +144,19 @@ function SwapWidget() {
     return <MainButton type={MainButtonType.Swap} onClick={() => setConfirmModalOpen(true)} />;
   };
 
+  // because we can manually update the quote, we need to check
+  // that current update is really occurring after the specified delay
+  useInterval(() => {
+    const time = performance.now();
+    if (time - lastQuoteUpdateTimestamp >= REFRESH_QUOTE_DELAY_MS) {
+      updateQuote();
+    }
+  }, 1000);
+
+  useEffect(() => {
+    updateQuote();
+  }, [inputToken?.address, outputToken?.address, typedValue, chainId, account, referrerOptions]);
+
   return (
     <div style={{ position: 'relative', height: 'inherit', width: 'inherit' }}>
       <Modal
@@ -155,6 +186,7 @@ function SwapWidget() {
         isOpen={isSettingsOpen}
         goBack={() => setSettingsOpen(false)}
       />
+
       <SettingsModal
         onOpenAddCustomToken={() => setAddTokenOpen(true)}
         gasOptions={gasOptions}

@@ -7,6 +7,7 @@ import {
 } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
+import { Field } from '../../../types';
 
 export const fetchQuote = createAsyncThunk(
   'swap/getQuoteInfo',
@@ -34,11 +35,6 @@ export const fetchSwap = createAsyncThunk(
     }
   }
 );
-
-export enum Field {
-  INPUT = 'INPUT',
-  OUTPUT = 'OUTPUT',
-}
 
 export interface SwapState {
   readonly independentField: Field;
@@ -77,6 +73,7 @@ export interface SwapState {
     referrerAddress: string;
     fee: string;
   };
+  lastQuoteUpdateTimestamp: number;
 }
 
 export const initialState: SwapState = {
@@ -160,6 +157,7 @@ export const initialState: SwapState = {
     referrerAddress: '',
     fee: '',
   },
+  lastQuoteUpdateTimestamp: -1,
 };
 
 const swapSlice = createSlice({
@@ -267,6 +265,7 @@ const swapSlice = createSlice({
         state.loadingQuote = 'succeeded';
         state.quoteError = null;
         state.quoteInfo = action.payload;
+        state.lastQuoteUpdateTimestamp = performance.now();
       }
     });
     user.addCase(fetchSwap.fulfilled, (state, action) => {

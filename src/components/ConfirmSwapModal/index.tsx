@@ -2,12 +2,15 @@ import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { REFRESH_QUOTE_DELAY_MS } from '../../constants';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
+import { useInterval } from '../../hooks/useInterval';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchSwap, Field } from '../../store/state/swap/swapSlice';
-import { useCountdownQuote } from '../../store/state/swap/useCountdownQuote';
+import { fetchSwap } from '../../store/state/swap/swapSlice';
 import { useSwapCallback } from '../../store/state/swap/useSwapCallback';
+import { useUpdateQuote } from '../../store/state/swap/useUpdateQuote';
 import { Token } from '../../store/state/tokens/tokensSlice';
+import { Field } from '../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../utils/conversion';
 import AuxButton from '../Buttons/AuxButton';
 import MainButton, { MainButtonType } from '../Buttons/MainButton';
@@ -98,25 +101,74 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
   );
 };
 
+enum RefreshStatus {
+  NO_REFRESH_NEEDED,
+  SHOULD_REFRESH,
+  EXTERNAL_REFRESH_OCCURRED,
+  INTERNAL_REFRESH_OCCURRED,
+}
+
 const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
   const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
-  const { countdown, reset } = useCountdownQuote();
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
   }));
+  const updateQuote = useUpdateQuote();
 
-  const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions } = useAppSelector((state) => state.swap);
+  const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions, lastQuoteUpdateTimestamp } =
+    useAppSelector((state) => state.swap);
 
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
   const [slippageModalOpen, setSlippageModalOpen] = useState<boolean>(false);
   const [gasPriceModalOpen, setGasPriceModalOpen] = useState<boolean>(false);
-  const [isRefresh, setIsRefresh] = useState<boolean>(false);
-  const [quoteUpdated, setQuoteUpdated] = useState<boolean>(false);
+  const [refreshStatus, setRefreshStatus] = useState<RefreshStatus>(RefreshStatus.NO_REFRESH_NEEDED);
 
-  const refreshTimeInterval = countdown > 0 && countdown <= 7;
+  const [displayedToTokenAmount, setDisplayedToTokenAmount] = useState<string>('0');
+
+  // if less than 5 seconds before next refresh, show suggest refresh button
+  const updateRefreshStatus = () => {
+    switch (refreshStatus) {
+      case RefreshStatus.INTERNAL_REFRESH_OCCURRED:
+      case RefreshStatus.EXTERNAL_REFRESH_OCCURRED:
+        return;
+      default: {
+        const newStatus =
+          performance.now() - lastQuoteUpdateTimestamp > REFRESH_QUOTE_DELAY_MS - 5000
+            ? RefreshStatus.SHOULD_REFRESH
+            : RefreshStatus.NO_REFRESH_NEEDED;
+        if (newStatus !== refreshStatus) {
+          setRefreshStatus(newStatus);
+        }
+      }
+    }
+  };
+
+  // update refresh status every second
+  useInterval(updateRefreshStatus, 1000);
+
+  // if quote was updated externally, show red refresh button
+  useEffect(() => {
+    if (isOpen && refreshStatus !== RefreshStatus.INTERNAL_REFRESH_OCCURRED) {
+      setRefreshStatus(RefreshStatus.EXTERNAL_REFRESH_OCCURRED);
+    } else {
+      setRefreshStatus(RefreshStatus.NO_REFRESH_NEEDED);
+    }
+  }, [lastQuoteUpdateTimestamp]);
+
+  useEffect(() => {
+    if (refreshStatus === RefreshStatus.INTERNAL_REFRESH_OCCURRED) {
+      updateQuote();
+    } else if (refreshStatus === RefreshStatus.NO_REFRESH_NEEDED) {
+      setDisplayedToTokenAmount(swapInfo?.toTokenAmount || '0x00');
+    }
+  }, [refreshStatus, swapInfo]);
+
+  useEffect(() => {
+    isOpen && swapInfo && setDisplayedToTokenAmount(swapInfo.toTokenAmount);
+  }, [isOpen]);
 
   useEffect(() => {
     const outputAmount = swapInfo?.toTokenAmount;
@@ -149,7 +201,6 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     OUTPUT,
     account,
     typedValue,
-    isRefresh,
     slippage,
     txFeeCalculation?.gasPriceInfo.price,
     txFeeCalculation?.gasLimit,
@@ -178,15 +229,13 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     }
   }, [swapCallback]);
 
-  const onRefresh = () => {
-    setIsRefresh(!isRefresh);
-    setQuoteUpdated(false);
-    reset();
+  const onRefreshClick = () => {
+    if (refreshStatus !== RefreshStatus.EXTERNAL_REFRESH_OCCURRED) {
+      setRefreshStatus(RefreshStatus.INTERNAL_REFRESH_OCCURRED);
+    } else {
+      setRefreshStatus(RefreshStatus.NO_REFRESH_NEEDED);
+    }
   };
-
-  useEffect(() => {
-    if (isOpen && countdown === 1) setQuoteUpdated(true);
-  }, [countdown]);
 
   const inputUsdcPrice = INPUT?.priceInUsd && formatUsdFixed(INPUT?.priceInUsd);
   const outputUsdcPrice = OUTPUT?.priceInUsd && formatUsdFixed(OUTPUT?.priceInUsd);
@@ -199,13 +248,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
 
   return isOpen ? (
     <React.Fragment>
-      <Modal
-        headerType={ModalHeaderType.Confirm}
-        goBack={() => {
-          goBack();
-          setQuoteUpdated(false);
-        }}
-        isOpen={isOpen}>
+      <Modal headerType={ModalHeaderType.Confirm} goBack={goBack} isOpen={isOpen}>
         <Box
           sx={{
             height: '100%',
@@ -231,7 +274,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
             <SwapTokenBox
               field={Field.OUTPUT}
               token={OUTPUT}
-              amount={parseFloat(formatUnits(swapInfo?.toTokenAmount || '0x00')).toFixed(6)}
+              amount={parseFloat(formatUnits(displayedToTokenAmount)).toFixed(6)}
               usdcPrice={outputUsdcPrice}
             />
             <Stack>
@@ -370,28 +413,26 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
               />
             </Stack>
           </Stack>
-          {refreshTimeInterval || quoteUpdated ? (
+          {refreshStatus === RefreshStatus.NO_REFRESH_NEEDED ? (
+            <MainButton
+              type={MainButtonType.Confirm}
+              onClick={handleSendTx}
+              disabled={!(account && typedValue && swapInfo?.tx?.data)}
+            />
+          ) : (
             <Stack direction="column" spacing={1}>
               <RefreshRateWarningMsg
                 inputTokenSymbol={INPUT.symbol}
                 outputTokenSymbol={OUTPUT.symbol}
-                quoteUpdated={quoteUpdated}
+                quoteUpdated={refreshStatus === RefreshStatus.EXTERNAL_REFRESH_OCCURRED}
               />
               <MainButton
                 type={MainButtonType.Refresh}
-                onClick={onRefresh}
+                onClick={onRefreshClick}
                 disabled={!(account && typedValue && swapInfo?.tx?.data)}
-                rateExpired={quoteUpdated}
+                rateExpired={refreshStatus === RefreshStatus.EXTERNAL_REFRESH_OCCURRED}
               />
             </Stack>
-          ) : (
-            !quoteUpdated && (
-              <MainButton
-                type={MainButtonType.Confirm}
-                onClick={handleSendTx}
-                disabled={!(account && typedValue && swapInfo?.tx?.data)}
-              />
-            )
           )}
         </Box>
       </Modal>

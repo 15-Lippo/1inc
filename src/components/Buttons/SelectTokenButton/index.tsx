@@ -4,7 +4,7 @@ import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
 import { useAppSelector } from '../../../store/hooks';
-import { Field } from '../../../store/state/swap/swapSlice';
+import { Field } from '../../../types';
 
 interface SelectedTokenProps {
   field: Field;

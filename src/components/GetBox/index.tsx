@@ -3,8 +3,8 @@ import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 
 import { useAppSelector } from '../../store/hooks';
-import { Field } from '../../store/state/swap/swapSlice';
 import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
+import { Field } from '../../types';
 import SelectTokenButton from '../Buttons/SelectTokenButton';
 
 interface GetBoxProps {

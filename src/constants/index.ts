@@ -1,8 +1,8 @@
-import { Field } from '../store/state/swap/swapSlice';
+import { Field } from '../types';
 import { SupportedChainId } from './chains';
 
 export const TOKEN_HELPER_ADDRESS = {
-  [SupportedChainId.LOCALHOST]: '0x31A40a1a176f66fd63ca8075eAE682D2Dc438B2B',
+  [SupportedChainId.LOCALHOST]: process.env.REACT_APP_HELPER_CONTRACT || '',
   [SupportedChainId.MAINNET]: '',
   [SupportedChainId.ARBITRUM_ONE]: '',
   [SupportedChainId.OPTIMISM]: '',
@@ -15,7 +15,8 @@ export const TOKEN_HELPER_ADDRESS = {
 
 export const NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
-export const REFRESH_QUOTE_DELAY = 15;
+export const REFRESH_QUOTE_DELAY = 10;
+export const REFRESH_QUOTE_DELAY_MS = REFRESH_QUOTE_DELAY * 1000;
 
 export const DEFAULT_TOKENS = {
   [Field.INPUT]: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',

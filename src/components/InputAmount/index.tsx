@@ -6,8 +6,9 @@ import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { Field, typeInput } from '../../store/state/swap/swapSlice';
+import { typeInput } from '../../store/state/swap/swapSlice';
 import { Token } from '../../store/state/tokens/tokensSlice';
+import { Field } from '../../types';
 
 export const StyledTextField: StyledComponent<StandardTextFieldProps> = styled(TextField)(({ theme }) => ({
   width: '100%',

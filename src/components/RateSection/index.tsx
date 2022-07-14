@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useAppSelector } from '../../store/hooks';
-import { Field } from '../../store/state/swap/swapSlice';
+import { Field } from '../../types';
 import RouteArrow from '../icons/RouteArrow';
 import { TooltipIcon } from '../icons/TooltipIcon';
 import { LightTooltip } from '../LightTooltip';

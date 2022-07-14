@@ -1,4 +1,5 @@
-import reducer, { Field, selectCurrency, switchCurrencies, typeInput } from './swapSlice';
+import { Field } from '../../../types';
+import reducer, { selectCurrency, switchCurrencies, typeInput } from './swapSlice';
 import { initialState as swapInitialState } from './swapSlice';
 
 export const initialState = swapInitialState;
