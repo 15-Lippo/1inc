@@ -3,13 +3,9 @@ import './SwapWidget.css';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import React, { useEffect, useState } from 'react';
 
-import { DEFAULT_TOKENS, FAVORITE_TOKENS, REFRESH_QUOTE_DELAY_MS } from '../constants';
-import { SupportedChainId } from '../constants/chains';
-import useActiveWeb3React from '../hooks/useActiveWeb3React';
-import { useAlertMessage } from '../hooks/useAlertMessage';
-import { SupportedGasOptions, useGasPriceOptions } from '../hooks/useGasPriceOptions';
-import { useInterval } from '../hooks/useInterval';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { REFRESH_QUOTE_DELAY_MS, SupportedChainId, Tokens } from '../constants';
+import { SupportedGasOptions, useAlertMessage, useGasPriceOptions, useInterval, useLocalStorage } from '../hooks';
+import { useActiveWeb3React } from '../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ApproveStatus } from '../store/state/approve/approveSlice';
 import { useApproval } from '../store/state/approve/hooks';
@@ -19,20 +15,26 @@ import { useUpdateQuote } from '../store/state/swap/useUpdateQuote';
 import { useTokens } from '../store/state/tokens/useTokens';
 import { setExplorer } from '../store/state/user/userSlice';
 import { Field } from '../types';
-import AddTokenModal from './AddTokenModal';
-import AlertModal from './AlertModal';
-import MainButton, { MainButtonType } from './Buttons/MainButton';
-import SwitchTokensButton from './Buttons/SwitchTokensButton';
-import ConfirmSwapModal from './ConfirmSwapModal';
+import { MainButton, MainButtonType, SwitchTokensButton } from './buttons';
 import GetBox from './GetBox';
-import { Modal, ModalHeaderType } from './Modal';
+import {
+  AddTokenModal,
+  AlertModal,
+  ConfirmSwapModal,
+  Modal,
+  ModalHeaderType,
+  SelectTokenModal,
+  SettingsModal,
+} from './modals';
 import RateSection from './RateSection';
-import SelectTokenModal from './SelectTokenModal';
 import SendBox from './SendBox';
-import SettingsModal from './SettingsModal';
 import WalletConnect from './WalletConnect';
 
-function SwapWidget() {
+export type SwapWidgetProps = {
+  width?: string | number;
+};
+
+function SwapWidget({ width }: SwapWidgetProps) {
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
   const { gasOptions, blockNum } = useGasPriceOptions();
@@ -65,7 +67,7 @@ function SwapWidget() {
     outputToken: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
   }));
-  const [, setFavoriteTokens] = useLocalStorage('favorite-tokens', FAVORITE_TOKENS);
+  const [, setFavoriteTokens] = useLocalStorage('favorite-tokens', Tokens.FAVORITE_TOKENS);
   const { approvalTxFee, estimateGasLimit: estimateApprovalCost } = useCalculateApprovalCost();
 
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
@@ -87,10 +89,10 @@ function SwapWidget() {
 
   useEffect(() => {
     const setDefaultTokens = () => {
-      if (DEFAULT_TOKENS[Field.INPUT])
-        dispatch(selectCurrency({ currency: DEFAULT_TOKENS[Field.INPUT], field: Field.INPUT }));
-      if (DEFAULT_TOKENS[Field.OUTPUT])
-        dispatch(selectCurrency({ currency: DEFAULT_TOKENS[Field.OUTPUT], field: Field.OUTPUT }));
+      if (Tokens.DEFAULT_TOKENS[Field.INPUT])
+        dispatch(selectCurrency({ currency: Tokens.DEFAULT_TOKENS[Field.INPUT], field: Field.INPUT }));
+      if (Tokens.DEFAULT_TOKENS[Field.OUTPUT])
+        dispatch(selectCurrency({ currency: Tokens.DEFAULT_TOKENS[Field.OUTPUT], field: Field.OUTPUT }));
     };
 
     if (!addresses.length) return;
@@ -100,7 +102,7 @@ function SwapWidget() {
   }, [addresses.length, INPUT, OUTPUT]);
 
   useEffect(() => {
-    if (!localStorage.getItem('favorite-tokens')) setFavoriteTokens(FAVORITE_TOKENS);
+    if (!localStorage.getItem('favorite-tokens')) setFavoriteTokens(Tokens.FAVORITE_TOKENS);
     dispatch(setExplorer({ chainId: chainId || SupportedChainId.MAINNET }));
   }, [chainId]);
 
@@ -114,7 +116,7 @@ function SwapWidget() {
   }, [approveTransactionInfo.data]);
 
   const handleApproveClick = () => {
-    if (!hasEnoughBalanceByAddress(approvalTxFee, DEFAULT_TOKENS[Field.INPUT])) {
+    if (!hasEnoughBalanceByAddress(approvalTxFee, Tokens.DEFAULT_TOKENS[Field.INPUT])) {
       setErrorMessage({
         text: 'Insufficient balance to pay for gas',
         title: 'Alert',
@@ -126,10 +128,10 @@ function SwapWidget() {
 
   const hasEnoughNativeTokenBalanceToSwap = () => {
     let paymentCost = BigNumber.from(txFee);
-    if (INPUT === DEFAULT_TOKENS[Field.INPUT]) {
+    if (INPUT === Tokens.DEFAULT_TOKENS[Field.INPUT]) {
       paymentCost = paymentCost.add(typedValue);
     }
-    return hasEnoughBalanceByAddress(paymentCost, DEFAULT_TOKENS[Field.INPUT]);
+    return hasEnoughBalanceByAddress(paymentCost, Tokens.DEFAULT_TOKENS[Field.INPUT]);
   };
 
   const mainButtonByType = () => {
@@ -158,7 +160,7 @@ function SwapWidget() {
   }, [inputToken?.address, outputToken?.address, typedValue, chainId, account, referrerOptions]);
 
   return (
-    <div style={{ position: 'relative', height: 'inherit', width: 'inherit' }}>
+    <div style={{ position: 'relative', height: 'inherit', width }}>
       <Modal
         headerType={ModalHeaderType.Main}
         isOpen

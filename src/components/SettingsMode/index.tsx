@@ -1,7 +1,7 @@
 import { Paper, ToggleButton } from '@mui/material';
 import React from 'react';
 
-import { StyledToggleButtonGroup } from '../Buttons/SlippageButtonsGroup';
+import { StyledToggleButtonGroup } from '../buttons';
 
 interface SettingsModeProps {
   mode: 'basic' | 'advanced';

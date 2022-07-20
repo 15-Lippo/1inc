@@ -3,15 +3,15 @@ import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 
-import { NATIVE_TOKEN_ADDRESS } from '../../constants';
-import useActiveWeb3React from '../../hooks/useActiveWeb3React';
+import { Tokens } from '../../constants';
+import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ApproveStatus } from '../../store/state/approve/approveSlice';
 import { typeInput } from '../../store/state/swap/swapSlice';
 import { Field } from '../../types';
-import AuxButton from '../Buttons/AuxButton';
-import SelectTokenButton from '../Buttons/SelectTokenButton';
-import InputAmount from '../InputAmount';
+import { AuxButton } from '../buttons';
+import SelectTokenButton from '../buttons/SelectTokenButton';
+import { InputAmount } from '../fields';
 
 interface SendBoxProps {
   onSelectToken: () => void;
@@ -66,7 +66,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
       return;
     }
     let maxAmount = BigNumber.from(bal);
-    if (INPUT.address === NATIVE_TOKEN_ADDRESS) {
+    if (INPUT.address === Tokens.NATIVE_TOKEN_ADDRESS) {
       maxAmount = maxAmount.sub(txFee as string); // txFee is validated 3 lines above
     }
     dispatch(

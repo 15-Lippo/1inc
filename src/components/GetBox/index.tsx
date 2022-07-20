@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
 import { Field } from '../../types';
-import SelectTokenButton from '../Buttons/SelectTokenButton';
+import { SelectTokenButton } from '../buttons';
 
 interface GetBoxProps {
   onSelectToken: () => void;

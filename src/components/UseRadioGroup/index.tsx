@@ -5,7 +5,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-import { SupportedGasOptions } from '../../hooks/useGasPriceOptions';
+import { SupportedGasOptions } from '../../hooks';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setCustomGasPrice, setGasPriceInfo } from '../../store/state/swap/swapSlice';
 

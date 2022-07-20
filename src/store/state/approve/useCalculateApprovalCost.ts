@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { useCallback, useEffect, useState } from 'react';
 
-import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
+import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { calculateTxFee } from '../../../utils';
 import { useAppSelector } from '../../hooks';
 

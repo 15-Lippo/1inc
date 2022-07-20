@@ -2,5 +2,4 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 #export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-# yarn hooks:pre-commit
-#yarn test
+yarn hooks:pre-commit

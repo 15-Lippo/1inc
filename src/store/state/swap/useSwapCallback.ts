@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers';
 
-import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
+import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenInfo } from '../tokens/balances';
 import { updateAllTokenBalances } from '../tokens/tokensSlice';

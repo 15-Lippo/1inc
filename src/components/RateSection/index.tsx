@@ -2,11 +2,10 @@ import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import useActiveWeb3React from '../../hooks/useActiveWeb3React';
+import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../types';
-import RouteArrow from '../icons/RouteArrow';
-import { TooltipIcon } from '../icons/TooltipIcon';
+import { RouteArrow, TooltipIcon } from '../icons';
 import { LightTooltip } from '../LightTooltip';
 
 const RateSection = () => {
@@ -111,7 +110,7 @@ const RateSection = () => {
                   </Stack>
                 </Stack>
               }>
-              {TooltipIcon}
+              <TooltipIcon />
             </LightTooltip>
           </Stack>
         )}

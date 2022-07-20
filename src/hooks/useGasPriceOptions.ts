@@ -2,8 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { useEffect, useState } from 'react';
 
-import { formatGweiFixed, parseGwei } from '../utils/conversion';
-import useActiveWeb3React from './useActiveWeb3React';
+import { useActiveWeb3React } from '../packages/web3-provider';
+import { formatGweiFixed, parseGwei } from '../utils';
 
 export enum SupportedGasOptions {
   Instant = 'instant',

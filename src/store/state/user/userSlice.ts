@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { EXPLORER_LINKS } from '../../../constants';
-import { SupportedChainId } from '../../../constants/chains';
+import { EXPLORER_LINKS, SupportedChainId } from '../../../constants';
 
 export interface UserState {
   userDarkMode: boolean | null; // the user's choice for dark mode or light mode

@@ -1,5 +1,5 @@
 import { useAppSelector } from '../store/hooks';
-import { formatGweiFixed, parseGwei } from '../utils/conversion';
+import { formatGweiFixed, parseGwei } from '../utils';
 
 export const useAdvancedSettings = () => {
   const { gasPriceInfo } = useAppSelector((state) => state.swap.txFeeCalculation);

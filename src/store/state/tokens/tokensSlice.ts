@@ -3,8 +3,7 @@ import { ProtocolsResponseDto } from '@yozh-io/1inch-widget-api-client';
 
 // @ts-ignore
 import { CoinsApi, InfoApi } from '../../../api';
-import { MAIN_TOKENS } from '../../../constants';
-import { LocalStorageKeys } from '../../../utils/localStorageKeys';
+import { LocalStorageKeys, Tokens } from '../../../constants';
 
 export interface Token {
   symbol: string;
@@ -76,8 +75,8 @@ export const fetchTokens = createAsyncThunk('tokens/getTokensInfo', async (_user
         // @ts-ignore
         fb = b.name;
 
-      if (MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
-      if (MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
+      if (Tokens.MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
+      if (Tokens.MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
 
       // compare ignoring case:
       if (fa.localeCompare(fb) > 0) return 1;

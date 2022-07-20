@@ -1,11 +1,11 @@
 import React from 'react';
 import { useCallback } from 'react';
 
-import MainButton, { MainButtonType } from '../Buttons/MainButton';
-import metaMask from './../../connector/metaMask';
+import { connectors, Web3ConnectorType } from '../../packages/web3-provider';
+import { MainButton, MainButtonType } from '../buttons';
 
 const WalletConnect = () => {
-  const [connector, hooks] = metaMask;
+  const [connector, hooks] = connectors[0] as Web3ConnectorType; // only metamask
   const isActive = hooks.useIsActive();
   const onClick = useCallback(() => {
     console.log(connector, isActive);

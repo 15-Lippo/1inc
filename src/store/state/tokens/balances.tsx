@@ -1,9 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
 
 import TokenHelper from '../../../abi/TokenHelper.json';
-import { TOKEN_HELPER_ADDRESS } from '../../../constants';
-import { SupportedChainId } from '../../../constants/chains';
-import { getContract } from '../../../utils/contract';
+import { SupportedChainId, TOKEN_HELPER_ADDRESS } from '../../../constants';
+import { getContract } from '../../../utils';
 
 export interface IUserTokenInfo {
   [address: string]: {

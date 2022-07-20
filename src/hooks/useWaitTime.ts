@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { useMemo } from 'react';
 
-import { formatGweiFixed, parseGwei } from '../utils/conversion';
+import { formatGweiFixed, parseGwei } from '../utils';
 
 type Props = {
   maxFee: string;

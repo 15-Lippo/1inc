@@ -4,13 +4,12 @@ import React from 'react';
 import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
 
-import { useActiveProvider } from '../connector';
-import { ActiveWeb3Provider } from '../hooks/useActiveWeb3React';
+import { ActiveWeb3Provider, useActiveProvider } from '../packages/web3-provider';
 import store from '../store';
 import { setReferrerOptions } from '../store/state/swap/swapSlice';
 import theme from '../theme/config';
 import { ReferrerOptions } from '../types';
-import { validateReferrerOptions } from '../utils/validateReferrerOptions';
+import { validateReferrerOptions } from '../utils';
 import SwapWidget from './SwapWidget';
 
 export type WidgetProps = {
@@ -18,11 +17,11 @@ export type WidgetProps = {
   // locale?: SupportedLocale
   // provider?: JsonRpcProvider;
   jsonRpcEndpoint?: string | JsonRpcProvider;
-  // width?: string | number
+  width?: string | number;
   referrerOptions?: ReferrerOptions;
 };
 
-export default function Widget({ jsonRpcEndpoint, referrerOptions }: PropsWithChildren<WidgetProps>) {
+export default function Widget({ jsonRpcEndpoint, referrerOptions, width }: PropsWithChildren<WidgetProps>) {
   const provider = useActiveProvider();
 
   if (referrerOptions) {
@@ -39,7 +38,7 @@ export default function Widget({ jsonRpcEndpoint, referrerOptions }: PropsWithCh
           <ActiveWeb3Provider
             provider={provider}
             jsonRpcEndpoint={jsonRpcEndpoint || process.env.REACT_APP_JSON_RPC_ENDPOINT}>
-            <SwapWidget />
+            <SwapWidget width={width || 418} />
           </ActiveWeb3Provider>
         </Provider>
       </React.StrictMode>

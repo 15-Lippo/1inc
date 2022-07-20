@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { TransactionRequest } from '@ethersproject/providers';
 import { useCallback, useEffect, useState } from 'react';
 
-import useActiveWeb3React from '../../../hooks/useActiveWeb3React';
+import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { calculateGasMargin, calculateTxFee } from '../../../utils';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setGasLimit, setTxFee } from './swapSlice';

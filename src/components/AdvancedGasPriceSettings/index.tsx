@@ -2,16 +2,14 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 
-import { CustomGasPriceFieldErrorTypes, CustomGasPriceFieldId } from '../../constants/advancedGasPriceSettings';
-import useActiveWeb3React from '../../hooks/useActiveWeb3React';
-import { useAdvancedSettings } from '../../hooks/useAdvancedSettings';
-import { useFeeRange } from '../../hooks/useFeeRange';
-import { useWaitTime } from '../../hooks/useWaitTime';
+import { CustomGasPriceFieldId, GasPriceErrorTypes } from '../../constants';
+import { useAdvancedSettings, useFeeRange, useWaitTime } from '../../hooks';
+import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setCustomGasPrice } from '../../store/state/swap/swapSlice';
-import { formatGweiFixed, parseGwei } from '../../utils/conversion';
-import EstimatedHighFeeButton from '../Buttons/EstimatedHighFeeButton';
-import CustomGasPriceField from '../CustomGasPriceField/input';
+import { formatGweiFixed, parseGwei } from '../../utils';
+import { MaxFeeButton } from '../buttons';
+import { CustomGasPriceField } from '../fields';
 
 type CustomSettingsState = {
   label: string;
@@ -122,13 +120,13 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
       updateState(setCustomSettings, { range: 'N/A', timeLabel: '-- / --' });
       updateState(setFieldError, {
         isInvalidMaxFee: true,
-        typeError: CustomGasPriceFieldErrorTypes[CustomGasPriceFieldId.maxFee].greaterBaseFee,
+        typeError: GasPriceErrorTypes[CustomGasPriceFieldId.maxFee].greaterBaseFee,
       });
     } else if (parseGwei(customSettings.maxPriorityFee).gt(parseGwei(customSettings.maxFee))) {
       // maxPriorityFee > maxFee
       updateState(setFieldError, {
         isInvalidMaxFee: true,
-        typeError: CustomGasPriceFieldErrorTypes[CustomGasPriceFieldId.maxFee].lessPriorityFee,
+        typeError: GasPriceErrorTypes[CustomGasPriceFieldId.maxFee].lessPriorityFee,
       });
     } else {
       updateState(setFieldError, { isInvalidMaxFee: false, typeError: '' });
@@ -195,7 +193,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
           <Typography variant="rm16" lineHeight="19px" color="dark.700">
             Max priority fee
           </Typography>
-          <EstimatedHighFeeButton value={estPriorityFee} onClick={onClickEstPriorityFee} />
+          <MaxFeeButton value={estPriorityFee} onClick={onClickEstPriorityFee} />
         </Stack>
         <CustomGasPriceField
           value={customSettings.maxPriorityFee}
@@ -214,7 +212,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
           <Typography variant="rm16" lineHeight="19px">
             Max fee
           </Typography>
-          <EstimatedHighFeeButton value={estMaxFee} onClick={onClickEstMaxFee} />
+          <MaxFeeButton value={estMaxFee} onClick={onClickEstMaxFee} />
         </Stack>
         <CustomGasPriceField
           value={customSettings.maxFee}

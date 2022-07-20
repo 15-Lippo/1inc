@@ -15,11 +15,8 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { useAppSelector } from '../../store/hooks';
 import { Token } from '../../store/state/tokens/tokensSlice';
-import CloseButton from '../Buttons/CloseButton';
-import LinkButton from '../Buttons/LinkButton';
-import PinButton from '../Buttons/PinButton';
-import NoLogoURI from '../icons/NoLogoURI';
-import NoTokenFoundIcon from '../icons/NoTokenFoundIcon';
+import { CloseButton, LinkButton, PinButton } from '../buttons';
+import { NoLogoURI, NoTokenFoundIcon } from '../icons';
 
 interface VirtualizedTokenListProps {
   loading?: boolean;
