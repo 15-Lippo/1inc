@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setSlippage } from '../../../store/state/swap/swapSlice';
-import theme from '../../../theme/config';
 import { StyledSearchField } from '../../fields';
 import { SlippageWarningMsg } from '../../messages';
 
@@ -110,7 +109,7 @@ export const SlippageButtonsGroup = () => {
           value={customSlippage}
           sx={{
             padding: 0,
-            margin: theme.spacing(0.5),
+            gap: 0.5,
             width: '150px',
             '& input::-webkit-inner-spin-button, & input::-webkit-outer-spin-button': {
               WebkitAppearance: 'none',
@@ -122,7 +121,7 @@ export const SlippageButtonsGroup = () => {
                 padding: '11px',
               },
               '& fieldset': {
-                borderColor: customSlippage ? theme.palette.blue[500] : '',
+                borderColor: customSlippage ? 'blue.500' : '',
               },
             },
           }}

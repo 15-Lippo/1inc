@@ -13,7 +13,13 @@ interface AuxButtonProps {
 
 const AuxButton = ({ onClick, text, variant, sx }: AuxButtonProps) => {
   return (
-    <Link variant={variant || 'rxs12'} lineHeight="14px" href="#" sx={sx} underline="none" onClick={onClick}>
+    <Link
+      variant={variant || 'rxs12'}
+      lineHeight="14px"
+      href="#"
+      sx={{ color: 'widget.text-primary-01', ...sx }}
+      underline="none"
+      onClick={onClick}>
       {text}
     </Link>
   );
