@@ -37,6 +37,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   const { balancesInUsd, priceTokenInUsd } = useTokenPriceInUsd({ isBalanceInUsd: true });
 
   useEffect(() => {
+    if (!tokensList.length) return;
     setData(tokensList);
   }, [tokensList.length, inputBalance, priceTokenInUsd]);
 
@@ -105,16 +106,19 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
         flexWrap="wrap"
         sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 16px 12px' }}>
         {chainId
-          ? favoriteTokens[chainId].map((key: string) => (
-              <PinnedToken
-                key={tokens[key].address}
-                id={tokens[key].address}
-                symbol={tokens[key].symbol}
-                logo={tokens[key].logoURI}
-                onChoose={onChoose}
-                onUnpin={onUnpinToken}
-              />
-            ))
+          ? favoriteTokens[chainId].map(
+              (key: string) =>
+                tokens[key].address && (
+                  <PinnedToken
+                    key={tokens[key].address}
+                    id={tokens[key].address}
+                    symbol={tokens[key].symbol}
+                    logo={tokens[key].logoURI}
+                    onChoose={onChoose}
+                    onUnpin={onUnpinToken}
+                  />
+                )
+            )
           : null}
       </Stack>
 
