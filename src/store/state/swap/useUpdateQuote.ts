@@ -1,3 +1,4 @@
+import { SupportedChainId } from '../../../constants';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { Field } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -26,7 +27,9 @@ export const useUpdateQuote = () => {
           toTokenAddress: OUTPUT.address,
           amount: typedValue,
           gasLimit,
-          ...(referrerOptions.referrerAddress ? { fee: referrerOptions.fee } : {}),
+          ...(referrerOptions[chainId as SupportedChainId].referrerAddress
+            ? { fee: referrerOptions[chainId as SupportedChainId].fee }
+            : {}),
         },
         chainId,
       })

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
-import { Field } from '../../../types';
+import { Field, ReferrerOptions } from '../../../types';
 
 interface FetchQuoteParams {
   quoteInfo: ethereumApi.ExchangeControllerGetQuoteRequest;
@@ -68,10 +68,7 @@ export interface SwapState {
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly quoteError?: any;
-  readonly referrerOptions: {
-    referrerAddress: string;
-    fee: string;
-  };
+  readonly referrerOptions: ReferrerOptions;
   lastQuoteUpdateTimestamp: number;
 }
 
@@ -153,8 +150,10 @@ export const initialState: SwapState = {
   loadingQuote: 'idle',
   quoteError: null,
   referrerOptions: {
-    referrerAddress: '',
-    fee: '',
+    1: {
+      referrerAddress: '',
+      fee: '',
+    },
   },
   lastQuoteUpdateTimestamp: -1,
 };

@@ -2,7 +2,7 @@ import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { REFRESH_QUOTE_DELAY_MS } from '../../../constants';
+import { REFRESH_QUOTE_DELAY_MS, SupportedChainId } from '../../../constants';
 import { useInterval } from '../../../hooks';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
@@ -192,7 +192,9 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
           slippage,
           disableEstimate: true,
           gasLimit: txFeeCalculation?.gasLimit,
-          ...(referrerOptions.referrerAddress ? referrerOptions : {}),
+          ...(referrerOptions[chainId as SupportedChainId].referrerAddress
+            ? referrerOptions[chainId as SupportedChainId]
+            : {}),
         },
         chainId,
       })

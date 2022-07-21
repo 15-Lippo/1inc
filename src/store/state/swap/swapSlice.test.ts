@@ -76,8 +76,10 @@ const restValues = {
     },
   },
   referrerOptions: {
-    referrerAddress: '',
-    fee: '',
+    1: {
+      referrerAddress: '',
+      fee: '',
+    },
   },
   lastQuoteUpdateTimestamp: -1,
 };

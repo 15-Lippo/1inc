@@ -1,8 +1,10 @@
 export {};
 
 export interface ReferrerOptions {
-  referrerAddress: string;
-  fee: string;
+  [chainId: number]: {
+    referrerAddress: string;
+    fee: string;
+  };
 }
 
 export enum Field {
