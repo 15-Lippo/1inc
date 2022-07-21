@@ -4,9 +4,9 @@ import { HealthcheckApi } from '../../../api';
 
 export const fetchHealthcheck = createAsyncThunk(
   'tokens/getHealthcheckInfo',
-  async (_userData, { rejectWithValue }) => {
+  async (chainId: number | undefined, { rejectWithValue }) => {
     try {
-      const JSONApiResponse = await HealthcheckApi.factoryHealthCheckControllerHealthcheckRaw();
+      const JSONApiResponse = await HealthcheckApi(chainId).factoryHealthCheckControllerHealthcheckRaw();
       const response = await JSONApiResponse.raw.json();
       return response;
     } catch (error) {

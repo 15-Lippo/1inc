@@ -2,6 +2,7 @@ import { parseUnits } from '@ethersproject/units';
 import { useState } from 'react';
 
 import { SwapApi } from '../../../api';
+import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { Field } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { updatePriceTokenInUsd } from './tokensSlice';
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function useTokenPriceInUsd({ isBalanceInUsd, isMainModalTokenPriceInUsd }: Props) {
+  const { chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT, tokens } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]],
@@ -29,7 +31,7 @@ export function useTokenPriceInUsd({ isBalanceInUsd, isMainModalTokenPriceInUsd 
 
       setUsdcTokenAddress(usdcToken[1].address);
       try {
-        const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw({
+        const JSONApiResponse = await SwapApi(chainId).exchangeControllerGetQuoteRaw({
           fromTokenAddress: fromAddress,
           toTokenAddress: usdcToken[1].address,
           amount: parseUnits('1', decimals).toString(),

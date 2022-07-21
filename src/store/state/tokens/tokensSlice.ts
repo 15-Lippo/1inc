@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
-import { ProtocolsResponseDto } from '@yozh-io/1inch-widget-api-client';
+import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
-// @ts-ignore
 import { CoinsApi, InfoApi } from '../../../api';
 import { LocalStorageKeys, Tokens } from '../../../constants';
 
@@ -49,9 +48,9 @@ export const fetchCoinInfoById = createAsyncThunk('tokens/getCoinInfo', async (c
 
 export const fetchLiquiditySources = createAsyncThunk(
   'tokens/getLiquiditySourcesInfo',
-  async (_userData, { rejectWithValue }) => {
+  async (chainId: number | undefined, { rejectWithValue }) => {
     try {
-      const JSONApiResponse = await InfoApi.chainProtocolControllerGetProtocolsImagesRaw();
+      const JSONApiResponse = await InfoApi(chainId).chainProtocolsControllerGetProtocolsImagesRaw();
       const response = await JSONApiResponse.raw.json();
       return response;
     } catch (error) {
@@ -60,45 +59,51 @@ export const fetchLiquiditySources = createAsyncThunk(
   }
 );
 
-export const fetchTokens = createAsyncThunk('tokens/getTokensInfo', async (_userData, { rejectWithValue }) => {
-  try {
-    const existingTokens =
-      // @ts-ignore
-      JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
-
-    const JSONApiResponse = await InfoApi.chainTokensControllerGetTokensRaw();
-    const response = await JSONApiResponse.raw.json();
-
-    const sortable = await Object.entries({ ...response.tokens, ...existingTokens }).sort(([, a], [, b]) => {
-      // @ts-ignore
-      const fa = a.name,
+export const fetchTokens = createAsyncThunk(
+  'tokens/getTokensInfo',
+  async (chainId: number | undefined, { rejectWithValue }) => {
+    try {
+      const existingTokens =
         // @ts-ignore
-        fb = b.name;
+        JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
 
-      if (Tokens.MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
-      if (Tokens.MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
+      const JSONApiResponse = await InfoApi(chainId).chainTokensControllerGetTokensRaw();
+      const response = await JSONApiResponse.raw.json();
 
-      // compare ignoring case:
-      if (fa.localeCompare(fb) > 0) return 1;
-      if (fa.localeCompare(fb) < 0) return -1;
-      return 0;
-    });
+      const sortable = await Object.entries({ ...response.tokens, ...existingTokens }).sort(([, a], [, b]) => {
+        // @ts-ignore
+        const fa = a.name,
+          // @ts-ignore
+          fb = b.name;
 
-    return sortable.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
-  } catch (error) {
-    return rejectWithValue(error);
+        if (Tokens.MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
+        if (Tokens.MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
+
+        // compare ignoring case:
+        if (fa.localeCompare(fb) > 0) return 1;
+        if (fa.localeCompare(fb) < 0) return -1;
+        return 0;
+      });
+
+      return sortable.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
-});
+);
 
-export const fetchPresets = createAsyncThunk('tokens/getPresetsInfo', async (_userData, { rejectWithValue }) => {
-  try {
-    const JSONApiResponse = await InfoApi.chainPresetsControllerGetPresetsRaw();
-    const response = await JSONApiResponse.raw.json();
-    return response;
-  } catch (error) {
-    return rejectWithValue(error);
+export const fetchPresets = createAsyncThunk(
+  'tokens/getPresetsInfo',
+  async (chainId: number | undefined, { rejectWithValue }) => {
+    try {
+      const JSONApiResponse = await InfoApi(chainId).chainPresetsControllerGetPresetsRaw();
+      const response = await JSONApiResponse.raw.json();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
-});
+);
 
 export interface TokensState {
   lastImportedTokenInfo: {
@@ -109,7 +114,7 @@ export interface TokensState {
   tokens: { [key: string]: Token };
   fetchingTokens: boolean;
   tokenInfoFetched: boolean;
-  liquiditySourcesInfo?: ProtocolsResponseDto;
+  liquiditySourcesInfo?: ethereumApi.ProtocolsResponseDto;
   presetsInfo?: void;
 }
 

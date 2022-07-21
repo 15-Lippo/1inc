@@ -108,7 +108,7 @@ enum RefreshStatus {
 
 const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
   const dispatch = useAppDispatch();
-  const { account } = useActiveWeb3React();
+  const { account, chainId } = useActiveWeb3React();
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
@@ -184,14 +184,17 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     if (!INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
     dispatch(
       fetchSwap({
-        fromTokenAddress: INPUT.address,
-        toTokenAddress: OUTPUT.address,
-        amount: typedValue,
-        fromAddress: String(account),
-        slippage,
-        disableEstimate: true,
-        gasLimit: txFeeCalculation?.gasLimit,
-        ...(referrerOptions.referrerAddress ? referrerOptions : {}),
+        swapInfo: {
+          fromTokenAddress: INPUT.address,
+          toTokenAddress: OUTPUT.address,
+          amount: typedValue,
+          fromAddress: String(account),
+          slippage,
+          disableEstimate: true,
+          gasLimit: txFeeCalculation?.gasLimit,
+          ...(referrerOptions.referrerAddress ? referrerOptions : {}),
+        },
+        chainId,
       })
     );
   }, [

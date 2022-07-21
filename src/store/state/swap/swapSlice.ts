@@ -1,40 +1,39 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {
-  QuoteResponseDto,
-  SwapFactoryCommonControllerGetQuoteRequest,
-  SwapFactoryCommonControllerGetSwapRequest,
-  SwapResponseDto,
-} from '@yozh-io/1inch-widget-api-client';
+import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
 import { Field } from '../../../types';
 
-export const fetchQuote = createAsyncThunk(
-  'swap/getQuoteInfo',
-  async (quoteInfo: SwapFactoryCommonControllerGetQuoteRequest) => {
-    try {
-      const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetQuoteRaw(quoteInfo);
-      const response = await JSONApiResponse.raw.json();
-      return response;
-    } catch (error) {
-      // @ts-ignore
-      return await error.json();
-    }
-  }
-);
+interface FetchQuoteParams {
+  quoteInfo: ethereumApi.ExchangeControllerGetQuoteRequest;
+  chainId: number | undefined;
+}
 
-export const fetchSwap = createAsyncThunk(
-  'swap/getSwapInfo',
-  async (swapInfo: SwapFactoryCommonControllerGetSwapRequest) => {
-    try {
-      const JSONApiResponse = await SwapApi.swapFactoryCommonControllerGetSwapRaw(swapInfo);
-      const response = await JSONApiResponse.raw.json();
-      return response;
-    } catch (error) {
-      console.error(error);
-    }
+interface FetchSwapParams {
+  swapInfo: ethereumApi.ExchangeControllerGetSwapRequest;
+  chainId: number | undefined;
+}
+
+export const fetchQuote = createAsyncThunk('swap/getQuoteInfo', async (params: FetchQuoteParams) => {
+  try {
+    const JSONApiResponse = await SwapApi(params.chainId).exchangeControllerGetQuoteRaw(params.quoteInfo);
+    const response = await JSONApiResponse.raw.json();
+    return response;
+  } catch (error) {
+    // @ts-ignore
+    return await error.json();
   }
-);
+});
+
+export const fetchSwap = createAsyncThunk('swap/getSwapInfo', async (params: FetchSwapParams) => {
+  try {
+    const JSONApiResponse = await SwapApi(params.chainId).exchangeControllerGetSwapRaw(params.swapInfo);
+    const response = await JSONApiResponse.raw.json();
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 export interface SwapState {
   readonly independentField: Field;
@@ -44,8 +43,8 @@ export interface SwapState {
   readonly [Field.OUTPUT]: string;
   // the typed recipient address if swap should go to sender
   readonly recipient: string | null;
-  readonly quoteInfo?: QuoteResponseDto;
-  readonly swapInfo?: SwapResponseDto;
+  readonly quoteInfo?: ethereumApi.QuoteResponseDto;
+  readonly swapInfo?: ethereumApi.SwapResponseDto;
   readonly txFeeCalculation: {
     readonly gasPriceInfo: {
       label: string;

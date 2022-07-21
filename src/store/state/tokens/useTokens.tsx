@@ -22,7 +22,7 @@ export const useTokens = () => {
   useEffect(() => {
     if (addresses.length) return;
     console.log('tokens...');
-    dispatch(fetchTokens());
+    dispatch(fetchTokens(chainId));
     console.log('...tokens');
   }, []);
 

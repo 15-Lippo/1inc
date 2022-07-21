@@ -1,9 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {
-  ApproveCalldataResponseDto,
-  ApproveFactoryControllerGetCallDataRequest,
-  ApproveSpenderResponseDto,
-} from '@yozh-io/1inch-widget-api-client';
+import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { ApproveApi } from '../../../api';
 
@@ -18,11 +14,16 @@ interface ApprovalState {
   status: ApproveStatus;
 }
 
+interface FetchApproveTransactionParams {
+  approveInfo: ethereumApi.ChainApproveControllerGetCallDataRequest;
+  chainId: number | undefined;
+}
+
 export const fetchApproveTransaction = createAsyncThunk(
   'approve/getApproveTransactionInfo',
-  async (approveInfo: ApproveFactoryControllerGetCallDataRequest, { rejectWithValue }) => {
+  async (params: FetchApproveTransactionParams, { rejectWithValue }) => {
     try {
-      const JSONApiResponse = await ApproveApi.approveFactoryControllerGetCallDataRaw(approveInfo);
+      const JSONApiResponse = await ApproveApi(params.chainId).chainApproveControllerGetCallDataRaw(params.approveInfo);
       const response = await JSONApiResponse.raw.json();
       return response;
     } catch (error) {
@@ -33,9 +34,9 @@ export const fetchApproveTransaction = createAsyncThunk(
 
 export const fetchApproveSpender = createAsyncThunk(
   'approve/getApproveSpenderInfo',
-  async (_approveInfo, { rejectWithValue }) => {
+  async (chainId: number | undefined, { rejectWithValue }) => {
     try {
-      const JSONApiResponse = await ApproveApi.approveFactoryControllerGetSpenderRaw();
+      const JSONApiResponse = await ApproveApi(chainId).chainApproveControllerGetSpenderRaw();
       const response = await JSONApiResponse.raw.json();
       return response;
     } catch (error) {
@@ -46,8 +47,8 @@ export const fetchApproveSpender = createAsyncThunk(
 
 export interface TokensState {
   approveAllowanceInfo: ApprovalState;
-  approveTransactionInfo: ApproveCalldataResponseDto;
-  spender: ApproveSpenderResponseDto;
+  approveTransactionInfo: ethereumApi.ApproveCalldataResponseDto;
+  spender: ethereumApi.ApproveSpenderResponseDto;
 }
 
 export const initialState: TokensState = {

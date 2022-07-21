@@ -1,9 +1,11 @@
+import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { Field } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useTokenPriceInUsd } from '../tokens/useTokenPriceInUsd';
 import { fetchQuote } from './swapSlice';
 
 export const useUpdateQuote = () => {
+  const { chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT, typedValue, gasLimit, referrerOptions } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
@@ -19,11 +21,14 @@ export const useUpdateQuote = () => {
 
     dispatch(
       fetchQuote({
-        fromTokenAddress: INPUT.address,
-        toTokenAddress: OUTPUT.address,
-        amount: typedValue,
-        gasLimit,
-        ...(referrerOptions.referrerAddress ? { fee: referrerOptions.fee } : {}),
+        quoteInfo: {
+          fromTokenAddress: INPUT.address,
+          toTokenAddress: OUTPUT.address,
+          amount: typedValue,
+          gasLimit,
+          ...(referrerOptions.referrerAddress ? { fee: referrerOptions.fee } : {}),
+        },
+        chainId,
       })
     );
 

@@ -79,6 +79,7 @@ const restValues = {
     referrerAddress: '',
     fee: '',
   },
+  lastQuoteUpdateTimestamp: -1,
 };
 describe('swapSlice', () => {
   it('typeInput 0.1 in OUTPUT field', () => {

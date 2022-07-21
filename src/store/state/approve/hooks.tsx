@@ -23,7 +23,7 @@ export function useApproval() {
   useEffect(() => {
     if (spender.address) return;
     console.log('spender...');
-    dispatch(fetchApproveSpender());
+    dispatch(fetchApproveSpender(chainId));
     console.log('...spender');
   }, [spender.address]);
 
@@ -49,7 +49,7 @@ export function useApproval() {
   useEffect(() => {
     if (approveStatus !== ApproveStatus.APPROVAL_NEEDED) return;
     if (approveTransactionInfo.to === INPUT.address) return;
-    dispatch(fetchApproveTransaction({ tokenAddress: INPUT.address }));
+    dispatch(fetchApproveTransaction({ approveInfo: { tokenAddress: INPUT.address }, chainId }));
   }, [approveStatus, INPUT]);
 
   const approve = useCallback(async () => {
