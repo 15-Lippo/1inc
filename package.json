@@ -70,7 +70,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
     "husky": "^7.0.0",
-    "lint-staged": "^12.4.1",
+    "lint-staged": "^13.0.3",
     "microbundle-crl": "^0.13.11",
     "prettier": "^2.6.2"
   },
@@ -81,13 +81,14 @@
     "lint": "eslint \"src/**/*{.ts,.tsx}\"",
     "lint:fix": "eslint \"src/**/*{.ts,.tsx}\" --fix",
     "prettier": "prettier --write .",
-    "hooks:pre-commit": "yarn lint && lint-staged",
+    "hooks:pre-commit": "lint-staged",
     "hooks:pre-push": "yarn test",
-    "hooks:commit-msg": "yarn commitlint --edit $1"
+    "hooks:commit-msg": "yarn commitlint --edit"
   },
   "lint-staged": {
     "*.{js,json,css,md,ts,tsx,html,component.html}": [
-      "prettier --write"
+      "prettier --write",
+      "eslint --fix"
     ]
   },
   "browserslist": {

@@ -11,7 +11,6 @@ import Widget from './components/Widget';
 
 // FOR USING THE WIDGET AS A COMPONENT
 export { Widget };
-export default Widget;
 
 // UNCOMMENT FOR DEVELOPMENT:
 export const root = createRoot(document.getElementById('root')!);
