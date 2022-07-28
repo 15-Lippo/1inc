@@ -2,7 +2,7 @@ import { SupportedChainId } from '../../../constants';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { Field } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { useTokenPriceInUsd } from '../tokens/useTokenPriceInUsd';
+import { useTokenPricesInUsd } from '../tokens/useTokenPricesInUsd';
 import { fetchQuote } from './swapSlice';
 
 export const useUpdateQuote = () => {
@@ -15,7 +15,7 @@ export const useUpdateQuote = () => {
     gasLimit: state.swap.txFeeCalculation?.gasLimit,
     referrerOptions: state.swap.referrerOptions,
   }));
-  const { balancesInUsd } = useTokenPriceInUsd({ isMainModalTokenPriceInUsd: true });
+  const { updateUsdcPriceForSelectedTokens } = useTokenPricesInUsd();
 
   return () => {
     if (!Number(typedValue)) return;
@@ -27,7 +27,7 @@ export const useUpdateQuote = () => {
           toTokenAddress: OUTPUT.address,
           amount: typedValue,
           gasLimit,
-          ...(referrerOptions[chainId as SupportedChainId].referrerAddress
+          ...(referrerOptions[chainId as SupportedChainId]?.referrerAddress
             ? { fee: referrerOptions[chainId as SupportedChainId].fee }
             : {}),
         },
@@ -35,6 +35,6 @@ export const useUpdateQuote = () => {
       })
     );
 
-    balancesInUsd();
+    updateUsdcPriceForSelectedTokens();
   };
 };

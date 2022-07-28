@@ -221,16 +221,18 @@ const tokensSlice = createSlice({
         },
       };
     },
-    updatePriceTokenInUsd(state, { payload: { key, priceInUsd } }: { payload: { key: string; priceInUsd?: string } }) {
+    updatePriceTokenInUsd(state, { payload }: { payload: { key: string; priceInUsd?: string }[] }) {
+      const updatedTokens = { ...state.tokens };
+      payload.forEach(({ key, priceInUsd }) => {
+        updatedTokens[key] = {
+          ...state.tokens[key],
+          priceInUsd,
+        };
+      });
+      console.log(updatedTokens);
       return {
         ...state,
-        tokens: {
-          ...state.tokens,
-          [key]: {
-            ...state.tokens[key],
-            priceInUsd,
-          },
-        },
+        tokens: updatedTokens,
       };
     },
   },

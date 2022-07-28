@@ -106,6 +106,11 @@ enum RefreshStatus {
   INTERNAL_REFRESH_OCCURRED,
 }
 
+interface PriceState {
+  input: string;
+  output: string;
+}
+
 const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
@@ -118,8 +123,10 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions, lastQuoteUpdateTimestamp } =
     useAppSelector((state) => state.swap);
 
-  const [outputPrice, setOutputPrice] = useState<string>('0');
-  const [inputPrice, setInputPrice] = useState<string>('0');
+  const [price, setPrice] = useState<PriceState>({
+    input: '0',
+    output: '0',
+  });
   const [slippageModalOpen, setSlippageModalOpen] = useState<boolean>(false);
   const [gasPriceModalOpen, setGasPriceModalOpen] = useState<boolean>(false);
   const [refreshStatus, setRefreshStatus] = useState<RefreshStatus>(RefreshStatus.NO_REFRESH_NEEDED);
@@ -175,8 +182,10 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
       const output = typedValue / outputAmount;
       // @ts-ignore
       const input = outputAmount / typedValue;
-      setInputPrice(input.toFixed(4));
-      setOutputPrice(output.toFixed(4));
+      setPrice({
+        input: input.toFixed(4),
+        output: output.toFixed(4),
+      });
     }
   }, [swapInfo?.toTokenAmount, typedValue]);
 
@@ -192,7 +201,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
           slippage,
           disableEstimate: true,
           gasLimit: txFeeCalculation?.gasLimit,
-          ...(referrerOptions[chainId as SupportedChainId].referrerAddress
+          ...(referrerOptions[chainId as SupportedChainId]?.referrerAddress
             ? referrerOptions[chainId as SupportedChainId]
             : {}),
         },
@@ -310,8 +319,8 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                       width="60px"
                     />
                   )}
-                  {inputPrice ? (
-                    <Typography variant="rxs12" lineHeight="14px">{` ${inputPrice}  ${
+                  {price.input ? (
+                    <Typography variant="rxs12" lineHeight="14px">{` ${price.input}  ${
                       INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)
                     }`}</Typography>
                   ) : (
@@ -356,8 +365,8 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                       width="50px"
                     />
                   )}
-                  {outputPrice ? (
-                    <Typography variant="rxs12" lineHeight="14px">{` ${outputPrice}  ${
+                  {price.output ? (
+                    <Typography variant="rxs12" lineHeight="14px">{` ${price.output}  ${
                       OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)
                     }`}</Typography>
                   ) : (
