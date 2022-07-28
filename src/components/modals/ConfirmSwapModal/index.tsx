@@ -1,5 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
-import { Box, Skeleton, Stack, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Typography, useTheme } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY_MS, SupportedChainId } from '../../../constants';
@@ -33,12 +33,13 @@ interface SwapTokenBoxProps {
 }
 
 const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        border: '1px solid #E3E7EE',
+        border: `1px solid ${theme.palette.widget['border-01']}`,
         borderRadius: '16px',
         mb: '10px',
         padding: '17px 17px 21px',
@@ -47,7 +48,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
         <Typography
           variant="rxs12"
           sx={{
-            color: 'dark.700',
+            color: 'widget.text-secondary',
             lineHeight: '14px',
             mb: '17px',
           }}>
@@ -57,7 +58,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
           <Typography
             variant="rxs12"
             sx={{
-              color: 'dark.700',
+              color: 'widget.text-secondary',
               lineHeight: '14px',
             }}>
             ~${usdcPrice}
@@ -65,7 +66,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
         ) : (
           <Skeleton
             sx={{
-              bgcolor: 'cool.100',
+              bgcolor: 'widget.skeleton-00',
             }}
             animation="wave"
             height={14}
@@ -76,18 +77,18 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box sx={{ display: 'flex' }}>
           <img style={{ width: '24px', height: '24px' }} src={token.logoURI} alt="logo" />
-          <Typography variant="mxlg20" sx={{ margin: '0 12px 0' }}>
+          <Typography color="widget.text-primary" variant="mxlg20" sx={{ margin: '0 12px 0' }}>
             {token.symbol}
           </Typography>
         </Box>
         {amount ? (
-          <Typography variant="mxlg20" lineHeight="24px">
+          <Typography color="widget.text-primary" variant="mxlg20" lineHeight="24px">
             {amount}
           </Typography>
         ) : (
           <Skeleton
             sx={{
-              bgcolor: 'cool.100',
+              bgcolor: 'widget.skeleton-00',
             }}
             animation="wave"
             height={28}
@@ -112,6 +113,7 @@ interface PriceState {
 }
 
 const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
@@ -294,7 +296,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                 <Typography
                   variant="rxs12"
                   sx={{
-                    color: 'dark.700',
+                    color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
                   1 {INPUT && INPUT.symbol} price
@@ -305,14 +307,14 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                       variant="rxs12"
                       sx={{
                         lineHeight: '14px',
-                        color: 'dark.700',
+                        color: 'widget.text-secondary',
                       }}>
                       ~${inputUsdcPrice}
                     </Typography>
                   ) : (
                     <Skeleton
                       sx={{
-                        bgcolor: 'cool.100',
+                        bgcolor: 'widget.skeleton-00',
                       }}
                       animation="wave"
                       height={14}
@@ -320,13 +322,13 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                     />
                   )}
                   {price.input ? (
-                    <Typography variant="rxs12" lineHeight="14px">{` ${price.input}  ${
+                    <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">{` ${price.input}  ${
                       INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)
                     }`}</Typography>
                   ) : (
                     <Skeleton
                       sx={{
-                        bgcolor: 'cool.100',
+                        bgcolor: 'widget.skeleton-00',
                       }}
                       animation="wave"
                       height={14}
@@ -340,7 +342,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                 <Typography
                   variant="rxs12"
                   sx={{
-                    color: 'dark.700',
+                    color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
                   1 {OUTPUT && OUTPUT.symbol} price
@@ -351,14 +353,14 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                       variant="rxs12"
                       sx={{
                         lineHeight: '14px',
-                        color: 'dark.700',
+                        color: 'widget.text-secondary',
                       }}>
                       ~${outputUsdcPrice}
                     </Typography>
                   ) : (
                     <Skeleton
                       sx={{
-                        bgcolor: 'cool.100',
+                        bgcolor: 'widget.skeleton-00',
                       }}
                       animation="wave"
                       height={14}
@@ -366,13 +368,13 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                     />
                   )}
                   {price.output ? (
-                    <Typography variant="rxs12" lineHeight="14px">{` ${price.output}  ${
+                    <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">{` ${price.output}  ${
                       OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)
                     }`}</Typography>
                   ) : (
                     <Skeleton
                       sx={{
-                        bgcolor: 'cool.100',
+                        bgcolor: 'widget.skeleton-00',
                       }}
                       animation="wave"
                       height={14}
@@ -386,14 +388,14 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                 <Typography
                   variant="rxs12"
                   sx={{
-                    color: 'dark.700',
+                    color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
                   Gas price
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   <AuxButton onClick={() => setGasPriceModalOpen(true)} text="Edit" />
-                  <Typography variant="rxs12" lineHeight="14px">
+                  <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">
                     {`${gasPrice} Gwei`}
                   </Typography>
                 </Box>
@@ -403,20 +405,20 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                 <Typography
                   variant="rxs12"
                   sx={{
-                    color: 'dark.700',
+                    color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
                   Slippage
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   <AuxButton onClick={() => setSlippageModalOpen(true)} text="Edit" />
-                  <Typography variant="rxs12" lineHeight="14px">
+                  <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">
                     {slippage}%
                   </Typography>
                 </Box>
               </Stack>
               <hr
-                color="#E3E7EE"
+                color={theme.palette.widget['border-01']}
                 style={{
                   margin: '19px 0',
                   height: '1px',

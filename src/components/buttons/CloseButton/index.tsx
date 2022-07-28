@@ -1,27 +1,29 @@
-import { IconButton, IconButtonProps } from '@mui/material';
+import { IconButton, IconButtonProps, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
 const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   '&:hover #close-button path': {
-    fill: theme.palette.cool[100],
+    fill: theme.palette.widget['bg-btn-hover'],
   },
   '&:active #close-button #cross': {
-    stroke: theme.palette.blue[500],
+    stroke: theme.palette.widget['icon-01'],
   },
   '&:disabled #close-button #cross': {
-    stroke: theme.palette.dark[500],
+    stroke: theme.palette.widget['icon-02'],
   },
 }));
 
 interface Props {
   disabled?: boolean;
   onClick: () => void;
-  size?: string;
+  size?: '16' | '28' | '36';
 }
 
 const CloseButton = ({ disabled, onClick, size }: Props) => {
+  const theme = useTheme();
+  const crossColor = size === '36' ? theme.palette.widget['icon-01'] : theme.palette.widget['icon-02'];
   return (
     <StyledIconButton disabled={disabled} disableRipple aria-label="close" onClick={onClick}>
       <svg
@@ -33,12 +35,12 @@ const CloseButton = ({ disabled, onClick, size }: Props) => {
         xmlns="http://www.w3.org/2000/svg">
         <path
           d="M0 12C0 5.37258 5.37258 0 12 0H24C30.6274 0 36 5.37258 36 12V24C36 30.6274 30.6274 36 24 36H12C5.37258 36 0 30.6274 0 24V12Z"
-          fill="white"
+          fill="none"
         />
         <path
           id="cross"
           d="M22.7278 13.2427L14.2426 21.728"
-          stroke="#15151F"
+          stroke={crossColor}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -46,7 +48,7 @@ const CloseButton = ({ disabled, onClick, size }: Props) => {
         <path
           id="cross"
           d="M22.7278 21.7279L14.2426 13.2426"
-          stroke="#15151F"
+          stroke={crossColor}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -15,12 +15,12 @@ const RefreshRateWarningMsg = ({ inputTokenSymbol, outputTokenSymbol, quoteUpdat
         display: 'flex',
         borderRadius: '12px',
         padding: '8px 14px',
-        backgroundColor: quoteUpdated ? 'red.16' : 'blue.16',
+        backgroundColor: quoteUpdated ? 'widget.bg-alert-error' : 'widget.bg-alert',
       }}>
       <Typography
         variant="rsm14"
         sx={{
-          color: 'dark.900',
+          color: 'widget.text-primary',
           lineHeight: '16px',
         }}>
         {quoteUpdated

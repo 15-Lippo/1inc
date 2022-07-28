@@ -34,7 +34,7 @@ const disabledStyle = (theme: Theme) => ({
 
 const primaryActionStyle = (theme: Theme) => ({
   background: theme.palette.widget['bg-main-btn'],
-  color: theme.palette.widget['text-main-btn'],
+  color: theme.palette.widget['text-main-btn-00'],
   '&:hover': {
     background: theme.palette.widget['bg-main-btn-hovered'],
   },
@@ -157,7 +157,7 @@ export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName,
       }}
       variant="contained"
       loading={type === MainButtonType.Loading}
-      loadingIndicator={<CircularProgress size={30} />}
+      loadingIndicator={<CircularProgress sx={{ color: 'widget.icon-10' }} size={30} />}
       disabled={
         type === MainButtonType.Error ||
         type === MainButtonType.EnterAmount ||

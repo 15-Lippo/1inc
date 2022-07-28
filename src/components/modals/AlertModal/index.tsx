@@ -33,7 +33,7 @@ const wrapperStyle = {
   height: 'fit-content',
   boxShadow: '0px 12px 24px #E2E9F6',
   borderRadius: '24px',
-  bgcolor: 'background.default',
+  bgcolor: 'widget.bg-02',
   padding: '16px',
 };
 
@@ -41,21 +41,21 @@ const textBoxStyle = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
-  bgcolor: 'yellow.20',
-  color: 'yellow.500',
+  bgcolor: 'widget.bg-alert-warn',
+  color: 'widget.text-warn',
   borderRadius: '16px',
   padding: '14px',
   margin: '14px 0 14px 0',
 };
 
 const closeButtonStyle = {
-  color: 'blue.500',
+  color: 'text-main-btn-02',
   borderRadius: '12px',
   boxShadow: 'none',
-  bgcolor: 'blue.16',
+  bgcolor: 'widget.bg-05',
   '&:hover': {
     boxShadow: 'none',
-    bgcolor: 'blue.40',
+    bgcolor: 'widget.bg-05-hover',
   },
 };
 

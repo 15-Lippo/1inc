@@ -69,12 +69,22 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
             scrollbarWidth: 'none',
           }}>
           <Accordion
+            elevation={0}
             defaultExpanded
             sx={{
               mt: '15px',
+              '&:before': {
+                display: 'none',
+              },
             }}>
             <AccordionSummary
-              expandIcon={<ExpandMoreRoundedIcon />}
+              expandIcon={
+                <ExpandMoreRoundedIcon
+                  sx={{
+                    color: 'widget.icon-02',
+                  }}
+                />
+              }
               aria-controls="panel1a-content"
               id="slippage-accordion">
               <Box
@@ -93,6 +103,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                   <GasStation />
                   <Typography
                     sx={{
+                      color: 'widget.text-primary',
                       marginLeft: '5px',
                     }}
                     variant="sbm16">
@@ -102,7 +113,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                 <Typography
                   sx={{
                     typography: 'rsm14',
-                    color: 'dark.700',
+                    color: 'widget.text-secondary',
                     marginLeft: '5px',
                   }}
                   variant="rm16">
@@ -118,11 +129,21 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
           </Accordion>
           <Accordion
             defaultExpanded
+            elevation={0}
             sx={{
               mt: '15px',
+              '&:before': {
+                display: 'none',
+              },
             }}>
             <AccordionSummary
-              expandIcon={<ExpandMoreRoundedIcon />}
+              expandIcon={
+                <ExpandMoreRoundedIcon
+                  sx={{
+                    color: 'widget.icon-02',
+                  }}
+                />
+              }
               aria-controls="panel1a-content"
               id="slippage-accordion">
               <Box
@@ -141,6 +162,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                   <SlippageWaves />
                   <Typography
                     sx={{
+                      color: 'widget.text-primary',
                       marginLeft: '5px',
                     }}
                     variant="sbm16">
@@ -150,7 +172,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                 <Typography
                   sx={{
                     typography: 'rsm14',
-                    color: 'dark.700',
+                    color: 'widget.text-secondary',
                     marginLeft: '5px',
                   }}
                   variant="rm16">
@@ -167,7 +189,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
               <ListItemIcon
                 sx={{
                   '&:hover .MuiSvgIcon-root, &:hover #count-of-custom-tokens': {
-                    color: 'dark.900',
+                    color: 'widget.text-primary',
                   },
                 }}>
                 <CustomTokensIcon />
@@ -176,15 +198,15 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                     ml: '5px',
                   }}
                   primary={
-                    <Typography variant="sbm16" color="dark.900">
+                    <Typography variant="sbm16" color="widget.text-primary">
                       Custom tokens
                     </Typography>
                   }
                 />
-                <Typography id="count-of-custom-tokens" color="dark.700" variant="rsm14">
+                <Typography id="count-of-custom-tokens" color="widget.text-secondary" variant="rsm14">
                   {countOfCustomTokens()}
                 </Typography>
-                <ArrowForwardIosRoundedIcon sx={{ ml: '13px', color: 'dark.700', id: 'arrow', fontSize: 16 }} />
+                <ArrowForwardIosRoundedIcon sx={{ ml: '13px', color: 'widget.icon-02', id: 'arrow', fontSize: 16 }} />
               </ListItemIcon>
             </MenuItem>
           </MenuList>

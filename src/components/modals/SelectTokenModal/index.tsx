@@ -1,4 +1,4 @@
-import { Box, Divider, Stack } from '@mui/material';
+import { Box, Divider, Stack, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { Tokens } from '../../../constants';
@@ -22,6 +22,7 @@ interface SelectTokenModalProps {
 }
 
 const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectTokenModalProps) => {
+  const theme = useTheme();
   const { account, chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { tokensList, tokenOnField, inputBalance, tokens } = useAppSelector((state) => ({
@@ -122,7 +123,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
           : null}
       </Stack>
 
-      <Divider variant="middle" sx={{ borderColor: 'cool.300' }} />
+      <Divider variant="middle" sx={{ borderColor: 'widget.border-01' }} />
       <VirtualizedTokenList
         tokensList={!searchValue ? data : filteredResults}
         onChoose={onChoose}
@@ -140,7 +141,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
             transform: 'translate(-50%, -50%)',
           }}>
           <hr
-            color="#E3E7EE"
+            color={theme.palette.widget['border-01']}
             style={{
               margin: 0,
               height: '1px',

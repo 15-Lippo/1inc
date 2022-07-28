@@ -10,6 +10,7 @@ const WHITE = '#FFFFFF';
 const GREEN = '#00897B';
 const BLUE_GREY = '#6C86AD';
 const LIGHT_BLUE_GREY = '#9BAFCD';
+const YELLOW = '#FF9C08';
 
 const defaultPalette: PaletteOptions = {
   widget: {
@@ -20,6 +21,7 @@ const defaultPalette: PaletteOptions = {
     'input-bg-01': WHITE,
     'input-border': DEEP_BLUE,
     'input-border-error': RED,
+    'input-border-warn': YELLOW,
 
     'bg-main': WHITE,
     'bg-disabled': LIGHT_GREY,
@@ -49,31 +51,35 @@ const defaultPalette: PaletteOptions = {
     'text-main-btn-00': WHITE,
     'text-main-btn-01': WHITE,
     'text-main-btn-02': DEEP_BLUE,
-    'text-warn': '#FF9C08',
+    'text-warn': YELLOW,
     'text-error': RED,
     'text-alert': CHARCOAL,
 
-    'checkbox-text-00': DEEP_BLUE,
-    'checkbox-text-01': LIGHT_BLUE_GREY,
-    'checkbox-text-02': WHITE,
+    'checkbox-00': DEEP_BLUE,
+    'checkbox-01': LIGHT_BLUE_GREY,
+    'checkbox-02': WHITE,
 
-    'border-00': '#CADAF480',
-    'border-01': '#E3E7EE80',
+    'border-00': '#EAF1FB',
+    'border-01': '#F1F3F6',
     'border-02': DEEP_BLUE,
 
     'btn-text': DEEP_BLUE,
     'btn-text-hover': '#2F8AF566',
+    'bg-btn-hover': LIGHT_GREY,
 
-    'icon-01': BLUE_GREY,
+    'icon-01': CHARCOAL,
     'icon-02': BLUE_GREY,
     'icon-05': LIGHT_BLUE_GREY,
     'icon-06': WHITE,
     'icon-07': GREEN,
     'icon-08': RED,
-    'icon-09': '#FF9C08',
+    'icon-09': YELLOW,
     'icon-10': DEEP_BLUE,
 
     'bg-tooltip': WHITE,
+
+    'skeleton-00': LIGHT_GREY,
+    'skeleton-01': WHITE,
   },
 };
 

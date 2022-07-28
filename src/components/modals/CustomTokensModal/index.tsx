@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { LocalStorageKeys, Tokens } from '../../../constants';
@@ -19,6 +19,7 @@ interface CustomTokensModalProps {
 }
 
 const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomTokensModalProps) => {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
   const [customTokens, setCustomTokens] = useState({});
@@ -107,7 +108,7 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
           transform: 'translate(-50%, -50%)',
         }}>
         <hr
-          color="#E3E7EE"
+          color={theme.palette.widget['border-01']}
           style={{
             margin: 0,
             height: '1px',

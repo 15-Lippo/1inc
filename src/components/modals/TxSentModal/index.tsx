@@ -40,6 +40,7 @@ const TxSentModal = () => {
         <SentArray />
         <Typography
           sx={{
+            color: 'widget.text-primary',
             mt: '52px',
           }}>
           Swap of {INPUT && INPUT.symbol} to {OUTPUT && OUTPUT.symbol}

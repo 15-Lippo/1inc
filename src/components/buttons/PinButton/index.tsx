@@ -12,14 +12,14 @@ const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProp
   width: '16px',
   padding: '0',
   '&:hover': {
-    background: theme.palette.background.default,
+    background: theme.palette.widget['bg-main'],
   },
   '&:hover .pinIcon': {
-    fill: theme.palette.dark[900],
-    stroke: theme.palette.dark[900],
+    fill: theme.palette.widget['icon-01'],
+    stroke: theme.palette.widget['icon-01'],
   },
   '&:hover .unpinIcon': {
-    stroke: theme.palette.dark[900],
+    stroke: theme.palette.widget['icon-01'],
   },
 }));
 

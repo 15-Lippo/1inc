@@ -12,6 +12,7 @@ import { Field } from '../../types';
 import { AuxButton } from '../buttons';
 import SelectTokenButton from '../buttons/SelectTokenButton';
 import { InputAmount } from '../fields';
+import { LockerIcon } from '../icons';
 
 interface SendBoxProps {
   onSelectToken: () => void;
@@ -30,23 +31,6 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
       explorer: state.user.explorer,
       txFee: state.swap.txFeeCalculation.txFee,
     })
-  );
-
-  const LockIcon = (
-    <svg width="12" height="15" viewBox="0 0 12 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M9.81816 6.875H2.18179C1.5793 6.875 1.09088 7.43464 1.09088 8.125V12.5C1.09088 13.1904 1.5793 13.75 2.18179 13.75H9.81816C10.4206 13.75 10.9091 13.1904 10.9091 12.5V8.125C10.9091 7.43464 10.4206 6.875 9.81816 6.875Z"
-        stroke="#FF9C08"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3.27271 6.875V4.375C3.27271 3.5462 3.56004 2.75134 4.0715 2.16529C4.58297 1.57924 5.27666 1.25 5.99998 1.25C6.7233 1.25 7.41699 1.57924 7.92845 2.16529C8.43991 2.75134 8.72725 3.5462 8.72725 4.375V6.875"
-        stroke="#FF9C08"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 
   const userBalance = useMemo(() => {
@@ -81,7 +65,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
     <Box
       sx={{
         display: 'flex',
-        bgcolor: 'cool.100',
+        bgcolor: 'widget.bg-01',
         flexDirection: 'column',
         padding: '15px',
         borderRadius: '16px',
@@ -96,7 +80,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           target="_blank"
           sx={{
             typography: 'rxs12',
-            color: 'dark.700',
+            color: 'widget.text-secondary',
           }}
           href={explorer && INPUT && `${explorer.link}/token/${INPUT.address}`}
           underline="hover">
@@ -105,7 +89,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
         {account && !Number(userBalance) ? (
           <Skeleton
             sx={{
-              bgcolor: 'common.white',
+              bgcolor: 'widget.skeleton-01',
             }}
             animation="wave"
             width="100px"
@@ -115,7 +99,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
             <Typography
               variant="rxs12"
               sx={{
-                color: 'dark.700',
+                color: 'widget.text-secondary',
                 lineHeight: '19px',
               }}>
               Balance: {userBalance}
@@ -132,7 +116,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           margin: '0 0 6px -9px',
         }}>
         <SelectTokenButton onClick={onSelectToken} field={Field.INPUT} />
-        <Box>{status === ApproveStatus.APPROVAL_NEEDED && LockIcon}</Box>
+        <Box>{status === ApproveStatus.APPROVAL_NEEDED && <LockerIcon />}</Box>
         <InputAmount inputId={Field.INPUT} />
       </Box>
 
@@ -141,18 +125,18 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           display: 'flex',
           justifyContent: 'space-between',
         }}>
-        <Typography variant="rxs12" sx={{ color: 'dark.700' }}>
+        <Typography variant="rxs12" sx={{ color: 'widget.text-secondary' }}>
           {INPUT?.name}
         </Typography>
         {inputTokenPriceInUsd && typedValue && loadingQuote === 'succeeded' ? (
-          <Typography variant="rxs12" sx={{ color: 'dark.700', lineHeight: '19px' }}>
+          <Typography variant="rxs12" sx={{ color: 'widget.text-secondary', lineHeight: '19px' }}>
             ~$
             {parseFloat(valueInUsd).toFixed(2)}
           </Typography>
         ) : (
           <Skeleton
             sx={{
-              bgcolor: 'common.white',
+              bgcolor: 'widget.skeleton-01',
             }}
             animation="wave"
             width="100px"

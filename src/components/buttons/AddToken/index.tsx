@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, useTheme } from '@mui/material';
 import React from 'react';
 
 interface AddTokenProps {
@@ -6,22 +6,23 @@ interface AddTokenProps {
   onClick: () => void;
 }
 const AddToken = ({ onClick, walletIsConnected }: AddTokenProps) => {
+  const theme = useTheme();
   return (
     <Button
       disabled={!walletIsConnected}
       sx={{
         '&:disabled': {
-          color: 'dark.500',
+          color: theme.palette.widget['text-disabled'],
         },
         typography: walletIsConnected ? 'rm16' : 'rxs12',
         fontWeight: '500',
         textTransform: 'none',
         p: '10px 0 0 0',
         bgcolor: 'transparent',
-        color: 'blue.500',
+        color: theme.palette.widget['text-primary-01'],
         ':hover': {
           bgcolor: 'transparent',
-          color: 'blue.500',
+          color: theme.palette.widget['btn-text-hover'],
         },
       }}
       fullWidth

@@ -1,4 +1,4 @@
-import { Avatar, IconButton, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Avatar, IconButton, ListItem, ListItemButton, ListItemText, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -6,11 +6,11 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   position: 'relative',
   border: '1px solid',
   borderRadius: '12px',
-  borderColor: theme.palette.cool[300],
+  borderColor: theme.palette.widget['border-00'],
   maxWidth: 'fit-content',
   alignSelf: 'flex-start',
   '&:hover': {
-    background: theme.palette.cool[100],
+    background: theme.palette.widget['bg-01'],
   },
   '& .MuiListItemButton-root': {
     padding: '9px 12px',
@@ -32,12 +32,12 @@ const StyledIconButtonRemove = styled(IconButton)(({ theme }) => ({
   height: '14px',
   width: '14px',
   padding: '0',
-  background: theme.palette.background.default,
+  background: theme.palette.widget['bg-02'],
   '&:hover': {
-    background: theme.palette.background.default,
+    background: theme.palette.widget['bg-02'],
   },
   '&:hover #remove-button-vector-1, &:hover #remove-button-vector-2': {
-    stroke: theme.palette.dark[900],
+    stroke: theme.palette.widget['icon-01'],
   },
 }));
 
@@ -50,6 +50,7 @@ interface Props {
 }
 
 const PinnedToken = ({ id, symbol, logo, onChoose, onUnpin }: Props) => {
+  const theme = useTheme();
   return (
     <StyledListItem
       id={id}
@@ -65,14 +66,14 @@ const PinnedToken = ({ id, symbol, logo, onChoose, onUnpin }: Props) => {
             <path
               id="remove-button-vector-1"
               d="M8.82858 8.82825L3.17173 3.17139"
-              stroke="#9BAFCD"
+              stroke={theme.palette.widget['icon-02']}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
               id="remove-button-vector-2"
               d="M8.82846 3.17151L3.17161 8.82836"
-              stroke="#9BAFCD"
+              stroke={theme.palette.widget['icon-02']}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -87,7 +88,7 @@ const PinnedToken = ({ id, symbol, logo, onChoose, onUnpin }: Props) => {
             ml: '8px',
             typography: 'rxs12',
             lineHeight: '14px',
-            color: 'dark.900',
+            color: theme.palette.widget['text-primary'],
           }}
           primary={symbol}
         />

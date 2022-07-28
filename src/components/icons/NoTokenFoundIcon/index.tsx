@@ -24,7 +24,7 @@ const NoTokenFoundIcon = () => {
           />
         </defs>
       </svg>
-      <Typography sx={{ mt: '16px' }} variant="rm16">
+      <Typography sx={{ mt: '16px', color: 'widget.text-primary' }} variant="rm16">
         Nothing found
       </Typography>
     </Stack>

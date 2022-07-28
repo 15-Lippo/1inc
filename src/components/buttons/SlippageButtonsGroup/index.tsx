@@ -1,4 +1,4 @@
-import { Paper, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from '@mui/material';
+import { Paper, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React, { useState } from 'react';
@@ -15,6 +15,7 @@ export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = 
     width: '100%',
     display: 'flex',
     '& .MuiToggleButtonGroup-grouped': {
+      color: theme.palette.widget['input-primary-text'],
       margin: theme.spacing(0.5),
       border: 0,
       '&.Mui-disabled': {
@@ -27,16 +28,18 @@ export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = 
         borderRadius: '8px',
       },
       '&.Mui-selected, &.Mui-selected:hover': {
-        backgroundColor: theme.palette.common.white,
+        backgroundColor: theme.palette.widget['input-bg-01'],
+        color: theme.palette.widget['input-primary-text'],
       },
       '&:hover': {
-        backgroundColor: theme.palette.cool[100],
+        backgroundColor: theme.palette.widget['input-bg'],
       },
     },
   })
 );
 
 export const SlippageButtonsGroup = () => {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const { slippage } = useAppSelector((state) => state.swap);
   const [customSlippage, setCustomSlippage] = useState<string>(slippage > 3 ? slippage.toString() : '');
@@ -59,7 +62,7 @@ export const SlippageButtonsGroup = () => {
       <Paper
         elevation={0}
         sx={{
-          backgroundColor: 'cool.100',
+          backgroundColor: theme.palette.widget['input-bg'],
           display: 'flex',
           alignItems: 'center',
           borderRadius: '12px',
@@ -71,7 +74,6 @@ export const SlippageButtonsGroup = () => {
           aria-label="slippage-percent">
           <ToggleButton
             sx={{
-              color: 'dark.900',
               typography: 'rm16',
             }}
             value="0.1">
@@ -79,7 +81,6 @@ export const SlippageButtonsGroup = () => {
           </ToggleButton>
           <ToggleButton
             sx={{
-              color: 'dark.900',
               typography: 'rm16',
             }}
             value="0.5">
@@ -88,7 +89,6 @@ export const SlippageButtonsGroup = () => {
           <ToggleButton
             sx={{
               width: '55px',
-              color: 'dark.900',
               typography: 'rm16',
             }}
             value="1">
@@ -97,7 +97,6 @@ export const SlippageButtonsGroup = () => {
           <ToggleButton
             sx={{
               width: '55px',
-              color: 'dark.900',
               typography: 'rm16',
             }}
             value="3">
@@ -121,7 +120,7 @@ export const SlippageButtonsGroup = () => {
                 padding: '11px',
               },
               '& fieldset': {
-                borderColor: customSlippage ? 'blue.500' : '',
+                borderColor: customSlippage ? theme.palette.widget['input-border'] : '',
               },
             },
           }}

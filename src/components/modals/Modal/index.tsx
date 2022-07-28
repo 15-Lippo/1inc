@@ -1,11 +1,11 @@
-import { Box, InputAdornment, Stack, TextField, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { StyledComponent } from '@mui/styles';
+import { Box, InputAdornment, Stack, Typography } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
 
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { BackButton, CloseButton, RefreshQuoteButton, ResetSettingsButton, SettingsButton } from '../../buttons';
+import { StyledSearchField } from '../../fields';
+import { SearchIcon } from '../../icons';
 
 export enum ModalHeaderType {
   Main = 'Swap',
@@ -36,28 +36,6 @@ interface ModalProps {
   sx?: SxProps;
 }
 
-export const StyledSearchField: StyledComponent<any> = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
-    background: theme.palette.cool[100],
-    '& ::placeholder': {
-      opacity: 'none',
-      color: '#3E4D63',
-    },
-    borderRadius: '12px',
-    '& fieldset': {
-      color: theme.palette.dark[900],
-      borderRadius: '12px',
-      borderColor: theme.palette.cool[100],
-    },
-    '&:hover fieldset': {
-      borderColor: theme.palette.blue[500],
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.blue[500],
-    },
-  },
-}));
-
 export const Modal = ({
   headerType,
   isOpen,
@@ -72,6 +50,7 @@ export const Modal = ({
   sx,
 }: ModalProps) => {
   const { account } = useActiveWeb3React();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const searchFieldText = {
     [ModalHeaderType.SelectToken]: 'Search by name or paste address',
@@ -91,7 +70,7 @@ export const Modal = ({
         boxShadow: '0px 12px 24px #E2E9F6',
         borderRadius: '24px',
         position: 'absolute',
-        bgcolor: 'background.default',
+        bgcolor: 'widget.bg-main',
         zIndex: '1',
         padding:
           headerType === ModalHeaderType.SelectToken ||
@@ -107,7 +86,7 @@ export const Modal = ({
             sx={{
               typography: 'sbm16',
               textAlign: 'center',
-              color: 'dark.900',
+              color: 'widget.text-primary',
             }}>
             {headerType}
           </Typography>
@@ -118,9 +97,10 @@ export const Modal = ({
               <Box
                 sx={{
                   p: '8px 10px',
-                  bgcolor: 'cool.100',
+                  bgcolor: 'widget.bg-01',
                   borderRadius: '16px',
                   typography: 'rm16',
+                  color: 'widget.text-primary',
                 }}>
                 {`${account.slice(0, 6)}...${account.slice(account.length - 4)}`}
               </Box>
@@ -152,7 +132,7 @@ export const Modal = ({
                 typography: 'mxlg20',
                 width: '100%',
                 textAlign: 'center',
-                color: 'dark.900',
+                color: 'widget.text-primary',
               }}>
               {headerType}
             </Typography>
@@ -180,17 +160,26 @@ export const Modal = ({
                 variant="outlined"
                 aria-label="search-token"
                 type="search"
+                autoComplete="off"
                 value={searchValue}
                 placeholder={searchFieldText[headerType]}
                 onChange={onSearch}
+                inputRef={inputRef}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <img
-                        alt="svgImg"
-                        src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMzAiIGhlaWdodD0iMzAiCnZpZXdCb3g9IjAgMCAxNzIgMTcyIgpzdHlsZT0iIGZpbGw6IzAwMDAwMDsiPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIGZvbnQtZmFtaWx5PSJub25lIiBmb250LXdlaWdodD0ibm9uZSIgZm9udC1zaXplPSJub25lIiB0ZXh0LWFuY2hvcj0ibm9uZSIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0wLDE3MnYtMTcyaDE3MnYxNzJ6IiBmaWxsPSJub25lIj48L3BhdGg+PGcgZmlsbD0iIzliYWZjZCI+PHBhdGggZD0iTTc0LjUzMzMzLDE3LjJjLTMxLjU5NjQyLDAgLTU3LjMzMzMzLDI1LjczNjkyIC01Ny4zMzMzMyw1Ny4zMzMzM2MwLDMxLjU5NjQyIDI1LjczNjkyLDU3LjMzMzMzIDU3LjMzMzMzLDU3LjMzMzMzYzEzLjczOTk4LDAgMjYuMzU4MzQsLTQuODc5MTUgMzYuMjQ3NjYsLTEyLjk3ODM5bDM0LjIzMjAzLDM0LjIzMjAzYzEuNDM4MDIsMS40OTc3OCAzLjU3MzQsMi4xMDExMyA1LjU4MjYsMS41NzczNWMyLjAwOTIsLTAuNTIzNzggMy41NzgyNiwtMi4wOTI4NCA0LjEwMjA0LC00LjEwMjA0YzAuNTIzNzgsLTIuMDA5MiAtMC4wNzk1NywtNC4xNDQ1OCAtMS41NzczNSwtNS41ODI2bC0zNC4yMzIwMywtMzQuMjMyMDNjOC4wOTkyNCwtOS44ODkzMiAxMi45NzgzOSwtMjIuNTA3NjggMTIuOTc4MzksLTM2LjI0NzY2YzAsLTMxLjU5NjQyIC0yNS43MzY5MiwtNTcuMzMzMzMgLTU3LjMzMzMzLC01Ny4zMzMzM3pNNzQuNTMzMzMsMjguNjY2NjdjMjUuMzk5MzcsMCA0NS44NjY2NywyMC40NjczIDQ1Ljg2NjY3LDQ1Ljg2NjY3YzAsMjUuMzk5MzcgLTIwLjQ2NzI5LDQ1Ljg2NjY3IC00NS44NjY2Nyw0NS44NjY2N2MtMjUuMzk5MzcsMCAtNDUuODY2NjcsLTIwLjQ2NzI5IC00NS44NjY2NywtNDUuODY2NjdjMCwtMjUuMzk5MzcgMjAuNDY3MywtNDUuODY2NjcgNDUuODY2NjcsLTQ1Ljg2NjY3eiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+"
-                      />
+                      <SearchIcon />
                     </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <CloseButton
+                      size="28"
+                      onClick={() => {
+                        if (inputRef.current) {
+                          inputRef.current.value = '';
+                        }
+                      }}
+                    />
                   ),
                 }}
                 margin="dense"

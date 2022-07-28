@@ -9,6 +9,7 @@ interface WidgetColors {
   'input-bg-01': CSSProperties['color'];
   'input-border': CSSProperties['color'];
   'input-border-error': CSSProperties['color'];
+  'input-border-warn': CSSProperties['color'];
 
   'bg-main': CSSProperties['color'];
   'bg-disabled': CSSProperties['color'];
@@ -40,9 +41,9 @@ interface WidgetColors {
   'text-error': CSSProperties['color'];
   'text-alert': CSSProperties['color'];
 
-  'checkbox-text-00': CSSProperties['color'];
-  'checkbox-text-01': CSSProperties['color'];
-  'checkbox-text-02': CSSProperties['color'];
+  'checkbox-00': CSSProperties['color'];
+  'checkbox-01': CSSProperties['color'];
+  'checkbox-02': CSSProperties['color'];
 
   'border-00': CSSProperties['color'];
   'border-01': CSSProperties['color'];
@@ -50,6 +51,7 @@ interface WidgetColors {
 
   'btn-text': CSSProperties['color'];
   'btn-text-hover': CSSProperties['color'];
+  'bg-btn-hover': CSSProperties['color'];
 
   'icon-01': CSSProperties['color'];
   'icon-02': CSSProperties['color'];
@@ -61,44 +63,13 @@ interface WidgetColors {
   'icon-10': CSSProperties['color'];
 
   'bg-tooltip': CSSProperties['color'];
+
+  'skeleton-00': CSSProperties['color'];
+  'skeleton-01': CSSProperties['color'];
 }
 
-// TODO delete unnecessary keys after refactoring
 declare module '@mui/material/styles' {
   interface Palette {
-    dark: {
-      900: CSSProperties['color'];
-      700: CSSProperties['color'];
-      500: CSSProperties['color'];
-      50: CSSProperties['color'];
-    };
-    cool: {
-      300: CSSProperties['color'];
-      100: CSSProperties['color'];
-    };
-    blue: {
-      700: CSSProperties['color'];
-      500: CSSProperties['color'];
-      70: CSSProperties['color'];
-      40: CSSProperties['color'];
-      16: CSSProperties['color'];
-    };
-    red: {
-      500: CSSProperties['color'];
-      70: CSSProperties['color'];
-      16: CSSProperties['color'];
-    };
-    yellow: {
-      500: CSSProperties['color'];
-      20: CSSProperties['color'];
-    };
-    green: {
-      500: CSSProperties['color'];
-    };
-    gradient: {
-      500: CSSProperties['color'];
-      52: CSSProperties['color'];
-    };
     widget: WidgetColors;
   }
 

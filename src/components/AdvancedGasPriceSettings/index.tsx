@@ -182,15 +182,15 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
           borderRadius: '12px',
           m: '16px 0',
           p: '19px 17px',
-          bgcolor: 'blue.16',
+          bgcolor: 'widget.bg-alert',
           lineHeight: '19px',
-          color: 'dark.900',
+          color: 'widget.text-alert',
         }}>
         {`Current base fee is ${baseFee} Gwei`}
       </Box>
       <Stack sx={{ m: '16px 0' }}>
         <Stack sx={{ mb: '4px' }} direction="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center">
-          <Typography variant="rm16" lineHeight="19px" color="dark.700">
+          <Typography variant="rm16" lineHeight="19px" color="widget.text-secondary">
             Max priority fee
           </Typography>
           <MaxFeeButton value={estPriorityFee} onClick={onClickEstPriorityFee} />
@@ -204,7 +204,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
       </Stack>
       <Stack sx={{ m: '16px 0' }}>
         <Stack
-          sx={{ color: 'dark.700', mb: '4px' }}
+          sx={{ color: 'widget.text-secondary', mb: '4px' }}
           direction="row"
           flexWrap="nowrap"
           justifyContent="space-between"
@@ -225,12 +225,12 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
       <Stack
         sx={{
           border: '1px solid',
-          borderColor: 'cool.100',
+          borderColor: 'widget.border-01',
           borderRadius: '16px',
           m: '16px 0',
           p: '19px 17px',
           lineHeight: '19px',
-          color: 'dark.900',
+          color: 'widget.text-primary',
         }}
         rowGap="10px">
         <Stack direction="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center">

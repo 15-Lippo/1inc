@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { ActiveWeb3Provider, useActiveProvider } from '../packages/web3-provider';
 import store from '../store';
 import { setReferrerOptions } from '../store/state/swap/swapSlice';
-import defaultTheme from '../theme/default-theme';
+import { defaultTheme } from '../theme';
 import { ReferrerOptions } from '../types';
 import { validateReferrerOptions } from '../utils';
 import SwapWidget from './SwapWidget';

@@ -1,4 +1,4 @@
-import { PaletteOptions, ThemeOptions } from '@mui/material';
+import { ThemeOptions } from '@mui/material';
 
 import { ExtendedTypographyOptions } from './theme';
 
@@ -23,16 +23,6 @@ const baseTheme: ThemeOptions = {
           margin: 0,
           '&.MuiFormControlLabel-root .MuiFormControlLabel-label': {
             width: '100%',
-          },
-        },
-      },
-    },
-    MuiRadio: {
-      styleOverrides: {
-        root: {
-          color: '#6C86AD',
-          '&.Mui-checked': {
-            color: '#2F8AF5',
           },
         },
       },
@@ -145,47 +135,6 @@ const baseTheme: ThemeOptions = {
       fontSize: '16px',
     },
   } as ExtendedTypographyOptions,
-  palette: {
-    background: {
-      default: '#FFFFFF',
-    },
-    common: {
-      white: '#FFFFFF',
-    },
-    dark: {
-      900: '#222222',
-      700: '#6C86AD',
-      500: '#9BAFCD',
-      50: 'rgba(202,218,244,0.5)',
-    },
-    cool: {
-      300: '#E3E7EE',
-      100: '#F3F5FA',
-    },
-    blue: {
-      700: '#0056B3',
-      500: '#2F8AF5',
-      70: 'rgba(47,138,245,0.7)',
-      40: 'rgba(47,138,245,0.4)',
-      16: 'rgba(47,138,245,0.16)',
-    },
-    red: {
-      500: '#E3402A',
-      70: 'rgba(227, 64, 42, 0.7)',
-      16: 'rgba(193,61,84,0.16)',
-    },
-    yellow: {
-      500: '#FF9C08',
-      20: 'rgba(255, 156, 8, 0.2)',
-    },
-    green: {
-      500: 'rgba(0, 137, 123, 1)',
-    },
-    gradient: {
-      500: 'linear-gradient(270deg, rgba(3, 97, 206, 0.49) 0%, #2F8AF5 51.04%, #0FBEE4 100%)',
-      52: 'linear-gradient(270deg, rgba(47, 138, 245, 0.2704) 0%, rgba(3, 97, 206, 0.442) 52.08%, rgba(15, 190, 228, 0.442) 100%)',
-    },
-  } as PaletteOptions,
 } as ThemeOptions;
 
 export default baseTheme;

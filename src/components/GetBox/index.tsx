@@ -40,14 +40,14 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
         padding: '15px 15px 8px',
         margin: '13px 0',
         border: '1px solid',
-        borderColor: 'cool.100',
+        borderColor: 'widget.border-00',
         borderRadius: '16px',
       }}>
       <Link
         target="_blank"
         sx={{
           typography: 'rxs12',
-          color: 'dark.700',
+          color: 'widget.text-secondary',
         }}
         href={explorer && `${explorer.link}/token/${OUTPUT}`}
         underline="hover">
@@ -67,10 +67,10 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
           display: 'flex',
           flexDirection: 'column',
           border: '1px solid',
-          borderColor: 'blue.500',
+          borderColor: 'widget.border-02',
           borderRadius: '8px 12px 12px 12px',
           padding: '17px 12px 12px',
-          color: 'dark.900',
+          color: 'widget.text-primary',
         }}>
         <Box
           sx={{
@@ -81,12 +81,12 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
             alignItems: 'center',
             borderRadius: '10px 10px 10px 0px',
             padding: '2px 7px 3px',
-            backgroundColor: 'green.500',
+            backgroundColor: 'widget.bg-07',
           }}>
           <Typography
             variant="rxs12"
             sx={{
-              color: 'common.white',
+              color: 'widget.text-primary-02',
             }}>
             Best quote
           </Typography>
@@ -108,7 +108,7 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
           ) : (
             <Skeleton
               sx={{
-                bgcolor: 'cool.100',
+                bgcolor: 'widget.skeleton-00',
               }}
               animation="wave"
               height={24}
@@ -123,13 +123,13 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
             justifyContent: 'space-between',
           }}>
           {txCostInTokenInput && txCostInUsd && typedValue && loadingQuote === 'succeeded' ? (
-            <Typography variant="rxs12" sx={{ color: 'dark.700', lineHeight: '24px' }}>
+            <Typography variant="rxs12" sx={{ color: 'widget.text-secondary', lineHeight: '24px' }}>
               {`Tx cost ${txCostInTokenInput} Ξ (~$${txCostInUsd.toFixed(2)})`}
             </Typography>
           ) : (
             <Skeleton
               sx={{
-                bgcolor: 'cool.100',
+                bgcolor: 'widget.skeleton-00',
               }}
               animation="wave"
               height={24}

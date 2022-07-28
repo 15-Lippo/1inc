@@ -13,8 +13,9 @@ import { Field } from '../../../types';
 const StyledTextField: StyledComponent<StandardTextFieldProps> = styled(TextField)(({ theme }) => ({
   width: '100%',
   '& .MuiOutlinedInput-root': {
+    color: theme.palette.widget['text-primary'],
     border: 'none',
-    background: theme.palette.cool[100],
+    background: theme.palette.widget['input-bg'],
     '& fieldset': {
       border: 'none',
     },

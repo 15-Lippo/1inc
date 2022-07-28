@@ -13,7 +13,7 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
     <Paper
       elevation={0}
       sx={{
-        backgroundColor: 'cool.100',
+        backgroundColor: 'widget.bg-01',
         display: 'flex',
         alignItems: 'center',
         borderRadius: '12px',
@@ -23,7 +23,6 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
           sx={{
             textTransform: 'none',
             width: '100%',
-            color: 'dark.900',
             typography: 'rm16',
           }}
           value="basic">
@@ -33,7 +32,6 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
           sx={{
             textTransform: 'none',
             width: '100%',
-            color: 'dark.900',
             typography: 'rm16',
           }}
           value="advanced">

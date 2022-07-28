@@ -8,17 +8,18 @@ import React, { useEffect, useState } from 'react';
 import { SupportedGasOptions } from '../../hooks';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setCustomGasPrice, setGasPriceInfo } from '../../store/state/swap/swapSlice';
+import { StarIcon } from '../icons';
 
 const BpIcon = styled('span')(({ theme }) => ({
   borderRadius: '50%',
   width: 13,
   height: 13,
-  border: `1px ${theme.palette.dark[500]} solid`,
+  border: `1px ${theme.palette.widget['checkbox-01']} solid`,
 }));
 
 const BpCheckedIcon = styled(BpIcon)(({ theme }) => ({
-  background: theme.palette.blue[500],
-  border: `1px ${theme.palette.blue[500]} solid`,
+  background: theme.palette.widget['checkbox-00'],
+  border: `1px ${theme.palette.widget['checkbox-00']} solid`,
   '&:before': {
     display: 'block',
     width: 13,
@@ -31,8 +32,9 @@ const BpCheckedIcon = styled(BpIcon)(({ theme }) => ({
 const StyledFormControlLabel = styled((props: FormControlLabelProps) => <FormControlLabel {...props} />)(
   ({ theme }) => ({
     padding: '15px',
-    backgroundColor: theme.palette.cool[100],
+    backgroundColor: theme.palette.widget['input-bg'],
     marginBottom: '1px',
+    color: theme.palette.widget['input-primary-text'],
     '&:first-of-type': {
       borderTopLeftRadius: '12px',
       borderTopRightRadius: '12px',
@@ -68,14 +70,6 @@ export default function UseRadioGroup({ gasOptions }: any) {
     setValue(value);
   };
 
-  const startIcon = (
-    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M4 0L4.89806 2.76393H7.80423L5.45308 4.47214L6.35114 7.23607L4 5.52786L1.64886 7.23607L2.54692 4.47214L0.195774 2.76393H3.10194L4 0Z"
-        fill="#2F8AF5"
-      />
-    </svg>
-  );
   return (
     <RadioGroup
       sx={{
@@ -91,15 +85,17 @@ export default function UseRadioGroup({ gasOptions }: any) {
           label={
             <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={0}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {gasOptions[v].label.toLowerCase() === SupportedGasOptions.High && startIcon}
+                {gasOptions[v].label.toLowerCase() === SupportedGasOptions.High && <StarIcon />}
                 <Typography variant="rsm14" sx={{ m: '0 5px' }}>
                   {gasOptions[v].label}
                 </Typography>
-                <Typography color="dark.700" variant="rxs12">
+                <Typography color="widget.input-secondary-text" variant="rxs12">
                   {gasOptions[v].timeLabel}
                 </Typography>
               </Box>
-              <Typography variant="rsm14">{gasOptions[v].range}</Typography>
+              <Typography color="widget.input-primary-text" variant="rsm14">
+                {gasOptions[v].range}
+              </Typography>
             </Stack>
           }
           control={

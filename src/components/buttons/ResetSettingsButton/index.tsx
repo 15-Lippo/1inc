@@ -6,12 +6,12 @@ import React from 'react';
 const StyledTextButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ theme }) => ({
   borderRadius: '12px',
   padding: '8px',
-  background: theme.palette.background.default,
+  background: theme.palette.widget['bg-main'],
   textTransform: 'none',
   lineHeight: '19px',
-  color: theme.palette.dark[900],
+  color: theme.palette.widget['text-primary'],
   '&:hover': {
-    background: theme.palette.cool[100],
+    background: theme.palette.widget['bg-btn-hover'],
   },
 }));
 

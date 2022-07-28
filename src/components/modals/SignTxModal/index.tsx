@@ -1,5 +1,4 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
@@ -7,10 +6,6 @@ import { setIsWaitingTx, setTxErrorMessage } from '../../../store/state/transact
 import { MainButton, MainButtonType } from '../../buttons';
 import { TxFailedIcon } from '../../icons';
 import { Modal, ModalHeaderType } from '../Modal';
-
-const StyledCircularProgress = styled(CircularProgress)(({ theme }) => ({
-  color: theme.palette.blue[500],
-}));
 
 const SignTxModal = () => {
   const dispatch = useAppDispatch();
@@ -31,13 +26,17 @@ const SignTxModal = () => {
           display: 'flex',
           justifyContent: 'center',
         }}>
-        {txErrorMessage ? <TxFailedIcon /> : <StyledCircularProgress size={94} thickness={2} />}
+        {txErrorMessage ? (
+          <TxFailedIcon />
+        ) : (
+          <CircularProgress sx={{ color: 'widget.icon-10' }} size={94} thickness={2} />
+        )}
       </Box>
       <Typography
         align="center"
         variant="rm16"
         sx={{
-          color: txErrorMessage ? 'red.500' : 'dark.900',
+          color: 'widget.text-primary',
         }}>
         {txErrorMessage ? txErrorMessage : 'Please, sign transaction in your wallet'}
       </Typography>

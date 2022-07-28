@@ -1,4 +1,4 @@
-import { InputAdornment, TextField, TextFieldProps, Typography } from '@mui/material';
+import { InputAdornment, TextField, TextFieldProps, Theme, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
@@ -6,57 +6,39 @@ import React, { useMemo } from 'react';
 
 import { CustomGasPriceFieldId, GasPriceErrorTypes } from '../../../constants';
 
+const primaryBorderStyle = (error: any, value: any, id: any, theme: Theme) => {
+  return `${
+    error && value && id === CustomGasPriceFieldId.maxPriorityFee
+      ? theme.palette.widget['input-border-warn']
+      : error && value && id === CustomGasPriceFieldId.maxFee
+      ? theme.palette.widget['input-border-error']
+      : !Number(value)
+      ? theme.palette.widget['input-border-error']
+      : theme.palette.widget['input-border']
+  }`;
+};
+
 const StyledTextField: StyledComponent<any> = styled(TextField)<TextFieldProps>(({ theme, id, value, error }) => ({
   '& .MuiInputBase-formControl': {
-    background: theme.palette.cool[100],
+    color: theme.palette.widget['text-primary'],
+    background: theme.palette.widget['input-bg'],
     borderRadius: '12px',
   },
   '& fieldset': {
-    border: `1px solid ${
-      error && value && id === CustomGasPriceFieldId.maxPriorityFee
-        ? theme.palette.yellow[500]
-        : error && value && id === CustomGasPriceFieldId.maxFee
-        ? theme.palette.red[500]
-        : !Number(value)
-        ? theme.palette.red[500]
-        : theme.palette.cool[100]
-    }`,
+    border: `1px solid ${primaryBorderStyle(error, value, id, theme)}`,
   },
   '& .MuiInputBase-formControl.Mui-error fieldset': {
-    borderColor:
-      error && value && id === CustomGasPriceFieldId.maxPriorityFee
-        ? theme.palette.yellow[500]
-        : error && value && id === CustomGasPriceFieldId.maxFee
-        ? theme.palette.red[500]
-        : !Number(value)
-        ? theme.palette.red[500]
-        : theme.palette.cool[100],
+    borderColor: primaryBorderStyle(error, value, id, theme),
   },
   '&:hover .MuiInputBase-formControl fieldset': {
-    border: `1px solid ${
-      error && value && id === CustomGasPriceFieldId.maxPriorityFee
-        ? theme.palette.yellow[500]
-        : error && value && id === CustomGasPriceFieldId.maxFee
-        ? theme.palette.red[500]
-        : !Number(value)
-        ? theme.palette.red[500]
-        : theme.palette.cool[100]
-    }`,
+    border: `1px solid ${primaryBorderStyle(error, value, id, theme)}`,
   },
   '&:focus-within .MuiInputBase-formControl fieldset': {
-    border: `1px solid ${
-      error && value && id === CustomGasPriceFieldId.maxPriorityFee
-        ? theme.palette.yellow[500]
-        : error && value && id === CustomGasPriceFieldId.maxFee
-        ? theme.palette.red[500]
-        : !Number(value)
-        ? theme.palette.red[500]
-        : theme.palette.cool[100]
-    }`,
+    border: `1px solid ${primaryBorderStyle(error, value, id, theme)}`,
   },
   '& .MuiOutlinedInput-input': {
     borderRadius: '12px',
-    border: `1px solid ${theme.palette.cool[100]}`,
+    border: `1px solid ${theme.palette.widget['input-bg']}`,
     padding: '15px',
   },
   '& .MuiFormHelperText-root': {
@@ -64,8 +46,8 @@ const StyledTextField: StyledComponent<any> = styled(TextField)<TextFieldProps>(
     '&.Mui-error': {
       color:
         error && value && id === CustomGasPriceFieldId.maxPriorityFee
-          ? theme.palette.yellow[500]
-          : error && value && id === CustomGasPriceFieldId.maxFee && theme.palette.red[500],
+          ? theme.palette.widget['input-border-warn']
+          : error && value && id === CustomGasPriceFieldId.maxFee && theme.palette.widget['input-border-error'],
     },
   },
   '& input::-webkit-inner-spin-button, & input::-webkit-outer-spin-button': {
@@ -99,13 +81,13 @@ const CustomGasPriceField = ({ value, id, onChange, error, typeError }: Props) =
         '& input': {
           typography: 'rm16',
           lineHeight: '19px',
-          color: 'dark.900',
+          color: 'widget.input-primary-text',
         },
       }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <Typography variant="rm16" color="dark.700" lineHeight="19px">
+            <Typography variant="rm16" color="widget.input-secondary-text" lineHeight="19px">
               Gwei
             </Typography>
           </InputAdornment>

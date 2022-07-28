@@ -62,7 +62,7 @@ const VirtualizedTokenList = ({
       <ListItem
         sx={{
           '& .MuiListItemButton-root:hover': {
-            bgcolor: 'cool.300',
+            bgcolor: 'widget.bg-01',
           },
         }}
         style={style}
@@ -86,11 +86,11 @@ const VirtualizedTokenList = ({
           <ListItemText
             primaryTypographyProps={{
               typography: 'mm16',
-              color: 'dark.900',
+              color: 'widget.text-primary',
             }}
             secondaryTypographyProps={{
               typography: 'rxs12',
-              color: 'dark.700',
+              color: 'widget.text-secondary',
             }}
             primary={name}
             secondary={`${
@@ -105,7 +105,7 @@ const VirtualizedTokenList = ({
             }}
             primaryTypographyProps={{
               typography: 'rm16',
-              color: 'dark.900',
+              color: 'widget.text-primary',
               lineHeight: '19px',
             }}
             primary={
@@ -120,11 +120,12 @@ const VirtualizedTokenList = ({
             <Button
               variant="contained"
               sx={{
+                color: 'widget.text-main-btn-01',
                 '&.MuiButton-root': {
-                  backgroundColor: 'blue.500',
+                  backgroundColor: 'widget.bg-04',
                 },
                 '&:hover': {
-                  backgroundColor: 'blue.70',
+                  backgroundColor: 'widget.bg-04-hover',
                   boxShadow: 'none',
                 },
                 borderRadius: '8px',
@@ -155,7 +156,7 @@ const VirtualizedTokenList = ({
             alignItems: 'center',
             display: 'flex',
           }}>
-          <CircularProgress sx={{ color: 'blue.500' }} />
+          <CircularProgress sx={{ color: 'widget.icon-10' }} />
         </Box>
       ) : tokensList.length ? (
         <FixedSizeList height={400} width={'100%'} itemSize={72} itemCount={tokensList.length}>

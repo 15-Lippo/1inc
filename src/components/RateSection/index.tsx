@@ -47,7 +47,7 @@ const RateSection = () => {
       alignItems="stretch"
       spacing={1}
       sx={{
-        color: 'dark.700',
+        color: 'widget.text-secondary',
         mb: '8px',
       }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
@@ -55,7 +55,7 @@ const RateSection = () => {
         {loading ? (
           <Skeleton
             sx={{
-              bgcolor: 'cool.100',
+              bgcolor: 'widget.skeleton-00',
             }}
             animation="wave"
             width="151px"
@@ -80,30 +80,14 @@ const RateSection = () => {
                 <Stack direction="column" spacing={1} sx={{ padding: '5px' }}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant="rxs12">{`${INPUT.symbol} price`}</Typography>
-                    {INPUT?.priceInUsd && (
-                      <Typography
-                        variant="rxs12"
-                        sx={{
-                          color: 'dark.700',
-                        }}>
-                        ~${inputInUsd}
-                      </Typography>
-                    )}
+                    {INPUT?.priceInUsd && <Typography variant="rxs12">~${inputInUsd}</Typography>}
                     <Typography variant="rxs12">{`${inputPrice} ${
                       INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol
                     }`}</Typography>
                   </Stack>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant="rxs12">{`${OUTPUT.symbol} price`}</Typography>
-                    {OUTPUT?.priceInUsd && (
-                      <Typography
-                        variant="rxs12"
-                        sx={{
-                          color: 'dark.700',
-                        }}>
-                        ~${outputInUsd}
-                      </Typography>
-                    )}
+                    {OUTPUT?.priceInUsd && <Typography variant="rxs12">~${outputInUsd}</Typography>}
                     <Typography variant="rxs12">{` ${outputPrice}  ${
                       OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol
                     }`}</Typography>

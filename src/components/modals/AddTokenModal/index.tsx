@@ -1,5 +1,5 @@
 import { isAddress } from '@ethersproject/address';
-import { Avatar, Box, Checkbox, FormControlLabel, FormGroup, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Checkbox, FormControlLabel, FormGroup, Stack, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import ERC20ABI from '../../../abi/ERC20ABI.json';
@@ -11,7 +11,7 @@ import { addTokenToAllTokens, fetchCoinInfoById, Token } from '../../../store/st
 import { Field } from '../../../types';
 import { getContract } from '../../../utils';
 import { MainButton, MainButtonType } from '../../buttons';
-import { NoLogoURI } from '../../icons';
+import { NoLogoURI, WarningIcon } from '../../icons';
 import VirtualizedTokenList from '../../VirtualizedTokenList';
 import { Modal, ModalHeaderType } from '../Modal';
 
@@ -22,6 +22,7 @@ interface AddTokenModalProps {
 }
 
 const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const { library } = useActiveWeb3React();
   const { lastImportedTokenInfo } = useAppSelector((state) => state.tokens);
@@ -156,7 +157,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
         goBack={closeAddTokenModal}
         isOpen={isOpen}>
         {searchToken?.address && !searchToken?.button && (
-          <Typography sx={{ m: '10px 16px' }} color="green.500" variant="rm16">
+          <Typography sx={{ m: '10px 16px' }} color="widget.text-successful" variant="rm16">
             This token has already been added
           </Typography>
         )}
@@ -171,7 +172,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
           sx={{
             p: '18px',
             boxSizing: 'border-box',
-            border: ' 1px solid #E3E7EE',
+            border: `1px solid ${theme.palette.widget['border-01']}`,
             borderRadius: '16px',
             mb: '14px',
           }}>
@@ -182,49 +183,75 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
               <NoLogoURI />
             )}
             <Stack sx={{ ml: '16px' }} direction="column" justifyContent="space-between">
-              <Typography color="dark.900" variant="mm16">
+              <Typography color="widget.text-primary" variant="mm16">
                 {tokenToImport?.token?.name}
               </Typography>
-              <Typography color="dark.700" variant="rxs12">
+              <Typography color="widget.text-secondary" variant="rxs12">
                 {tokenToImport?.token?.symbol}
               </Typography>
             </Stack>
           </Stack>
           <hr
-            color="#E3E7EE"
+            color={theme.palette.widget['border-01']}
             style={{
               margin: '19px 0',
               height: '1px',
               borderWidth: 0,
             }}
           />
-          <Typography variant="rsm14">{tokenToImport?.token?.address}</Typography>
+          <Typography color="widget.text-primary" variant="rsm14">
+            {tokenToImport?.token?.address}
+          </Typography>
         </Box>
         <Box
           sx={{
-            backgroundColor: 'red.16',
+            display: 'flex',
+            flexDirection: 'row',
+            backgroundColor: 'widget.bg-alert-error',
             p: '18px',
             borderRadius: '12px',
             mb: '30px',
           }}>
+          <WarningIcon
+            error={true}
+            sx={{
+              margin: '2px  18px 0 0',
+            }}
+          />
           <Stack direction="column" justifyContent="space-between">
-            <Typography sx={{ mb: '14px' }} color="red.500" variant="sblg18">
+            <Typography sx={{ mb: '14px' }} color="widget.text-error" variant="sblg18">
               Trade at your own risk!
             </Typography>
-            <Typography sx={{ mb: '14px' }} variant="rsm14">
+            <Typography sx={{ mb: '14px' }} color="widget.text-primary" variant="rsm14">
               Anyone can create a token, including creating fake versions of existing tokens that claim to represent
               projects
             </Typography>
-            <Typography sx={{ mb: '14px' }} variant="rsm14">
+            <Typography sx={{ mb: '14px' }} color="widget.text-primary" variant="rsm14">
               If you purchase this token, you may not be able to sell it back
             </Typography>
             <FormGroup>
               <FormControlLabel
+                sx={{
+                  color: 'widget.text-primary',
+                }}
                 control={
                   <Checkbox
                     inputProps={{ 'aria-label': 'controlled' }}
                     checked={understanding}
+                    disableRipple
                     onChange={handleCheckboxChange}
+                    sx={{
+                      '&:hover': {
+                        color: 'widget.checkbox-00',
+                      },
+                      paddingLeft: '0',
+                      color: 'widget.checkbox-01',
+                      borderRadius: 4,
+                      '&.Mui-checked': {
+                        borderRadius: '4px',
+                        color: 'widget.checkbox-00',
+                      },
+                    }}
                   />
                 }
                 label="I understand"

@@ -4,22 +4,23 @@ import { StyledComponent } from '@mui/styles';
 
 const StyledSearchField: StyledComponent<any> = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    background: theme.palette.cool[100],
+    color: theme.palette.widget['input-primary-text'],
+    background: theme.palette.widget['input-bg'],
     '& ::placeholder': {
       opacity: 'none',
-      color: '#3E4D63',
+      color: theme.palette.widget['input-placeholder'],
     },
     borderRadius: '12px',
     '& fieldset': {
-      color: theme.palette.dark[900],
+      color: theme.palette.widget['input-primary-text'],
       borderRadius: '12px',
-      borderColor: theme.palette.cool[100],
+      borderColor: theme.palette.widget['input-bg'],
     },
     '&:hover fieldset': {
-      borderColor: theme.palette.blue[500],
+      borderColor: theme.palette.widget['input-border'],
     },
     '&.Mui-focused fieldset': {
-      borderColor: theme.palette.blue[500],
+      borderColor: theme.palette.widget['input-border'],
     },
   },
 }));
