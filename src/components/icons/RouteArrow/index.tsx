@@ -12,4 +12,5 @@ const RouteArrow = () => {
     </svg>
   );
 };
+
 export default RouteArrow;

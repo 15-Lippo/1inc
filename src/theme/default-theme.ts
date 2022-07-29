@@ -62,6 +62,8 @@ const defaultPalette: PaletteOptions = {
     'border-00': '#EAF1FB',
     'border-01': '#F1F3F6',
     'border-02': DEEP_BLUE,
+    'border-03': LIGHT_BLUE_GREY,
+    'border-gradient': 'radial-gradient(circle, #9BAFCD 0%, #9BAFCD 15%, rgba(155, 175, 205, 0) 100%)',
 
     'btn-text': DEEP_BLUE,
     'btn-text-hover': '#2F8AF566',

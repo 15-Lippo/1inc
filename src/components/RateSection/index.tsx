@@ -1,21 +1,29 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Stack, Typography } from '@mui/material';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
 import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppSelector } from '../../store/hooks';
 import { Field } from '../../types';
-import { RouteArrow, TooltipIcon } from '../icons';
+import { RouteButton } from '../buttons';
+import { TooltipIcon } from '../icons';
 import { LightTooltip } from '../LightTooltip';
 
-const RateSection = () => {
+interface RateSectionProps {
+  openRoute: () => void;
+  totalRouteSteps: number;
+}
+const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
   const { account } = useActiveWeb3React();
-  const { INPUT, OUTPUT, inputAmount, outputAmount, loadingQuote } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, inputAmount, outputAmount, loadingQuote, protocols, tokens } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     inputAmount: state.swap.typedValue || '0',
     outputAmount: state.swap.quoteInfo?.toTokenAmount || '0',
     loadingQuote: state.swap.loadingQuote,
+    protocols: state.swap.quoteInfo?.protocols,
+    tokens: state.tokens.tokens,
   }));
   const [outputPrice, setOutputPrice] = useState<string>('0');
   const [inputPrice, setInputPrice] = useState<string>('0');
@@ -50,7 +58,7 @@ const RateSection = () => {
         color: 'widget.text-secondary',
         mb: '8px',
       }}>
-      <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" lineHeight="19px" spacing={1}>
         <Typography variant="rxs12">Rate</Typography>
         {loading ? (
           <Skeleton
@@ -62,11 +70,7 @@ const RateSection = () => {
           />
         ) : (
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-            <Typography
-              variant="rxs12"
-              sx={{
-                lineHeight: '19px',
-              }}>{`1 ${OUTPUT.symbol} = ${outputPrice} ${INPUT.symbol} ${
+            <Typography variant="rxs12">{`1 ${OUTPUT.symbol} = ${outputPrice} ${INPUT.symbol} ${
               OUTPUT?.priceInUsd && `(~$${outputInUsd})`
             }`}</Typography>
             <LightTooltip
@@ -103,13 +107,28 @@ const RateSection = () => {
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
+          alignItems: 'center',
+          alignContent: 'center',
+          lineHeight: '19px',
         }}>
         <Typography variant="rxs12">Route</Typography>
-        <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
-          <Typography variant="rxs12">{INPUT.symbol}</Typography>
-          <RouteArrow />
-          <Typography variant="rxs12">{OUTPUT.symbol}</Typography>
-        </Stack>
+        {protocols?.length && !_.isEmpty(tokens) && totalRouteSteps && loadingQuote === 'succeeded' ? (
+          <RouteButton
+            tokens={tokens}
+            inputTokenSymbol={INPUT.symbol}
+            protocols={protocols}
+            onClick={openRoute}
+            totalRouteSteps={totalRouteSteps}
+          />
+        ) : (
+          <Skeleton
+            sx={{
+              bgcolor: 'widget.skeleton-00',
+            }}
+            animation="wave"
+            width="80px"
+          />
+        )}
       </Box>
     </Stack>
   );

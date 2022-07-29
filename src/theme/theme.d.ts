@@ -48,6 +48,8 @@ interface WidgetColors {
   'border-00': CSSProperties['color'];
   'border-01': CSSProperties['color'];
   'border-02': CSSProperties['color'];
+  'border-03': CSSProperties['color'];
+  'border-gradient': CSSProperties['color'];
 
   'btn-text': CSSProperties['color'];
   'btn-text-hover': CSSProperties['color'];

@@ -64,7 +64,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
       <Modal headerType={ModalHeaderType.AdvancedSettings} isOpen={isOpen} goBack={goBack} onReset={onReset}>
         <Box
           sx={{
-            overflow: 'scroll',
+            overflow: 'auto',
             MsOverflowStyle: 'none' /* Internet Explorer 10+ */,
             scrollbarWidth: 'none',
           }}>

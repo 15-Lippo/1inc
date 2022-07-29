@@ -13,6 +13,7 @@ import {
 import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
+import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppSelector } from '../../store/hooks';
 import { Token } from '../../store/state/tokens/tokensSlice';
 import { CloseButton, LinkButton, PinButton } from '../buttons';
@@ -37,6 +38,7 @@ const VirtualizedTokenList = ({
   onUnpinToken,
   onRemoveCustomToken,
 }: VirtualizedTokenListProps) => {
+  const { account } = useActiveWeb3React();
   const { explorer } = useAppSelector((state) => state.user);
 
   function renderRow({ index, style }: ListChildComponentProps) {
@@ -147,7 +149,7 @@ const VirtualizedTokenList = ({
         height: '100%',
         display: 'flex',
         justifyContent: 'center',
-        overflow: 'scroll',
+        overflow: 'auto',
       }}>
       {loading ? (
         <Box
@@ -159,7 +161,7 @@ const VirtualizedTokenList = ({
           <CircularProgress sx={{ color: 'widget.icon-10' }} />
         </Box>
       ) : tokensList.length ? (
-        <FixedSizeList height={400} width={'100%'} itemSize={72} itemCount={tokensList.length}>
+        <FixedSizeList height={account ? 280 : 374} width={'100%'} itemSize={72} itemCount={tokensList.length}>
           {renderRow}
         </FixedSizeList>
       ) : (

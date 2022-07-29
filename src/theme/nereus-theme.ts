@@ -64,6 +64,8 @@ const nereusPalette: PaletteOptions = {
     'border-00': '#434343',
     'border-01': DARK_GREY,
     'border-02': LIGHT_YELLOW,
+    'border-03': LIGHT_GREY,
+    'border-gradient': 'radial-gradient(circle, #A3A3A3 0%, #A3A3A3 15%, rgba(163, 163, 163, 0) 100%)',
 
     'btn-text': CYAN,
     'btn-text-hover': '#7BE1E4',

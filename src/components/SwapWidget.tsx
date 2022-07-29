@@ -1,6 +1,7 @@
 import './SwapWidget.css';
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY_MS, SupportedChainId, Tokens } from '../constants';
@@ -15,6 +16,7 @@ import { useUpdateQuote } from '../store/state/swap/useUpdateQuote';
 import { useTokens } from '../store/state/tokens/useTokens';
 import { setExplorer } from '../store/state/user/userSlice';
 import { Field } from '../types';
+import { totalRouteSteps } from '../utils';
 import { MainButton, MainButtonType, SwitchTokensButton } from './buttons';
 import GetBox from './GetBox';
 import {
@@ -23,6 +25,7 @@ import {
   ConfirmSwapModal,
   Modal,
   ModalHeaderType,
+  RouteModal,
   SelectTokenModal,
   SettingsModal,
 } from './modals';
@@ -45,6 +48,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
     INPUT,
     OUTPUT,
     typedValue,
+    protocols,
     tokensList,
     quoteError,
     approveTransactionInfo,
@@ -58,6 +62,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
     INPUT: state.swap.INPUT,
     OUTPUT: state.swap.OUTPUT,
     typedValue: state.swap.typedValue,
+    protocols: state.swap.quoteInfo?.protocols,
     tokensList: state.tokens.tokens,
     lastTxHash: state.transactions.lastTxHash,
     approveTransactionInfo: state.approve.approveTransactionInfo,
@@ -73,6 +78,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [isAddTokenOpen, setAddTokenOpen] = useState<boolean>(false);
+  const [isRouteOpen, setRouteOpen] = useState<boolean>(false);
   const [isSelectTokenOpen, setSelectTokenOpen] = useState({
     field: Field.INPUT,
     open: false,
@@ -159,19 +165,40 @@ function SwapWidget({ width }: SwapWidgetProps) {
     updateQuote();
   }, [inputToken?.address, outputToken?.address, typedValue, chainId, account, referrerOptions]);
 
+  const routeSteps = totalRouteSteps(protocols);
+
   return (
-    <div style={{ position: 'relative', height: 'inherit', width }}>
+    <Box
+      component="div"
+      sx={{
+        position: 'relative',
+        height: 'inherit',
+        width,
+        '& ::-webkit-scrollbar': {
+          width: '8px',
+          height: '8px',
+        },
+        '& ::-webkit-scrollbar-track': {
+          backgroundColor: 'widget.bg-main',
+        },
+        '& ::-webkit-scrollbar-thumb': {
+          backgroundColor: 'widget.border-01',
+          borderRadius: '4px',
+          border: '2px solid',
+          borderColor: 'widget.bg-main',
+        },
+      }}>
       <Modal
         headerType={ModalHeaderType.Main}
         isOpen
-        hide={isConfirmOpen || isSettingsOpen}
+        hide={isConfirmOpen || isSettingsOpen || isRouteOpen}
         openSettings={() => setSettingsOpen(true)}>
         <React.Fragment>
           <SendBox onSelectToken={() => setSelectTokenOpen({ field: Field.INPUT, open: true })} />
           <SwitchTokensButton />
           <GetBox onSelectToken={() => setSelectTokenOpen({ field: Field.OUTPUT, open: true })} />
         </React.Fragment>
-        <RateSection />
+        <RateSection openRoute={() => setRouteOpen(true)} totalRouteSteps={routeSteps} />
         {mainButtonByType()}
       </Modal>
       <SelectTokenModal
@@ -198,7 +225,13 @@ function SwapWidget({ width }: SwapWidgetProps) {
       <AddTokenModal field={isSelectTokenOpen.field} goBack={() => setAddTokenOpen(false)} isOpen={isAddTokenOpen} />
       <ConfirmSwapModal gasOptions={gasOptions} goBack={() => setConfirmModalOpen(false)} isOpen={isConfirmOpen} />
       <AlertModal open={shouldOpenModal()} onClose={clearMessage} text={errorMessage.text} title={errorMessage.title} />
-    </div>
+      <RouteModal
+        protocols={protocols}
+        goBack={() => setRouteOpen(false)}
+        isOpen={isRouteOpen}
+        totalRouteSteps={routeSteps}
+      />
+    </Box>
   );
 }
 

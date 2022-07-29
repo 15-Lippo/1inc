@@ -20,6 +20,7 @@ export enum ModalHeaderType {
   AddToken = 'Add a token',
   Import = 'Import a token',
   Custom = 'Custom tokens',
+  Route = 'Routing',
 }
 
 interface ModalProps {
@@ -75,7 +76,8 @@ export const Modal = ({
         padding:
           headerType === ModalHeaderType.SelectToken ||
           headerType === ModalHeaderType.AddToken ||
-          headerType === ModalHeaderType.Custom
+          headerType === ModalHeaderType.Custom ||
+          headerType === ModalHeaderType.Route
             ? '11px 0'
             : '11px 16px 14px',
         boxSizing: 'border-box',
