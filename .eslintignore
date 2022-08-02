@@ -4,3 +4,4 @@ src/api/coingeco-api/*
 node_modules/
 *.min.js
 src/index.css
+*.md

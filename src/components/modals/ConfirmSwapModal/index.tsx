@@ -198,14 +198,13 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
         swapInfo: {
           fromTokenAddress: INPUT.address,
           toTokenAddress: OUTPUT.address,
-          amount: typedValue,
+          amount: typedValue.toString(),
           fromAddress: String(account),
           slippage,
           disableEstimate: true,
           gasLimit: txFeeCalculation?.gasLimit,
-          ...(referrerOptions[chainId as SupportedChainId]?.referrerAddress
-            ? referrerOptions[chainId as SupportedChainId]
-            : {}),
+          referrerAddress: referrerOptions[chainId as SupportedChainId]?.referrerAddress,
+          fee: referrerOptions[chainId as SupportedChainId]?.fee,
         },
         chainId,
       })

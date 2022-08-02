@@ -1,4 +1,5 @@
-import { formatEther, parseUnits } from '@ethersproject/units';
+import { BigNumber } from '@ethersproject/bignumber';
+import { formatUnits, parseUnits } from '@ethersproject/units';
 import { StandardTextFieldProps, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
@@ -7,7 +8,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { typeInput } from '../../../store/state/swap/swapSlice';
-import { Token } from '../../../store/state/tokens/tokensSlice';
 import { Field } from '../../../types';
 
 const StyledTextField: StyledComponent<StandardTextFieldProps> = styled(TextField)(({ theme }) => ({
@@ -39,9 +39,8 @@ const InputAmount = ({ inputId }: SendProps) => {
   const [amount, setAmount] = useState<string>('0');
   const { INPUT, typedValue } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
-    typedValue: state.swap.typedValue,
+    typedValue: BigNumber.from(state.swap.typedValue),
   }));
-  const [input, setInput] = useState<Token>(INPUT);
   const debouncedTypedValueSetter = useRef(
     _.debounce((value: string, field: Field) => {
       const valueInWei = calcWeiAmount(value);
@@ -49,20 +48,16 @@ const InputAmount = ({ inputId }: SendProps) => {
     }, 1000)
   );
 
-  useEffect(() => {
-    setInput(INPUT);
-  }, [INPUT]);
-
-  const calcWeiAmount = (value: string) => (value ? parseUnits(value, input?.decimals).toString() : '');
+  const calcWeiAmount = (value: string) => (value ? parseUnits(value, INPUT.decimals) : BigNumber.from('0'));
 
   const handleChange = ({ target }: any) => {
     setAmount(target.value);
-    if (input?.address) debouncedTypedValueSetter.current(target.value, target.id);
+    if (INPUT.address) debouncedTypedValueSetter.current(target.value, target.id);
   };
 
   useEffect(() => {
-    if (typedValue && calcWeiAmount(amount) !== typedValue) {
-      setAmount(formatEther(typedValue));
+    if (!typedValue.isZero() && !typedValue.eq(calcWeiAmount(amount))) {
+      setAmount(formatUnits(typedValue, INPUT.decimals));
     }
   }, [typedValue]);
 

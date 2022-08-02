@@ -25,11 +25,9 @@ export const useUpdateQuote = () => {
         quoteInfo: {
           fromTokenAddress: INPUT.address,
           toTokenAddress: OUTPUT.address,
-          amount: typedValue,
+          amount: typedValue.toString(),
           gasLimit,
-          ...(referrerOptions[chainId as SupportedChainId]?.referrerAddress
-            ? { fee: referrerOptions[chainId as SupportedChainId].fee }
-            : {}),
+          fee: referrerOptions[chainId as SupportedChainId]?.fee,
         },
         chainId,
       })

@@ -1,11 +1,15 @@
-export {};
+import { SupportedChainId } from './constants';
 
-export interface ReferrerOptions {
-  [chainId: number]: {
+export type ReferrerOptions = {
+  [chainId in SupportedChainId]?: {
     referrerAddress: string;
     fee: string;
   };
-}
+};
+
+export type DefaultTokenOptions = {
+  [chainId in SupportedChainId]?: string | 'NATIVE';
+};
 
 export enum Field {
   INPUT = 'INPUT',

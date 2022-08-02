@@ -3,86 +3,7 @@ import reducer, { selectCurrency, switchCurrencies, typeInput } from './swapSlic
 import { initialState as swapInitialState } from './swapSlice';
 
 export const initialState = swapInitialState;
-const restValues = {
-  loading: 'idle',
-  loadingQuote: 'idle',
-  txFeeCalculation: {
-    gasPriceInfo: {
-      label: '',
-      range: '-- / -- - 0.00 Gwei',
-      timeLabel: '',
-      price: '0',
-      baseFee: '0',
-    },
-    customGasPrice: {
-      label: '',
-      maxFee: '0',
-      maxPriorityFee: '0',
-      range: '',
-      timeLabel: '',
-    },
-    gasPriceSettingsMode: 'basic',
-    gasLimit: '130000',
-    maxFeePerGas: '',
-    txFee: '',
-  },
-  slippage: 1,
-  quoteError: null,
-  quoteInfo: {
-    fromToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toTokenAmount: '',
-    fromTokenAmount: '',
-    protocols: [],
-    estimatedGas: 0,
-  },
-  swapInfo: {
-    fromToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toTokenAmount: '',
-    fromTokenAmount: '',
-    protocols: [],
-    tx: {
-      from: '',
-      to: '',
-      data: '',
-      value: '',
-      gasPrice: '',
-      gas: '',
-    },
-  },
-  referrerOptions: {
-    1: {
-      referrerAddress: '',
-      fee: '',
-    },
-  },
-  lastQuoteUpdateTimestamp: -1,
-};
+
 describe('swapSlice', () => {
   it('typeInput 0.1 in OUTPUT field', () => {
     return expect(
@@ -103,12 +24,12 @@ describe('swapSlice', () => {
         })
       )
     ).toEqual({
+      ...initialState,
       [Field.OUTPUT]: '',
       [Field.INPUT]: '',
       typedValue,
       independentField: Field.OUTPUT,
       recipient: null,
-      ...restValues,
     });
   });
 
@@ -123,12 +44,12 @@ describe('swapSlice', () => {
         })
       )
     ).toEqual({
+      ...initialState,
       [Field.OUTPUT]: '',
       [Field.INPUT]: '',
       typedValue,
       independentField: Field.INPUT,
       recipient: null,
-      ...restValues,
     });
   });
 
@@ -142,34 +63,19 @@ describe('swapSlice', () => {
         })
       )
     ).toEqual({
+      ...initialState,
       [Field.OUTPUT]: '0x0000',
-      [Field.INPUT]: '',
-      typedValue: '',
-      independentField: Field.INPUT,
-      recipient: null,
-      ...restValues,
-    });
-  });
-
-  it('switchCurrencies', () => {
-    expect(reducer(initialState, switchCurrencies())).toEqual({
-      [Field.OUTPUT]: '',
-      [Field.INPUT]: '',
-      typedValue: '',
-      independentField: Field.OUTPUT,
-      recipient: null,
-      ...restValues,
     });
   });
 
   it('selectCurrency in both fields', () => {
     const previousState = {
+      ...initialState,
       [Field.OUTPUT]: '',
       [Field.INPUT]: '0x0000',
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
-      ...restValues,
     };
 
     expect(
@@ -182,32 +88,32 @@ describe('swapSlice', () => {
         })
       )
     ).toEqual({
+      ...initialState,
       OUTPUT: '0x1111',
       INPUT: '0x0000',
       typedValue: '',
       independentField: 'INPUT',
       recipient: null,
-      ...restValues,
     });
   });
 
   it('switchCurrencies', () => {
     const previousState = {
+      ...initialState,
       [Field.OUTPUT]: '0x1111',
       [Field.INPUT]: '0x0000',
       typedValue: '',
       independentField: Field.INPUT,
       recipient: null,
-      ...restValues,
     };
     // @ts-ignore
     expect(reducer(previousState, switchCurrencies())).toEqual({
+      ...initialState,
       OUTPUT: '0x0000',
       INPUT: '0x1111',
       typedValue: '',
       independentField: 'OUTPUT',
       recipient: null,
-      ...restValues,
     });
   });
 });

@@ -139,6 +139,8 @@ export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName,
     [MainButtonType.Loading]: '',
     [MainButtonType.Explorer]: `View on ${explorerName}`,
     [MainButtonType.Import]: 'Import',
+
+    // TODO: shows [object Object]
     [MainButtonType.Error]: `${quoteError}`,
   };
 
