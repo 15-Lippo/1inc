@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { Tokens } from '../../constants';
 import { useActiveWeb3React } from '../../packages/web3-provider';
@@ -19,6 +20,7 @@ interface SendBoxProps {
 }
 
 const SendBox = ({ onSelectToken }: SendBoxProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
   const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer, txFee } = useAppSelector(
@@ -84,7 +86,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           }}
           href={explorer && INPUT && `${explorer.link}/token/${INPUT.address}`}
           underline="hover">
-          You sell
+          <Trans>You sell</Trans>
         </Link>
         {account && !Number(userBalance) ? (
           <Skeleton
@@ -102,9 +104,9 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
                 color: 'widget.text-secondary',
                 lineHeight: '19px',
               }}>
-              Balance: {userBalance}
+              <Trans>Balance</Trans>: {userBalance}
             </Typography>
-            <AuxButton onClick={onMaxClick} text="Max" sx={{ lineHeight: '19px' }} />
+            <AuxButton onClick={onMaxClick} text={t('Max')} sx={{ lineHeight: '19px' }} />
           </Box>
         )}
       </Box>

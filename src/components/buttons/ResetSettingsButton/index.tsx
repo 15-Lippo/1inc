@@ -2,6 +2,7 @@ import { Button, ButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 const StyledTextButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ theme }) => ({
   borderRadius: '12px',
@@ -23,7 +24,7 @@ interface Props {
 const ResetSettingsButton = ({ disabled, onClick }: Props) => {
   return (
     <StyledTextButton sx={{ typography: 'rm16' }} disabled={disabled} onClick={onClick}>
-      Reset
+      <Trans>Reset</Trans>
     </StyledTextButton>
   );
 };

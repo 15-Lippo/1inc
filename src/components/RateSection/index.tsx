@@ -2,6 +2,7 @@ import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppSelector } from '../../store/hooks';
@@ -15,6 +16,7 @@ interface RateSectionProps {
   totalRouteSteps: number;
 }
 const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
+  const { t } = useTranslation();
   const { account } = useActiveWeb3React();
   const { INPUT, OUTPUT, inputAmount, outputAmount, loadingQuote, protocols, tokens } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
@@ -59,7 +61,9 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
         mb: '8px',
       }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" lineHeight="19px" spacing={1}>
-        <Typography variant="rxs12">Rate</Typography>
+        <Typography variant="rxs12">
+          <Trans>Rate</Trans>
+        </Typography>
         {loading ? (
           <Skeleton
             sx={{
@@ -83,14 +87,14 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
               title={
                 <Stack direction="column" spacing={1} sx={{ padding: '5px' }}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Typography variant="rxs12">{`${INPUT.symbol} price`}</Typography>
+                    <Typography variant="rxs12">{`${INPUT.symbol} ` + t('price')}</Typography>
                     {INPUT?.priceInUsd && <Typography variant="rxs12">~${inputInUsd}</Typography>}
                     <Typography variant="rxs12">{`${inputPrice} ${
                       INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol
                     }`}</Typography>
                   </Stack>
                   <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Typography variant="rxs12">{`${OUTPUT.symbol} price`}</Typography>
+                    <Typography variant="rxs12">{`${OUTPUT.symbol} ` + t('price')}</Typography>
                     {OUTPUT?.priceInUsd && <Typography variant="rxs12">~${outputInUsd}</Typography>}
                     <Typography variant="rxs12">{` ${outputPrice}  ${
                       OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol
@@ -111,7 +115,9 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
           alignContent: 'center',
           lineHeight: '19px',
         }}>
-        <Typography variant="rxs12">Route</Typography>
+        <Typography variant="rxs12">
+          <Trans>Route</Trans>
+        </Typography>
         {protocols?.length && !_.isEmpty(tokens) && totalRouteSteps && loadingQuote === 'succeeded' ? (
           <RouteButton
             tokens={tokens}

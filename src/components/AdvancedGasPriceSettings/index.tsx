@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { CustomGasPriceFieldId, GasPriceErrorTypes } from '../../constants';
 import { useAdvancedSettings, useFeeRange, useWaitTime } from '../../hooks';
@@ -26,6 +27,7 @@ type FieldErrorState = {
 };
 
 const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
+  const { t } = useTranslation();
   const { account } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { gasPriceInfo, customGasPrice } = useAppSelector((state) => state.swap.txFeeCalculation);
@@ -33,7 +35,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
   const { baseFee, baseFeeWei, maxFeeGwei, estPriorityFee, estMaxFee, maxPriorityFeeGwei } = useAdvancedSettings();
 
   const [customSettings, setCustomSettings] = useState<CustomSettingsState>({
-    label: customGasPrice.label,
+    label: t('${customGasPrice.label}'),
     maxFee: '0',
     maxPriorityFee: '0',
     timeLabel: '--/--',
@@ -52,7 +54,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
   useLayoutEffect(() => {
     if (!customSettings.label) {
       setCustomSettings({
-        label: 'Custom',
+        label: t('Custom'),
         maxFee: maxFeeGwei,
         maxPriorityFee: maxPriorityFeeGwei,
         timeLabel: gasPriceInfo.timeLabel,
@@ -146,7 +148,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
 
     dispatch(
       setCustomGasPrice({
-        label: 'Custom',
+        label: t('Custom'),
         maxPriorityFee: parseGwei(customSettings.maxPriorityFee).toString(),
         maxFee: parseGwei(customSettings.maxFee).toString(),
         range: customSettings.range,
@@ -186,12 +188,12 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
           lineHeight: '19px',
           color: 'widget.text-alert',
         }}>
-        {`Current base fee is ${baseFee} Gwei`}
+        {t('Current base fee is') + ` ${baseFee} Gwei`}
       </Box>
       <Stack sx={{ m: '16px 0' }}>
         <Stack sx={{ mb: '4px' }} direction="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center">
           <Typography variant="rm16" lineHeight="19px" color="widget.text-secondary">
-            Max priority fee
+            <Trans>Max priority fee</Trans>
           </Typography>
           <MaxFeeButton value={estPriorityFee} onClick={onClickEstPriorityFee} />
         </Stack>
@@ -210,7 +212,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
           justifyContent="space-between"
           alignItems="center">
           <Typography variant="rm16" lineHeight="19px">
-            Max fee
+            <Trans>Max fee</Trans>
           </Typography>
           <MaxFeeButton value={estMaxFee} onClick={onClickEstMaxFee} />
         </Stack>
@@ -235,15 +237,15 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
         rowGap="10px">
         <Stack direction="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center">
           <Typography variant="rsm14" lineHeight="16px">
-            Wait time
+            <Trans>Wait time</Trans>
           </Typography>
           <Typography variant="rsm14" lineHeight="16px">
-            {customSettings.timeLabel}
+            <Trans>{customSettings.timeLabel}</Trans>
           </Typography>
         </Stack>
         <Stack direction="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center">
           <Typography variant="rsm14" lineHeight="16px">
-            Fee range
+            <Trans>Fee range</Trans>
           </Typography>
           <Typography variant="rsm14" lineHeight="16px">
             {customSettings.range}

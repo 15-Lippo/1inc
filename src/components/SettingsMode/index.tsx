@@ -1,5 +1,6 @@
 import { Paper, ToggleButton } from '@mui/material';
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 import { StyledToggleButtonGroup } from '../buttons';
 
@@ -26,7 +27,7 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
             typography: 'rm16',
           }}
           value="basic">
-          Basic
+          <Trans>Basic</Trans>
         </ToggleButton>
         <ToggleButton
           sx={{
@@ -35,7 +36,7 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
             typography: 'rm16',
           }}
           value="advanced">
-          Advanced
+          <Trans>Advanced</Trans>
         </ToggleButton>
       </StyledToggleButtonGroup>
     </Paper>

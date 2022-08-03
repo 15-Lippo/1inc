@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const StyledTextButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ theme }) => ({
   padding: 0,
@@ -21,9 +22,10 @@ interface Props {
 }
 
 const MaxFeeButton = ({ value, onClick }: Props) => {
+  const { t } = useTranslation();
   return (
     <StyledTextButton onClick={onClick}>
-      <Typography variant="rxs12">{`Estimated high: ${value} Gwei`}</Typography>
+      <Typography variant="rxs12">{t('Estimated high') + `: ${value} Gwei`}</Typography>
     </StyledTextButton>
   );
 };

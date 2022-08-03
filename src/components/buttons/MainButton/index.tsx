@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import { SxProps } from '@mui/system';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '../../../store/hooks';
 import { Field } from '../../../types';
@@ -97,6 +98,7 @@ interface MainButtonProps {
 }
 
 export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName, sx }: MainButtonProps) => {
+  const { t } = useTranslation();
   const { token, quoteError } = useAppSelector((state) => {
     return {
       quoteError: state.swap.quoteError,
@@ -126,19 +128,19 @@ export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName,
   };
 
   const textButtonType = {
-    [MainButtonType.Connect]: 'Connect wallet',
-    [MainButtonType.EnterAmount]: 'Enter amount to swap',
-    [MainButtonType.Swap]: 'Swap',
-    [MainButtonType.Approve]: `Give permission to swap ${token && token.symbol}`,
-    [MainButtonType.Refresh]: 'Refresh rate',
-    [MainButtonType.MustRefresh]: 'Refresh rate',
-    [MainButtonType.Confirm]: 'Confirm swap',
-    [MainButtonType.Close]: 'Close',
-    [MainButtonType.InsufficientBalance]: `Insufficient ${token && token.symbol} balance`,
-    [MainButtonType.InsufficientNativeTokenBalance]: 'Insufficient native token balance',
+    [MainButtonType.Connect]: t('Connect wallet'),
+    [MainButtonType.EnterAmount]: t('Enter amount to swap'),
+    [MainButtonType.Swap]: t('Swap'),
+    [MainButtonType.Approve]: t('Give permission to swap', { symbol: token && token.symbol }),
+    [MainButtonType.Refresh]: t(`Refresh rate`),
+    [MainButtonType.MustRefresh]: t(`Refresh rate`),
+    [MainButtonType.Confirm]: t(`Confirm swap`),
+    [MainButtonType.Close]: t(`Close`),
+    [MainButtonType.InsufficientBalance]: t('Insufficient token balance', { symbol: token && token.symbol }),
+    [MainButtonType.InsufficientNativeTokenBalance]: t(`Insufficient native token balance`),
     [MainButtonType.Loading]: '',
-    [MainButtonType.Explorer]: `View on ${explorerName}`,
-    [MainButtonType.Import]: 'Import',
+    [MainButtonType.Explorer]: t('View on', { explorerName }),
+    [MainButtonType.Import]: t(`Import`),
 
     // TODO: shows [object Object]
     [MainButtonType.Error]: `${quoteError}`,
@@ -159,7 +161,7 @@ export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName,
       }}
       variant="contained"
       loading={type === MainButtonType.Loading}
-      loadingIndicator={<CircularProgress sx={{ color: 'widget.icon-10' }} size={30} />}
+      loadingIndicator={<CircularProgress size={30} />}
       disabled={
         type === MainButtonType.Error ||
         type === MainButtonType.EnterAmount ||

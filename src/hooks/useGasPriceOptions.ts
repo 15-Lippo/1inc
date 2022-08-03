@@ -1,46 +1,52 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useActiveWeb3React } from '../packages/web3-provider';
 import { formatGweiFixed, parseGwei } from '../utils';
 
 export enum SupportedGasOptions {
-  Instant = 'instant',
-  High = 'high',
-  Medium = 'medium',
-  Low = 'low',
+  Instant,
+  High,
+  Medium,
+  Low,
 }
 
 export const useGasPriceOptions = () => {
+  const { t } = useTranslation();
   const { library } = useActiveWeb3React();
   const [blockNum, setBlockNum] = useState<number>();
   const [gasOptions, setOptions] = useState({
     [SupportedGasOptions.Instant]: {
-      label: 'Instant',
+      id: SupportedGasOptions.Instant,
+      label: t(`Instant`),
       range: '-- / -- - 0.00 Gwei',
-      timeLabel: '< 10 sec',
+      timeLabel: '< 10' + t(`sec`),
       price: '0',
       baseFee: '0',
     },
     [SupportedGasOptions.High]: {
-      label: 'High',
+      id: SupportedGasOptions.High,
+      label: t(`High`),
       range: '-- / -- - 0.00 Gwei',
-      timeLabel: '~ 12 sec',
+      timeLabel: '~ 12' + t(`sec`),
       price: '0',
       baseFee: '0',
     },
     [SupportedGasOptions.Medium]: {
-      label: 'Medium',
+      id: SupportedGasOptions.Medium,
+      label: t(`Medium`),
       range: '-- / -- - 0.00 Gwei',
-      timeLabel: '~ 30 sec',
+      timeLabel: '~ 30' + t(`sec`),
       price: '0',
       baseFee: '0',
     },
     [SupportedGasOptions.Low]: {
-      label: 'Low',
+      id: SupportedGasOptions.Low,
+      label: t(`Low`),
       range: '-- / -- - 0.00 Gwei',
-      timeLabel: '≥ 1 min',
+      timeLabel: '≥ 1' + t(`min`),
       price: '0',
       baseFee: '0',
     },
@@ -79,30 +85,34 @@ export const useGasPriceOptions = () => {
 
         const gasOptions = {
           [SupportedGasOptions.Instant]: {
-            label: 'Instant',
+            id: SupportedGasOptions.Instant,
+            label: t(`Instant`),
             range: `${gasPriceGwei} - ${formatGweiFixed(instantOption)} Gwei`,
-            timeLabel: '< 10 sec',
+            timeLabel: '< 10' + t(`sec`),
             price: formatUnits(instantOption, 'wei'),
             baseFee: parseGwei(gasPriceGwei).toString(),
           },
           [SupportedGasOptions.High]: {
-            label: 'High',
+            id: SupportedGasOptions.High,
+            label: t(`High`),
             range: `${gasPriceGwei} - ${formatGweiFixed(highOption)} Gwei`,
-            timeLabel: '~ 12 sec',
+            timeLabel: '~ 12' + t(`sec`),
             price: formatUnits(highOption, 'wei'),
             baseFee: parseGwei(gasPriceGwei).toString(),
           },
           [SupportedGasOptions.Medium]: {
-            label: 'Medium',
+            id: SupportedGasOptions.Medium,
+            label: t(`Medium`),
             range: `${gasPriceGwei} - ${formatGweiFixed(mediumOption)} Gwei`,
-            timeLabel: '~ 30 sec',
+            timeLabel: '~ 30' + t(`sec`),
             price: formatUnits(mediumOption, 'wei'),
             baseFee: parseGwei(gasPriceGwei).toString(),
           },
           [SupportedGasOptions.Low]: {
-            label: 'Low',
+            id: SupportedGasOptions.Low,
+            label: t(`Low`),
             range: `${gasPriceGwei} - ${formatGweiFixed(lowOption)} Gwei`,
-            timeLabel: '≥ 1 min',
+            timeLabel: '≥ 1' + t(`min`),
             price: formatUnits(lowOption, 'wei'),
             baseFee: parseGwei(gasPriceGwei).toString(),
           },

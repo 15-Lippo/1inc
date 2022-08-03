@@ -1,5 +1,6 @@
 import { Paper, Typography } from '@mui/material';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface RefreshRateWarningMsgProps {
   inputTokenSymbol: string;
@@ -8,6 +9,10 @@ interface RefreshRateWarningMsgProps {
 }
 
 const RefreshRateWarningMsg = ({ inputTokenSymbol, outputTokenSymbol, quoteUpdated }: RefreshRateWarningMsgProps) => {
+  const { t } = useTranslation();
+  const message = quoteUpdated
+    ? t('exchange rate has expired', { inputTokenSymbol, outputTokenSymbol })
+    : t('We managed to get a better rate!', { inputTokenSymbol, outputTokenSymbol });
   return (
     <Paper
       elevation={0}
@@ -23,9 +28,7 @@ const RefreshRateWarningMsg = ({ inputTokenSymbol, outputTokenSymbol, quoteUpdat
           color: 'widget.text-primary',
           lineHeight: '16px',
         }}>
-        {quoteUpdated
-          ? `${inputTokenSymbol}/${outputTokenSymbol} exchange rate has expired.`
-          : `We managed to get a better ${inputTokenSymbol}/${outputTokenSymbol} rate!`}
+        {message}
       </Typography>
     </Paper>
   );

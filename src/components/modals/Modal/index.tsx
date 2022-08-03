@@ -1,6 +1,7 @@
 import { Box, InputAdornment, Stack, Typography } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { BackButton, CloseButton, RefreshQuoteButton, ResetSettingsButton, SettingsButton } from '../../buttons';
@@ -8,19 +9,19 @@ import { StyledSearchField } from '../../fields';
 import { SearchIcon } from '../../icons';
 
 export enum ModalHeaderType {
-  Main = 'Swap',
-  Confirm = 'Confirm swap',
-  Sign = 'Sign transaction',
-  Sent = 'Transaction sent',
-  Failed = 'Transaction Failed',
-  Slippage = 'Slippage',
-  GasPrice = 'Gas price',
-  SelectToken = 'Select a token',
-  AdvancedSettings = 'Advanced settings',
-  AddToken = 'Add a token',
-  Import = 'Import a token',
-  Custom = 'Custom tokens',
-  Route = 'Routing',
+  Main,
+  Confirm,
+  Sign,
+  Sent,
+  Failed,
+  Slippage,
+  GasPrice,
+  SelectToken,
+  AdvancedSettings,
+  AddToken,
+  Import,
+  Custom,
+  Route,
 }
 
 interface ModalProps {
@@ -50,13 +51,30 @@ export const Modal = ({
   hide,
   sx,
 }: ModalProps) => {
+  const { t } = useTranslation();
   const { account } = useActiveWeb3React();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const searchFieldText = {
-    [ModalHeaderType.SelectToken]: 'Search by name or paste address',
-    [ModalHeaderType.AddToken]: 'Search by address',
-    [ModalHeaderType.Custom]: 'Search by name',
+    [ModalHeaderType.SelectToken]: t('Search by name or address'),
+    [ModalHeaderType.AddToken]: t('Search by address'),
+    [ModalHeaderType.Custom]: t('Search by name'),
+  };
+
+  const textModalType = {
+    [ModalHeaderType.Main]: t('Swap'),
+    [ModalHeaderType.Confirm]: t('Confirm swap'),
+    [ModalHeaderType.Sign]: t('Sign transaction'),
+    [ModalHeaderType.Sent]: t('Transaction sent'),
+    [ModalHeaderType.Failed]: t('Transaction Failed'),
+    [ModalHeaderType.Slippage]: t('Slippage'),
+    [ModalHeaderType.GasPrice]: t('Gas price'),
+    [ModalHeaderType.SelectToken]: t('Select a token'),
+    [ModalHeaderType.AdvancedSettings]: t('Advanced settings'),
+    [ModalHeaderType.AddToken]: t('Add a token'),
+    [ModalHeaderType.Import]: t('Import a token'),
+    [ModalHeaderType.Custom]: t('Custom tokens'),
+    [ModalHeaderType.Route]: t('Routing'),
   };
 
   return isOpen ? (
@@ -90,7 +108,7 @@ export const Modal = ({
               textAlign: 'center',
               color: 'widget.text-primary',
             }}>
-            {headerType}
+            {textModalType[headerType]}
           </Typography>
           <Stack direction="row" alignItems="center">
             <RefreshQuoteButton />
@@ -136,7 +154,7 @@ export const Modal = ({
                 textAlign: 'center',
                 color: 'widget.text-primary',
               }}>
-              {headerType}
+              {textModalType[headerType]}
             </Typography>
             {closeModal && (
               <Box sx={{ position: 'absolute', right: -8, top: -9 }}>
@@ -164,10 +182,10 @@ export const Modal = ({
                 type="search"
                 autoComplete="off"
                 value={searchValue}
-                placeholder={searchFieldText[headerType]}
                 onChange={onSearch}
                 inputRef={inputRef}
                 InputProps={{
+                  placeholder: searchFieldText[headerType],
                   startAdornment: (
                     <InputAdornment position="start">
                       <SearchIcon />

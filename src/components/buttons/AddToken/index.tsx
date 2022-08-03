@@ -1,5 +1,6 @@
 import { Button, useTheme } from '@mui/material';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface AddTokenProps {
   walletIsConnected: boolean;
@@ -7,6 +8,8 @@ interface AddTokenProps {
 }
 const AddToken = ({ onClick, walletIsConnected }: AddTokenProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const text = walletIsConnected ? t('Add token +') : t('Connect wallet to add custom tokens');
   return (
     <Button
       disabled={!walletIsConnected}
@@ -30,7 +33,7 @@ const AddToken = ({ onClick, walletIsConnected }: AddTokenProps) => {
       disableFocusRipple
       disableRipple
       onClick={onClick}>
-      {walletIsConnected ? 'Add token +' : ' Connect wallet to add custom tokens'}
+      {text}
     </Button>
   );
 };

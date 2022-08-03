@@ -5,6 +5,7 @@ import React from 'react';
 
 import { useAppSelector } from '../../../store/hooks';
 import { Field } from '../../../types';
+import { NoLogoURI } from '../../icons';
 
 interface SelectedTokenProps {
   field: Field;
@@ -43,7 +44,11 @@ const SelectTokenButton = ({ field, onClick }: SelectedTokenProps) => {
       field={field}
       variant="text"
       onClick={onClick}
-      startIcon={<Avatar src={token.logoURI} style={{ width: 24, height: 24 }} />}
+      startIcon={
+        <Avatar src={token.logoURI} style={{ width: 24, height: 24 }}>
+          <NoLogoURI />
+        </Avatar>
+      }
       endIcon={
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path

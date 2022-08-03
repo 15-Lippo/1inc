@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 import { WarningIcon } from '../../icons';
 
@@ -76,7 +77,7 @@ const AlertModal = ({ open, onClose, title, text }: AlertModalProps) => {
         </Box>
         <Box sx={{ textAlign: 'center' }}>
           <Button sx={closeButtonStyle} variant="contained" onClick={onClose}>
-            Close
+            <Trans>Close</Trans>
           </Button>
         </Box>
       </Box>

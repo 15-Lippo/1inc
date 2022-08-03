@@ -1,6 +1,7 @@
 import { isAddress } from '@ethersproject/address';
 import { Avatar, Box, Checkbox, FormControlLabel, FormGroup, Stack, Typography, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import ERC20ABI from '../../../abi/ERC20ABI.json';
 import { LocalStorageKeys } from '../../../constants';
@@ -23,6 +24,7 @@ interface AddTokenModalProps {
 
 const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { library } = useActiveWeb3React();
   const { lastImportedTokenInfo } = useAppSelector((state) => state.tokens);
@@ -67,7 +69,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
             name: coinName,
             symbol: await erc20Contract.symbol(),
             button: {
-              label: 'Import',
+              label: t('Import'),
               handleClick: (token: Token) => {
                 setTokenToImport({
                   open: true,
@@ -158,7 +160,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
         isOpen={isOpen}>
         {searchToken?.address && !searchToken?.button && (
           <Typography sx={{ m: '10px 16px' }} color="widget.text-successful" variant="rm16">
-            This token has already been added
+            <Trans>This token has already been added</Trans>
           </Typography>
         )}
         <VirtualizedTokenList
@@ -177,11 +179,9 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
             mb: '14px',
           }}>
           <Stack direction="row">
-            {tokenToImport?.token?.logoURI ? (
-              <Avatar src={tokenToImport?.token?.logoURI} alt={tokenToImport?.token?.symbol} />
-            ) : (
+            <Avatar src={tokenToImport?.token?.logoURI} alt={tokenToImport?.token?.symbol}>
               <NoLogoURI />
-            )}
+            </Avatar>
             <Stack sx={{ ml: '16px' }} direction="column" justifyContent="space-between">
               <Typography color="widget.text-primary" variant="mm16">
                 {tokenToImport?.token?.name}
@@ -220,14 +220,16 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
           />
           <Stack direction="column" justifyContent="space-between">
             <Typography sx={{ mb: '14px' }} color="widget.text-error" variant="sblg18">
-              Trade at your own risk!
+              <Trans>Trade at your own risk!</Trans>
             </Typography>
             <Typography sx={{ mb: '14px' }} color="widget.text-primary" variant="rsm14">
-              Anyone can create a token, including creating fake versions of existing tokens that claim to represent
-              projects
+              <Trans>
+                Anyone can create a token, including creating fake versions of existing tokens that claim to represent
+                projects
+              </Trans>
             </Typography>
             <Typography sx={{ mb: '14px' }} color="widget.text-primary" variant="rsm14">
-              If you purchase this token, you may not be able to sell it back
+              <Trans>If you purchase this token, you may not be able to sell it back</Trans>
             </Typography>
             <FormGroup>
               <FormControlLabel
@@ -254,7 +256,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
                     }}
                   />
                 }
-                label="I understand"
+                label={<Trans>I understand</Trans>}
               />
             </FormGroup>
           </Stack>

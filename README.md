@@ -15,8 +15,7 @@ These are the props you can pass into your `<Widget />` React component
 | **`defaultInputTokenAddress`** | <pre>{<br>  [chainId: string]: {<br>    "defaultInputTokenAddress": string<br>  }<br>}</pre>| Address of the token to be selected by default in the input field (e.g. USDC) for each network chain ID. If left empty the widget will use the native token of the connected chain as default. This can be explicitly defined by the special string 'NATIVE'. For convenience you may pass a single string instead of a chainId mapping.   | ``string or 'NATIVE'`` |
 | **`defaultOutputTokenAddress`** | <pre>{<br>  [chainId: string]: {<br>    "defaultOutputTokenAddress": string<br>  }<br>}</pre>| Address of the token to be selected by default in the input field (e.g. USDC) for each network chain ID. None if left empty. Any addresses provided in this parameter must be included in the tokenList. | ``string or 'NATIVE'`` |
 | **`defaultTypedValue`** | `BigNumberish` | Number in wei MUST respect the decimals of the defaultInputTokenAddress! If the defaultInputTokenAddress is USDC, defaultTypedValue should be `1000000` or `0x1e8480` (it means 1 USDC). | `0`           |
- 
-
+| **`locale`**          | `SupportedLocale`                       | Specifies an explicit locale to use for the widget interface. This can be set to one of the values exported by the library in SUPPORTED_LOCALES.| `en-US`                        |
 ## Developing
 
 ### Install and start:

@@ -2,6 +2,8 @@ import { Avatar, IconButton, ListItem, ListItemButton, ListItemText, useTheme } 
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
+import { NoLogoURI } from '../icons';
+
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   position: 'relative',
   border: '1px solid',
@@ -82,7 +84,9 @@ const PinnedToken = ({ id, symbol, logo, onChoose, onUnpin }: Props) => {
       }
       disablePadding>
       <ListItemButton onClick={() => onChoose(id)}>
-        <Avatar src={logo} alt={symbol} sx={{ height: '24px', width: '24px' }} />
+        <Avatar src={logo} alt={symbol} sx={{ height: '24px', width: '24px' }}>
+          <NoLogoURI />
+        </Avatar>
         <ListItemText
           primaryTypographyProps={{
             ml: '8px',

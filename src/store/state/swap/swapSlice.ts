@@ -50,6 +50,7 @@ export interface SwapState {
   readonly swapInfo?: ethereumApi.SwapResponseDto;
   readonly txFeeCalculation: {
     readonly gasPriceInfo: {
+      id: string;
       label: string;
       range: string;
       timeLabel: string;
@@ -134,6 +135,7 @@ export const initialState: SwapState = {
   },
   txFeeCalculation: {
     gasPriceInfo: {
+      id: '',
       label: '',
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '',

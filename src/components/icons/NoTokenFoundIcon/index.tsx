@@ -1,5 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 const NoTokenFoundIcon = () => {
   return (
@@ -25,7 +26,7 @@ const NoTokenFoundIcon = () => {
         </defs>
       </svg>
       <Typography sx={{ mt: '16px', color: 'widget.text-primary' }} variant="rm16">
-        Nothing found
+        <Trans>Nothing found</Trans>
       </Typography>
     </Stack>
   );

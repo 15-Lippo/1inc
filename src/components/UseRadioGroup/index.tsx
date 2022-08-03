@@ -3,7 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { SupportedGasOptions } from '../../hooks';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
@@ -47,17 +47,14 @@ const StyledFormControlLabel = styled((props: FormControlLabelProps) => <FormCon
 );
 
 export default function UseRadioGroup({ gasOptions }: any) {
-  const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const dispatch = useAppDispatch();
-  const [value, setValue] = useState<string>(gasPriceInfo.label.toLowerCase());
 
-  useEffect(() => {
-    setValue(gasPriceInfo.label.toLowerCase());
-  }, [gasPriceInfo.label]);
+  // Set the calculated High option as a default value in radio group
+  const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = (event.target as HTMLInputElement).value;
-    dispatch(setGasPriceInfo(gasOptions[value]));
+    const v = (event.target as HTMLInputElement).value;
+    dispatch(setGasPriceInfo(gasOptions[v]));
     dispatch(
       setCustomGasPrice({
         label: '',
@@ -67,7 +64,6 @@ export default function UseRadioGroup({ gasOptions }: any) {
         timeLabel: 'N/A',
       })
     );
-    setValue(value);
   };
 
   return (
@@ -76,16 +72,16 @@ export default function UseRadioGroup({ gasOptions }: any) {
         marginTop: '12px',
       }}
       name="use-radio-group"
-      value={value}
+      value={gasPriceInfo.id}
       onChange={handleChange}>
       {Object.keys(gasOptions).map((v) => (
         <StyledFormControlLabel
-          key={gasOptions[v].label}
-          value={gasOptions[v].label.toLowerCase()}
+          key={gasOptions[v].id}
+          value={gasOptions[v].id}
           label={
             <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={0}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {gasOptions[v].label.toLowerCase() === SupportedGasOptions.High && <StarIcon />}
+                {gasOptions[v].id === SupportedGasOptions.High && <StarIcon />}
                 <Typography variant="rsm14" sx={{ m: '0 5px' }}>
                   {gasOptions[v].label}
                 </Typography>

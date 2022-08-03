@@ -12,8 +12,10 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { LocalStorageKeys } from '../../../constants';
+import { SupportedGasOptions } from '../../../hooks';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setCustomGasPrice, setGasPriceInfo, setGasPriceSettingsMode } from '../../../store/state/swap/swapSlice';
 import { formatGweiFixed } from '../../../utils';
@@ -32,6 +34,7 @@ interface SettingsModalProps {
 
 const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: SettingsModalProps) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { slippage, txFeeCalculation } = useAppSelector((state) => state.swap);
   const [isOpenCustomTokens, setOpenCustomTokens] = useState<boolean>(false);
 
@@ -47,7 +50,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
 
   const onReset = () => {
     dispatch(setGasPriceSettingsMode('basic'));
-    dispatch(setGasPriceInfo(gasOptions['high']));
+    dispatch(setGasPriceInfo(gasOptions[SupportedGasOptions.High]));
     dispatch(
       setCustomGasPrice({
         label: '',
@@ -107,7 +110,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                       marginLeft: '5px',
                     }}
                     variant="sbm16">
-                    Gas price
+                    <Trans>Gas price</Trans>
                   </Typography>
                 </Box>
                 <Typography
@@ -118,8 +121,8 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                   }}
                   variant="rm16">
                   {txFeeCalculation.gasPriceSettingsMode === 'basic'
-                    ? `${txFeeCalculation.gasPriceInfo.label} (${txFeeCalculation.gasPriceInfo.range})`
-                    : `Custom (${gasPriceGweiCustom} Gwei)`}
+                    ? `(${txFeeCalculation.gasPriceInfo.range})`
+                    : t('Custom') + `(${gasPriceGweiCustom} Gwei)`}
                 </Typography>
               </Box>
             </AccordionSummary>
@@ -166,7 +169,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                       marginLeft: '5px',
                     }}
                     variant="sbm16">
-                    Slippage tolerance
+                    <Trans>Slippage tolerance</Trans>
                   </Typography>
                 </Box>
                 <Typography
@@ -199,7 +202,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                   }}
                   primary={
                     <Typography variant="sbm16" color="widget.text-primary">
-                      Custom tokens
+                      <Trans>Custom tokens</Trans>
                     </Typography>
                   }
                 />

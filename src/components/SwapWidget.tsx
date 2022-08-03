@@ -3,6 +3,7 @@ import './SwapWidget.css';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../constants';
 import { SupportedGasOptions, useAlertMessage, useGasPriceOptions, useInterval, useLocalStorage } from '../hooks';
@@ -38,6 +39,7 @@ export type SwapWidgetProps = {
 };
 
 function SwapWidget({ width }: SwapWidgetProps) {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
   const { gasOptions, blockNum } = useGasPriceOptions();
@@ -113,8 +115,8 @@ function SwapWidget({ width }: SwapWidgetProps) {
   const handleApproveClick = () => {
     if (!hasEnoughBalanceByAddress(approvalTxFee, Tokens.NATIVE_TOKEN_ADDRESS)) {
       setErrorMessage({
-        text: 'Insufficient balance to pay for gas',
-        title: 'Alert',
+        text: t('Insufficient balance to pay for gas'),
+        title: t('Alert'),
       });
       return;
     }

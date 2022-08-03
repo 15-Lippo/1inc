@@ -1,5 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { Trans } from 'react-i18next';
 
 import { EXPLORER_LINKS, SupportedChainId } from '../../../constants';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
@@ -43,7 +44,7 @@ const TxSentModal = () => {
             color: 'widget.text-primary',
             mt: '52px',
           }}>
-          Swap of {INPUT && INPUT.symbol} to {OUTPUT && OUTPUT.symbol}
+          <Trans i18nKey="Swap of" values={{ input: INPUT && INPUT.symbol, output: OUTPUT && OUTPUT.symbol }} />
         </Typography>
       </Stack>
       <Stack>

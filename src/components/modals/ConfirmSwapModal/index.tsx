@@ -1,6 +1,7 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Skeleton, Stack, Typography, useTheme } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { REFRESH_QUOTE_DELAY_MS, SupportedChainId } from '../../../constants';
 import { useInterval } from '../../../hooks';
@@ -33,7 +34,9 @@ interface SwapTokenBoxProps {
 }
 
 const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) => {
+  const { t } = useTranslation();
   const theme = useTheme();
+  const text = field === Field.INPUT ? t('You sell') : t('You buy');
   return (
     <Box
       sx={{
@@ -52,7 +55,7 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
             lineHeight: '14px',
             mb: '17px',
           }}>
-          {field === Field.INPUT ? 'You sell' : 'You get'}
+          {text}
         </Typography>
         {usdcPrice ? (
           <Typography
@@ -113,6 +116,7 @@ interface PriceState {
 }
 
 const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
@@ -298,7 +302,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                     color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
-                  1 {INPUT && INPUT.symbol} price
+                  1 {INPUT && INPUT.symbol} <Trans>price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   {inputUsdcPrice ? (
@@ -344,7 +348,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                     color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
-                  1 {OUTPUT && OUTPUT.symbol} price
+                  1 {OUTPUT && OUTPUT.symbol} <Trans>price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   {outputUsdcPrice ? (
@@ -390,10 +394,10 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                     color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
-                  Gas price
+                  <Trans>Gas price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  <AuxButton onClick={() => setGasPriceModalOpen(true)} text="Edit" />
+                  <AuxButton onClick={() => setGasPriceModalOpen(true)} text={t('Edit')} />
                   <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">
                     {`${gasPrice} Gwei`}
                   </Typography>
@@ -407,10 +411,10 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                     color: 'widget.text-secondary',
                     lineHeight: '14px',
                   }}>
-                  Slippage
+                  <Trans>Slippage</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  <AuxButton onClick={() => setSlippageModalOpen(true)} text="Edit" />
+                  <AuxButton onClick={() => setSlippageModalOpen(true)} text={t('Edit')} />
                   <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">
                     {slippage}%
                   </Typography>

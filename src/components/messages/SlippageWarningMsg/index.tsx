@@ -1,5 +1,6 @@
 import { Box, Paper, Typography, useTheme } from '@mui/material';
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 interface Props {
   slippagePercent: number;
@@ -47,7 +48,7 @@ const SlippageWarningMsg = ({ slippagePercent }: Props) => {
           color: 'widget.text-primary',
           lineHeight: '20px',
         }}>
-        You may receive {slippagePercent}% less with this level of slippage tolerance
+        <Trans i18nKey="You may receive" values={{ slippagePercent }} />
       </Typography>
     </Paper>
   ) : null;

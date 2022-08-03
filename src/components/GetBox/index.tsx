@@ -1,6 +1,7 @@
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
+import { Trans } from 'react-i18next';
 
 import { useAppSelector } from '../../store/hooks';
 import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
@@ -51,7 +52,7 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
         }}
         href={explorer && `${explorer.link}/token/${OUTPUT}`}
         underline="hover">
-        You buy
+        <Trans>You buy</Trans>
       </Link>
 
       <Box
@@ -88,7 +89,7 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
             sx={{
               color: 'widget.text-primary-02',
             }}>
-            Best quote
+            <Trans>Best quote</Trans>
           </Typography>
         </Box>
         <Box
@@ -124,7 +125,8 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
           }}>
           {txCostInTokenInput && txCostInUsd && typedValue && loadingQuote === 'succeeded' ? (
             <Typography variant="rxs12" sx={{ color: 'widget.text-secondary', lineHeight: '24px' }}>
-              {`Tx cost ${txCostInTokenInput} Ξ (~$${txCostInUsd.toFixed(2)})`}
+              <Trans>Tx cost</Trans>
+              {` ${txCostInTokenInput} Ξ (~$${txCostInUsd.toFixed(2)})`}
             </Typography>
           ) : (
             <Skeleton

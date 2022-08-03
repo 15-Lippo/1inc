@@ -2,6 +2,7 @@ import { Paper, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps, useThem
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setSlippage } from '../../../store/state/swap/swapSlice';
@@ -39,6 +40,7 @@ export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = 
 );
 
 export const SlippageButtonsGroup = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const { slippage } = useAppSelector((state) => state.swap);
@@ -127,7 +129,7 @@ export const SlippageButtonsGroup = () => {
           id="custom-slippage"
           variant="outlined"
           type="number"
-          placeholder="Custom"
+          placeholder={t('Custom')}
           onChange={onCustomChange}
           margin="dense"
           fullWidth
