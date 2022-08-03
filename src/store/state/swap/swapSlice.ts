@@ -1,12 +1,10 @@
 import { BigNumberish } from '@ethersproject/bignumber';
-import { parseEther } from '@ethersproject/units';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
 import { Tokens } from '../../../constants';
 import { DefaultTokenOptions, Field, ReferrerOptions } from '../../../types';
-
 interface FetchQuoteParams {
   quoteInfo: ethereumApi.ExchangeControllerGetQuoteRequest;
   chainId: number | undefined;
@@ -24,7 +22,7 @@ export const fetchQuote = createAsyncThunk('swap/getQuoteInfo', async (params: F
     return response;
   } catch (error) {
     // @ts-ignore
-    return await error.json();
+    throw error.message;
   }
 });
 
@@ -44,6 +42,10 @@ export interface SwapState {
   readonly typedValue: BigNumberish;
   readonly [Field.INPUT]: string;
   readonly [Field.OUTPUT]: string;
+  readonly referrerOptions: ReferrerOptions;
+  readonly defaultInputTokenAddress: DefaultTokenOptions;
+  readonly defaultOutputTokenAddress: DefaultTokenOptions;
+  readonly defaultTypedValue: BigNumberish;
   // the typed recipient address if swap should go to sender
   readonly recipient: string | null;
   readonly quoteInfo?: ethereumApi.QuoteResponseDto;
@@ -72,10 +74,6 @@ export interface SwapState {
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly quoteError?: any;
-  readonly referrerOptions: ReferrerOptions;
-  readonly defaultInputTokenAddress: DefaultTokenOptions;
-  readonly defaultOutputTokenAddress: DefaultTokenOptions;
-  readonly defaultTypedValue: BigNumberish;
   lastQuoteUpdateTimestamp: number;
 }
 
@@ -85,6 +83,19 @@ export const initialState: SwapState = {
   typedValue: '0',
   [Field.INPUT]: '',
   [Field.OUTPUT]: '',
+  referrerOptions: {
+    1: {
+      referrerAddress: '',
+      fee: '',
+    },
+  },
+  defaultInputTokenAddress: {
+    1: '',
+  },
+  defaultOutputTokenAddress: {
+    1: '',
+  },
+  defaultTypedValue: '',
   recipient: null,
   quoteInfo: {
     fromToken: {
@@ -158,21 +169,6 @@ export const initialState: SwapState = {
   loadingQuote: 'idle',
   quoteError: null,
   lastQuoteUpdateTimestamp: -1,
-
-  // Default swap settings - maybe need to move it to another store.
-  referrerOptions: {
-    1: {
-      referrerAddress: '',
-      fee: '',
-    },
-  },
-  defaultInputTokenAddress: {
-    1: '',
-  },
-  defaultOutputTokenAddress: {
-    1: '',
-  },
-  defaultTypedValue: '',
 };
 
 const swapSlice = createSlice({
@@ -181,6 +177,14 @@ const swapSlice = createSlice({
   reducers: {
     setSlippage(state, { payload: { percent } }) {
       state.slippage = percent;
+    },
+    switchCurrencies(state) {
+      return {
+        ...state,
+        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
+        [Field.INPUT]: state[Field.OUTPUT],
+        [Field.OUTPUT]: state[Field.INPUT],
+      };
     },
     selectCurrency(state, { payload: { currency, field } }) {
       const otherField = field === Field.INPUT ? Field.OUTPUT : Field.INPUT;
@@ -201,20 +205,30 @@ const swapSlice = createSlice({
         [field]: currency,
       };
     },
-    switchCurrencies(state) {
-      return {
-        ...state,
-        independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-        [Field.INPUT]: state[Field.OUTPUT],
-        [Field.OUTPUT]: state[Field.INPUT],
-      };
-    },
     typeInput(state, { payload: { field, typedValue } }) {
       return {
         ...state,
         independentField: field,
-        typedValue,
+        typedValue: typedValue.toString(),
       };
+    },
+    // Working with default settings
+    setDefaultSettings(
+      state,
+      { payload: { referrerOptions, defaultInputTokenAddress, defaultOutputTokenAddress, defaultTypedValue } }
+    ) {
+      state.referrerOptions = referrerOptions ?? state.referrerOptions;
+      state.defaultInputTokenAddress = defaultInputTokenAddress ?? state.defaultInputTokenAddress;
+      state.defaultOutputTokenAddress = defaultOutputTokenAddress ?? state.defaultOutputTokenAddress;
+      state.defaultTypedValue = defaultTypedValue ?? state.defaultTypedValue;
+    },
+    applyDefaultSettings(state, { payload: { chainId } }) {
+      state[Field.INPUT] = state.defaultInputTokenAddress[chainId] || Tokens.FAVORITE_TOKENS[chainId][0];
+      // @ts-ignore
+      state[Field.OUTPUT] =
+        state.defaultOutputTokenAddress[chainId] ||
+        Tokens.FAVORITE_TOKENS[chainId].filter((token: string) => token != state[Field.INPUT])[0];
+      state.typedValue = state.defaultTypedValue.toString() || '';
     },
     setGasLimit(state, { payload: gasLimit }) {
       return {
@@ -252,23 +266,6 @@ const swapSlice = createSlice({
         txFeeCalculation: { ...state.txFeeCalculation, txFee },
       };
     },
-    // Working with default settings
-    setDefaultSettings(
-      state,
-      { payload: { referrerOptions, defaultInputTokenAddress, defaultOutputTokenAddress, defaultTypedValue } }
-    ) {
-      state.referrerOptions = referrerOptions ?? state.referrerOptions;
-      state.defaultInputTokenAddress = defaultInputTokenAddress ?? state.defaultInputTokenAddress;
-      state.defaultOutputTokenAddress = defaultOutputTokenAddress ?? state.defaultOutputTokenAddress;
-      state.defaultTypedValue = defaultTypedValue ?? state.defaultTypedValue;
-    },
-    applyDefaultSettings(state, { payload: { chainId } }) {
-      state[Field.INPUT] = state.defaultInputTokenAddress[chainId] || Tokens.FAVORITE_TOKENS[chainId][0];
-      state[Field.OUTPUT] =
-        state.defaultOutputTokenAddress[chainId] ||
-        Tokens.FAVORITE_TOKENS[chainId].filter((token: string) => token != state[Field.INPUT])[0];
-      state.typedValue = state.defaultTypedValue || parseEther('1');
-    },
   },
   extraReducers: (user) => {
     user.addCase(fetchQuote.pending, (state) => {
@@ -298,16 +295,16 @@ const swapSlice = createSlice({
 });
 
 export const {
-  setSlippage,
+  setDefaultSettings,
+  applyDefaultSettings,
+  typeInput,
   selectCurrency,
   switchCurrencies,
-  typeInput,
+  setSlippage,
   setGasLimit,
   setMaxFeePerGas,
   setTxFee,
   setGasPriceInfo,
-  setDefaultSettings,
-  applyDefaultSettings,
   setCustomGasPrice,
   setGasPriceSettingsMode,
 } = swapSlice.actions;

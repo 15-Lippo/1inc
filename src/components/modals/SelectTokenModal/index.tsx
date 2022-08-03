@@ -1,4 +1,5 @@
 import { Box, Divider, Stack, useTheme } from '@mui/material';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 
 import { Tokens } from '../../../constants';
@@ -102,26 +103,26 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
       headerType={ModalHeaderType.SelectToken}
       closeModal={closeModal}
       isOpen={isOpen}>
-      <Stack
-        direction="row"
-        flexWrap="wrap"
-        sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 16px 12px' }}>
-        {chainId
-          ? favoriteTokens[chainId].map(
-              (key: string) =>
-                tokens[key].address && (
-                  <PinnedToken
-                    key={tokens[key].address}
-                    id={tokens[key].address}
-                    symbol={tokens[key].symbol}
-                    logo={tokens[key].logoURI}
-                    onChoose={onChoose}
-                    onUnpin={onUnpinToken}
-                  />
-                )
-            )
-          : null}
-      </Stack>
+      {chainId && !_.isEmpty(tokens) && (
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 16px 12px' }}>
+          {favoriteTokens[chainId].map(
+            (key: string) =>
+              tokens[key]?.address && (
+                <PinnedToken
+                  key={tokens[key].address}
+                  id={tokens[key].address}
+                  symbol={tokens[key].symbol}
+                  logo={tokens[key].logoURI}
+                  onChoose={onChoose}
+                  onUnpin={onUnpinToken}
+                />
+              )
+          )}
+        </Stack>
+      )}
 
       <Divider variant="middle" sx={{ borderColor: 'widget.border-01' }} />
       <VirtualizedTokenList

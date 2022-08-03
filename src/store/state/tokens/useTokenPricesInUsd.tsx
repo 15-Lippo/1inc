@@ -60,7 +60,7 @@ export const useTokenPricesInUsd = () => {
   };
 
   const updateUsdcPriceForSelectedTokens = () => {
-    updateUsdcPrices([INPUT.address, OUTPUT.address]);
+    if (INPUT?.address && OUTPUT?.address) updateUsdcPrices([INPUT.address, OUTPUT.address]);
   };
 
   return { updateUsdcPricesForBalances, updateUsdcPriceForSelectedTokens };

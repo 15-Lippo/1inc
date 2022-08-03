@@ -15,4 +15,5 @@ export { default as StarIcon } from './StarIcon';
 export { default as SwitchTokensIcon } from './SwitchTokensIcon';
 export { default as TooltipIcon } from './TooltipIcon';
 export { default as TxFailedIcon } from './TxFailedIcon';
+export { default as WalletIcon } from './WalletIcon';
 export { default as WarningIcon } from './WarningIcon';

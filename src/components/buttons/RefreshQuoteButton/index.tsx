@@ -32,7 +32,10 @@ const calcFillOffset = (timeDiff: number) => {
 
 const RefreshQuoteButton = () => {
   const theme = useTheme();
-  const { typedValue, lastQuoteUpdateTimestamp } = useAppSelector((state) => state.swap);
+  const { typedValue, lastQuoteUpdateTimestamp } = useAppSelector((state) => ({
+    typedValue: state.swap.typedValue,
+    lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
+  }));
   const [rotate, setRotate] = useState(false);
   const [fillOffset, setFillOffset] = useState(0);
   const updateQuote = useUpdateQuote();

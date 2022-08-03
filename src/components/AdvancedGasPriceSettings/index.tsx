@@ -35,7 +35,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
   const { baseFee, baseFeeWei, maxFeeGwei, estPriorityFee, estMaxFee, maxPriorityFeeGwei } = useAdvancedSettings();
 
   const [customSettings, setCustomSettings] = useState<CustomSettingsState>({
-    label: t('${customGasPrice.label}'),
+    label: t(customGasPrice.label),
     maxFee: '0',
     maxPriorityFee: '0',
     timeLabel: '--/--',

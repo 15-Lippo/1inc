@@ -1,11 +1,26 @@
 import { Field } from '../../../types';
-import reducer, { selectCurrency, switchCurrencies, typeInput } from './swapSlice';
-import { initialState as swapInitialState } from './swapSlice';
+import reducer, { selectCurrency, setSlippage, switchCurrencies, typeInput } from '../swap/swapSlice';
+import { initialState as swapInitialState, setTxFee } from './swapSlice';
 
 export const initialState = swapInitialState;
 
 describe('swapSlice', () => {
-  it('typeInput 0.1 in OUTPUT field', () => {
+  it('set slippage', () => {
+    const slippage = 11;
+    expect(
+      reducer(
+        initialState,
+        setSlippage({
+          percent: slippage,
+        })
+      )
+    ).toEqual({
+      ...initialState,
+      slippage,
+    });
+  });
+
+  it('initial state of typeInput', () => {
     return expect(
       reducer(undefined, {
         type: undefined,
@@ -29,11 +44,10 @@ describe('swapSlice', () => {
       [Field.INPUT]: '',
       typedValue,
       independentField: Field.OUTPUT,
-      recipient: null,
     });
   });
 
-  it('ypeInput 1000 in INPUT field', () => {
+  it('typeInput 1000 in INPUT field', () => {
     const typedValue = '1000';
     expect(
       reducer(
@@ -49,7 +63,6 @@ describe('swapSlice', () => {
       [Field.INPUT]: '',
       typedValue,
       independentField: Field.INPUT,
-      recipient: null,
     });
   });
 
@@ -75,7 +88,6 @@ describe('swapSlice', () => {
       [Field.INPUT]: '0x0000',
       typedValue: '',
       independentField: Field.INPUT,
-      recipient: null,
     };
 
     expect(
@@ -93,7 +105,6 @@ describe('swapSlice', () => {
       INPUT: '0x0000',
       typedValue: '',
       independentField: 'INPUT',
-      recipient: null,
     });
   });
 
@@ -104,7 +115,6 @@ describe('swapSlice', () => {
       [Field.INPUT]: '0x0000',
       typedValue: '',
       independentField: Field.INPUT,
-      recipient: null,
     };
     // @ts-ignore
     expect(reducer(previousState, switchCurrencies())).toEqual({
@@ -113,7 +123,16 @@ describe('swapSlice', () => {
       INPUT: '0x1111',
       typedValue: '',
       independentField: 'OUTPUT',
-      recipient: null,
+    });
+  });
+  it('set tx fee', () => {
+    const fee = '1000';
+    expect(reducer(initialState, setTxFee(fee))).toEqual({
+      ...initialState,
+      txFeeCalculation: {
+        ...initialState.txFeeCalculation,
+        txFee: fee,
+      },
     });
   });
 });

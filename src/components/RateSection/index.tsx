@@ -43,8 +43,8 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
   }, [INPUT?.address, OUTPUT?.address, account, loadingQuote]);
 
   useEffect(() => {
-    account && outputPrice !== '0' && loadingQuote === 'succeeded' ? setLoading(false) : setLoading(true);
-  }, [account, outputPrice]);
+    outputPrice !== '0' && loadingQuote === 'succeeded' ? setLoading(false) : setLoading(true);
+  }, [outputPrice]);
 
   const inputInUsd = INPUT?.priceInUsd ? parseFloat(formatUnits(INPUT?.priceInUsd, 6)).toFixed(2) : '0';
 

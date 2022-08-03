@@ -15,6 +15,7 @@ import { useCalculateApprovalCost } from '../store/state/approve/useCalculateApp
 import { applyDefaultSettings, setGasPriceInfo } from '../store/state/swap/swapSlice';
 import { useUpdateQuote } from '../store/state/swap/useUpdateQuote';
 import { useTokens } from '../store/state/tokens/useTokens';
+import { cleanLastTxHash } from '../store/state/transactions/txSlice';
 import { setExplorer } from '../store/state/user/userSlice';
 import { Field } from '../types';
 import { totalRouteSteps } from '../utils';
@@ -48,6 +49,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const {
     INPUT,
+    OUTPUT,
     typedValue,
     protocols,
     tokensList,
@@ -65,7 +67,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
     typedValue: state.swap.typedValue,
     protocols: state.swap.quoteInfo?.protocols,
     tokensList: state.tokens.tokens,
-    lastTxHash: state.transactions.lastTxHash,
+    // lastTxHash: state.transactions.lastTxHash,
     approveTransactionInfo: state.approve.approveTransactionInfo,
     txFee: state.swap.txFeeCalculation.txFee,
     referrerOptions: state.swap.referrerOptions,
@@ -88,6 +90,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
   const updateQuote = useUpdateQuote();
 
   useEffect(() => {
+    dispatch(cleanLastTxHash());
     // Set default high gas price option:
     if (gasPriceInfo?.price === '0' || !gasPriceInfo?.price) {
       dispatch(setGasPriceInfo(gasOptions[SupportedGasOptions.High]));
@@ -95,8 +98,9 @@ function SwapWidget({ width }: SwapWidgetProps) {
   }, [gasOptions, blockNum]);
 
   useEffect(() => {
+    if (INPUT && OUTPUT) return;
     if (chainId) dispatch(applyDefaultSettings({ chainId }));
-  }, [chainId]);
+  }, [INPUT, OUTPUT, chainId]);
 
   useEffect(() => {
     if (!localStorage.getItem('favorite-tokens')) setFavoriteTokens(Tokens.FAVORITE_TOKENS);
@@ -104,7 +108,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
   }, [chainId]);
 
   const hasEnoughBalanceByAddress = (paymentCost: BigNumberish, tokenAddress: string): boolean => {
-    const balance = tokensList[tokenAddress].userBalance || '0';
+    const balance = tokensList[tokenAddress]?.userBalance || '0';
     return BigNumber.from(paymentCost).lte(balance);
   };
 

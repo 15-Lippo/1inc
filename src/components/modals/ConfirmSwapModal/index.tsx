@@ -126,7 +126,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   }));
   const updateQuote = useUpdateQuote();
 
-  const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions, lastQuoteUpdateTimestamp } =
+  const { swapInfo, txFeeCalculation, lastQuoteUpdateTimestamp, typedValue, slippage, referrerOptions } =
     useAppSelector((state) => state.swap);
 
   const [price, setPrice] = useState<PriceState>({

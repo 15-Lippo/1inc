@@ -5,7 +5,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './i18n'; // import i18n (needs to be bundled ;))
 
-import { parseEther } from '@ethersproject/units';
+import { parseUnits } from '@ethersproject/units';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -18,19 +18,21 @@ export { Widget };
 export const root = createRoot(document.getElementById('root')!);
 root.render(
   <Widget
+    // jsonRpcEndpoint={'https://cloudflare-eth.com'}
     referrerOptions={{
       [1337]: {
         referrerAddress: '0xF4da87003DE84337400DB65A2DE41586E3557831',
         fee: '3',
       },
     }}
-    jsonRpcEndpoint={'https://cloudflare-eth.com'}
-    defaultTypedValue={parseEther('2')}
+    defaultTypedValue={parseUnits('2', 6)}
     defaultInputTokenAddress={{
       1: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      137: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     }}
     defaultOutputTokenAddress={{
       1: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      137: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     }}
   />
 );

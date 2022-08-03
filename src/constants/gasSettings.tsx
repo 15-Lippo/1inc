@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 export enum CustomGasPriceFieldId {
   maxFee = 'MAX_FEE',
   maxPriorityFee = 'MAX_PRIORITY_FEE',
@@ -5,10 +7,10 @@ export enum CustomGasPriceFieldId {
 
 export const GasPriceErrorTypes = {
   [CustomGasPriceFieldId.maxPriorityFee]: {
-    invalidAverage: 'The average now is 1.00 Gwei',
+    invalidAverage: t('The average now is 1.00 Gwei'),
   },
   [CustomGasPriceFieldId.maxFee]: {
-    lessPriorityFee: 'maxFee can not be lower than maxPriorityFee',
-    greaterBaseFee: `Max price can't be lower than base fee`,
+    lessPriorityFee: t(`Max fee can't be lower than Max priority fee`),
+    greaterBaseFee: t(`Max price can't be lower than base fee`),
   },
 };

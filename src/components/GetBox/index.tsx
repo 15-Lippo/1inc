@@ -14,9 +14,8 @@ interface GetBoxProps {
 
 const GetBox = ({ onSelectToken }: GetBoxProps) => {
   const { estimateGasLimit } = useCalculateTxCost();
-  const { quoteInfo, typedValue, loadingQuote, swapInfo, txFeeCalculation, OUTPUT } = useAppSelector(
-    (state) => state.swap
-  );
+  const { quoteInfo, loadingQuote, swapInfo, txFeeCalculation } = useAppSelector((state) => state.swap);
+  const { typedValue, OUTPUT } = useAppSelector((state) => state.swap);
   const tokens = useAppSelector((state) => state.tokens.tokens);
   const explorer = useAppSelector((state) => state.user.explorer);
 

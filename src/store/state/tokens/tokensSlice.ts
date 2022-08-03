@@ -229,7 +229,6 @@ const tokensSlice = createSlice({
           priceInUsd,
         };
       });
-      console.log(updatedTokens);
       return {
         ...state,
         tokens: updatedTokens,

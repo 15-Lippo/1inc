@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { Box, Link, Skeleton, Typography } from '@mui/material';
+import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -36,10 +37,11 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
   );
 
   const userBalance = useMemo(() => {
-    if (!INPUT) return '0';
-    if (!Number(INPUT.userBalance)) return '0';
+    if (_.isEmpty(INPUT)) return;
+    if (account && !INPUT?.userBalance) return;
+    if (!Number(INPUT?.userBalance)) return '0';
     return parseFloat(formatUnits(INPUT.userBalance || '0', INPUT.decimals)).toFixed(6);
-  }, [INPUT]);
+  }, [account, INPUT?.address, INPUT?.userBalance]);
 
   const valueInUsd =
     inputTokenPriceInUsd && typedValue
@@ -88,27 +90,28 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           underline="hover">
           <Trans>You sell</Trans>
         </Link>
-        {account && !Number(userBalance) ? (
-          <Skeleton
-            sx={{
-              bgcolor: 'widget.skeleton-01',
-            }}
-            animation="wave"
-            width="100px"
-          />
-        ) : (
-          <Box sx={{ display: 'flex', columnGap: '4px' }}>
-            <Typography
-              variant="rxs12"
+        {account &&
+          (userBalance ? (
+            <Box sx={{ display: 'flex', columnGap: '4px' }}>
+              <Typography
+                variant="rxs12"
+                sx={{
+                  color: 'widget.text-secondary',
+                  lineHeight: '19px',
+                }}>
+                <Trans>Balance</Trans>: {userBalance}
+              </Typography>
+              <AuxButton onClick={onMaxClick} text={t('Max')} sx={{ lineHeight: '19px' }} />
+            </Box>
+          ) : (
+            <Skeleton
               sx={{
-                color: 'widget.text-secondary',
-                lineHeight: '19px',
-              }}>
-              <Trans>Balance</Trans>: {userBalance}
-            </Typography>
-            <AuxButton onClick={onMaxClick} text={t('Max')} sx={{ lineHeight: '19px' }} />
-          </Box>
-        )}
+                bgcolor: 'widget.skeleton-01',
+              }}
+              animation="wave"
+              width="100px"
+            />
+          ))}
       </Box>
 
       <Box

@@ -5,7 +5,6 @@ import approveReducer from './state/approve/approveSlice';
 import healthcheckReducer from './state/healthcheck/healthcheckSlice';
 import swapReducer from './state/swap/swapSlice';
 import tokensReducer from './state/tokens/tokensSlice';
-// import wallet from './wallet/reducer';
 import txReducer from './state/transactions/txSlice';
 import userReducer from './state/user/userSlice';
 
