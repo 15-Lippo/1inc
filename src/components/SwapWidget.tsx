@@ -55,10 +55,10 @@ function SwapWidget({ width }: SwapWidgetProps) {
     tokensList,
     quoteError,
     approveTransactionInfo,
-    txFee,
     referrerOptions,
     inputToken,
     outputToken,
+    txFeeCalculation,
     lastQuoteUpdateTimestamp,
   } = useAppSelector((state) => ({
     quoteError: state.swap.quoteError,
@@ -69,11 +69,11 @@ function SwapWidget({ width }: SwapWidgetProps) {
     tokensList: state.tokens.tokens,
     // lastTxHash: state.transactions.lastTxHash,
     approveTransactionInfo: state.approve.approveTransactionInfo,
-    txFee: state.swap.txFeeCalculation.txFee,
     referrerOptions: state.swap.referrerOptions,
     inputToken: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     outputToken: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
+    txFeeCalculation: state.swap.txFeeCalculation,
   }));
   const [, setFavoriteTokens] = useLocalStorage('favorite-tokens', Tokens.FAVORITE_TOKENS);
   const { approvalTxFee, estimateGasLimit: estimateApprovalCost } = useCalculateApprovalCost();
@@ -128,7 +128,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
   };
 
   const hasEnoughNativeTokenBalanceToSwap = () => {
-    let paymentCost = BigNumber.from(txFee);
+    let paymentCost = BigNumber.from(txFeeCalculation?.txFee);
     if (INPUT === Tokens.NATIVE_TOKEN_ADDRESS) {
       paymentCost = paymentCost.add(typedValue);
     }
@@ -158,7 +158,15 @@ function SwapWidget({ width }: SwapWidgetProps) {
 
   useEffect(() => {
     updateQuote();
-  }, [inputToken?.address, outputToken?.address, typedValue, chainId, account, referrerOptions]);
+  }, [
+    inputToken?.address,
+    outputToken?.address,
+    typedValue,
+    chainId,
+    account,
+    referrerOptions,
+    txFeeCalculation?.gasPriceInfo?.price,
+  ]);
 
   const routeSteps = totalRouteSteps(protocols);
 

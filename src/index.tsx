@@ -25,14 +25,20 @@ root.render(
         fee: '3',
       },
     }}
-    defaultTypedValue={parseUnits('2', 6)}
+    defaultTypedValue={{
+      1: parseUnits('2', 6).toString(),
+      137: parseUnits('2', 6).toString(),
+      1337: parseUnits('2', 6).toString(),
+    }}
     defaultInputTokenAddress={{
       1: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       137: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     }}
     defaultOutputTokenAddress={{
       1: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       137: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      1337: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     }}
   />
 );

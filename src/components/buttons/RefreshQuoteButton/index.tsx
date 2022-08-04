@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber';
 import { IconButton, IconButtonProps, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
@@ -107,7 +106,7 @@ const RefreshQuoteButton = () => {
             stroke={theme.palette.widget['icon-01']}
             strokeWidth="15"
             strokeDasharray={circumference}
-            strokeDashoffset={!BigNumber.from(typedValue).isZero() && rotate ? 0 : `${fillOffset}%`}
+            strokeDashoffset={Number(typedValue) && rotate ? 0 : `${fillOffset}%`}
           />
         </g>
         <use xlinkHref="#arrow" />

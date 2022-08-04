@@ -71,5 +71,9 @@
   "{0}": "{0}",
   "steps in the route": "{{steps}} кроків в маршруті",
   "exchange rate has expired": "{{inputTokenSymbol}}/{{outputTokenSymbol}} дія обмінного курсу скінчилася.",
-  "{quoteError}": "{quoteError}"
+  "{quoteError}": "{quoteError}",
+  "< 10 sec": "< 10 сек",
+  "~ 12 sec": "~ 12 сек",
+  "~ 30 sec": "~ 30 сек",
+  "≥ 1 min": "≥ 1 хв"
 }

@@ -5,8 +5,8 @@ const formatGweiFixed = (value: BigNumberish): string => {
   return parseFloat(formatUnits(value, 'gwei')).toFixed(2);
 };
 
-const formatUsdFixed = (value: BigNumberish): string => {
-  return parseFloat(formatUnits(value, 6)).toFixed(2);
+const formatUsdFixed = (value: BigNumberish, usdCoinDecimals: number): string => {
+  return parseFloat(formatUnits(value, usdCoinDecimals)).toFixed(2);
 };
 
 const parseGwei = (value: string): BigNumber => {

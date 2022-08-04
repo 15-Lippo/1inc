@@ -3,7 +3,7 @@ import { StandardTextFieldProps, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { typeInput } from '../../../store/state/swap/swapSlice';
@@ -34,33 +34,33 @@ interface SendProps {
 }
 
 // This value will respect the decimals of the INPUT
-const calcWeiAmount = (value: string, decimals: number) => (value ? parseUnits(value, decimals).toString() : '0');
+const parseTypedAmount = (value: string, decimals: number) => (value ? parseUnits(value, decimals).toString() : '0');
 
 const InputAmount = ({ inputId }: SendProps) => {
   const dispatch = useAppDispatch();
   const [amount, setAmount] = useState<string>('0');
-  const { input, typedValue } = useAppSelector((state) => ({
-    input: state.tokens.tokens[state.swap.INPUT],
+  const { INPUT, typedValue } = useAppSelector((state) => ({
+    INPUT: state.tokens.tokens[state.swap[Field.INPUT]],
     typedValue: state.swap.typedValue,
   }));
 
-  const debouncedTypedValueSetter = useRef(
-    _.debounce((value: string, field: Field, decimals) => {
-      const valueInWei = calcWeiAmount(value, decimals);
-      dispatch(typeInput({ field, typedValue: valueInWei }));
-    }, 1000)
+  const debouncedTypedValueSetter = useMemo(
+    () =>
+      _.debounce((value: string, field: Field, decimals: number) => {
+        const valueInWei = parseTypedAmount(value, decimals);
+        dispatch(typeInput({ field, typedValue: valueInWei }));
+      }, 1000),
+    [INPUT]
   );
 
   const handleChange = ({ target }: any) => {
     setAmount(target.value);
-    if (input?.address) debouncedTypedValueSetter.current(target.value, target.id, input?.decimals);
+    if (INPUT) debouncedTypedValueSetter(target.value, target.id, INPUT.decimals);
   };
 
   useEffect(() => {
-    if (!_.isEmpty(input) && input.decimals) {
-      if (typedValue && calcWeiAmount(amount, input?.decimals) !== typedValue) {
-        setAmount(formatUnits(typedValue, input.decimals));
-      }
+    if (typedValue && INPUT && parseTypedAmount(amount, INPUT.decimals) !== typedValue) {
+      setAmount(formatUnits(typedValue, INPUT.decimals));
     }
   }, [typedValue]);
 

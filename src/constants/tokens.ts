@@ -98,3 +98,36 @@ export const FAVORITE_TOKENS = {
     '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664',
   ],
 };
+
+// TODO add more addresses
+export const DOLLAR_TIED_TOKENS = {
+  [SupportedChainId.LOCALHOST]: [
+    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // usdc
+    '0xdac17f958d2ee523a2206206994597c13d831ec7', // usdt
+    '0x6b175474e89094c44da98b954eedeac495271d0f', // dai
+  ],
+  [SupportedChainId.MAINNET]: [
+    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // usdc
+    '0xdac17f958d2ee523a2206206994597c13d831ec7', // usdt
+    '0x6b175474e89094c44da98b954eedeac495271d0f', // dai
+  ],
+  [SupportedChainId.OPTIMISM]: [
+    '0x7f5c764cbc14f9669b88837ca1490cca17c31607', // USDC
+  ],
+  [SupportedChainId.BINANCE]: [
+    '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', // USDC
+  ],
+  [SupportedChainId.GNOSIS]: ['0xddafbb505ad214d7b80b1f830fccc89b60fb7a83'], // USD//C
+  [SupportedChainId.POLYGON]: [
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
+  ],
+  [SupportedChainId.FANTOM]: [
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
+  ],
+  [SupportedChainId.ARBITRUM_ONE]: [
+    '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
+  ],
+  [SupportedChainId.AVALANCHE]: [
+    '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
+  ],
+};

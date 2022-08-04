@@ -10,6 +10,7 @@ import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ApproveStatus } from '../../store/state/approve/approveSlice';
 import { typeInput } from '../../store/state/swap/swapSlice';
+import { useUsdStablecoins } from '../../store/state/tokens/prices-in-usd/useUsdStablecoins';
 import { Field } from '../../types';
 import { AuxButton } from '../buttons';
 import SelectTokenButton from '../buttons/SelectTokenButton';
@@ -24,8 +25,8 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
-  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer, txFee } = useAppSelector(
-    (state) => ({
+  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer, txFee, lastQuoteUpdateTimestamp } =
+    useAppSelector((state) => ({
       INPUT: state.tokens.tokens[state.swap.INPUT],
       status: state.approve.approveAllowanceInfo.status,
       typedValue: state.swap.typedValue,
@@ -33,8 +34,9 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
       loadingQuote: state.swap.loadingQuote,
       explorer: state.user.explorer,
       txFee: state.swap.txFeeCalculation.txFee,
-    })
-  );
+      lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
+    }));
+  const { defaultStablecoin } = useUsdStablecoins();
 
   const userBalance = useMemo(() => {
     if (_.isEmpty(INPUT)) return;
@@ -43,10 +45,18 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
     return parseFloat(formatUnits(INPUT.userBalance || '0', INPUT.decimals)).toFixed(6);
   }, [account, INPUT?.address, INPUT?.userBalance]);
 
-  const valueInUsd =
-    inputTokenPriceInUsd && typedValue
-      ? formatUnits(BigNumber.from(inputTokenPriceInUsd).mul(BigNumber.from(typedValue)), INPUT.decimals + 6)
-      : '0';
+  const valueInUsd = useMemo(
+    () =>
+      inputTokenPriceInUsd && typedValue && defaultStablecoin
+        ? parseFloat(
+            formatUnits(
+              BigNumber.from(typedValue).mul(BigNumber.from(inputTokenPriceInUsd)),
+              INPUT.decimals + defaultStablecoin.decimals
+            )
+          ).toFixed(2)
+        : '',
+    [INPUT, inputTokenPriceInUsd, lastQuoteUpdateTimestamp]
+  );
 
   const onMaxClick = () => {
     const bal = INPUT.userBalance;
@@ -133,10 +143,10 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
         <Typography variant="rxs12" sx={{ color: 'widget.text-secondary' }}>
           {INPUT?.name}
         </Typography>
-        {inputTokenPriceInUsd && typedValue && loadingQuote === 'succeeded' ? (
+        {valueInUsd && loadingQuote === 'succeeded' ? (
           <Typography variant="rxs12" sx={{ color: 'widget.text-secondary', lineHeight: '19px' }}>
             ~$
-            {parseFloat(valueInUsd).toFixed(2)}
+            {valueInUsd}
           </Typography>
         ) : (
           <Skeleton

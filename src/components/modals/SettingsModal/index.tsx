@@ -122,7 +122,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                   variant="rm16">
                   {txFeeCalculation.gasPriceSettingsMode === 'basic'
                     ? `(${txFeeCalculation.gasPriceInfo.range})`
-                    : t('Custom') + `(${gasPriceGweiCustom} Gwei)`}
+                    : t('Custom') + ` (${gasPriceGweiCustom} Gwei)`}
                 </Typography>
               </Box>
             </AccordionSummary>

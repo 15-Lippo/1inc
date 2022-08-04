@@ -20,7 +20,7 @@ import SwapWidget from './SwapWidget';
 export interface Defaults {
   defaultInputTokenAddress?: { [chainId: number]: string | 'NATIVE' };
   defaultOutputTokenAddress?: { [chainId: number]: string | 'NATIVE' };
-  defaultTypedValue?: BigNumberish;
+  defaultTypedValue?: { [chainId: number]: BigNumberish };
   referrerOptions?: ReferrerOptions;
 }
 
@@ -77,7 +77,7 @@ export default function Widget({
     if (defaultTypedValue) {
       const validationMsg = validateDefaultValue(defaultTypedValue);
       if (validationMsg) throw new Error(validationMsg);
-      defaults.defaultTypedValue = defaultTypedValue.toString();
+      defaults.defaultTypedValue = defaultTypedValue;
     }
 
     if (defaultInputTokenAddress || defaultOutputTokenAddress) {

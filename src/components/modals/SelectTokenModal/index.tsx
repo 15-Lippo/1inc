@@ -7,8 +7,8 @@ import { useLocalStorage } from '../../../hooks';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { selectCurrency } from '../../../store/state/swap/swapSlice';
+import { useUpdateUsdcPricesForBalances } from '../../../store/state/tokens/prices-in-usd/useTokenPricesInUsd';
 import { onPinnedToken, Token } from '../../../store/state/tokens/tokensSlice';
-import { useTokenPricesInUsd } from '../../../store/state/tokens/useTokenPricesInUsd';
 import { Field } from '../../../types';
 import { AddToken } from '../../buttons';
 import PinnedToken from '../../PinnedToken';
@@ -36,7 +36,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   const [data, setData] = useState<Token[]>([]);
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
-  const { updateUsdcPricesForBalances } = useTokenPricesInUsd();
+  const updateUsdcPricesForBalances = useUpdateUsdcPricesForBalances();
 
   useEffect(() => {
     if (!tokensList.length) return;

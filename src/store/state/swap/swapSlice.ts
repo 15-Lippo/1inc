@@ -4,6 +4,8 @@ import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
 import { Tokens } from '../../../constants';
+import { SupportedGasOptions } from '../../../hooks';
+import { GasOption } from '../../../hooks/useGasPriceOptions';
 import { DefaultTokenOptions, Field, ReferrerOptions } from '../../../types';
 interface FetchQuoteParams {
   quoteInfo: ethereumApi.ExchangeControllerGetQuoteRequest;
@@ -17,9 +19,7 @@ interface FetchSwapParams {
 
 export const fetchQuote = createAsyncThunk('swap/getQuoteInfo', async (params: FetchQuoteParams) => {
   try {
-    const JSONApiResponse = await SwapApi(params.chainId).exchangeControllerGetQuoteRaw(params.quoteInfo);
-    const response = await JSONApiResponse.raw.json();
-    return response;
+    return (await SwapApi(params.chainId).exchangeControllerGetQuoteRaw(params.quoteInfo)).raw.json();
   } catch (error) {
     // @ts-ignore
     throw error.message;
@@ -28,9 +28,7 @@ export const fetchQuote = createAsyncThunk('swap/getQuoteInfo', async (params: F
 
 export const fetchSwap = createAsyncThunk('swap/getSwapInfo', async (params: FetchSwapParams) => {
   try {
-    const JSONApiResponse = await SwapApi(params.chainId).exchangeControllerGetSwapRaw(params.swapInfo);
-    const response = await JSONApiResponse.raw.json();
-    return response;
+    return (await SwapApi(params.chainId).exchangeControllerGetSwapRaw(params.swapInfo)).raw.json();
   } catch (error) {
     console.error(error);
   }
@@ -51,14 +49,7 @@ export interface SwapState {
   readonly quoteInfo?: ethereumApi.QuoteResponseDto;
   readonly swapInfo?: ethereumApi.SwapResponseDto;
   readonly txFeeCalculation: {
-    readonly gasPriceInfo: {
-      id: string;
-      label: string;
-      range: string;
-      timeLabel: string;
-      price: string;
-      baseFee: string;
-    };
+    readonly gasPriceInfo: GasOption;
     readonly customGasPrice: {
       label: string;
       maxPriorityFee: string;
@@ -146,7 +137,7 @@ export const initialState: SwapState = {
   },
   txFeeCalculation: {
     gasPriceInfo: {
-      id: '',
+      id: SupportedGasOptions.High,
       label: '',
       range: '-- / -- - 0.00 Gwei',
       timeLabel: '',
@@ -228,7 +219,7 @@ const swapSlice = createSlice({
       state[Field.OUTPUT] =
         state.defaultOutputTokenAddress[chainId] ||
         Tokens.FAVORITE_TOKENS[chainId].filter((token: string) => token != state[Field.INPUT])[0];
-      state.typedValue = state.defaultTypedValue.toString() || '';
+      state.typedValue = state.defaultTypedValue[chainId]?.toString() || '';
     },
     setGasLimit(state, { payload: gasLimit }) {
       return {

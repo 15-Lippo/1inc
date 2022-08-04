@@ -71,5 +71,9 @@
   "{0}": "{0}",
   "steps in the route": "{{steps}} steps in the route",
   "exchange rate has expired": "{{inputTokenSymbol}}/{{outputTokenSymbol}} exchange rate has expired.",
-  "{quoteError}": "{quoteError}"
+  "{quoteError}": "{quoteError}",
+  "< 10 sec": "< 10 sec",
+  "~ 12 sec": "~ 12 sec",
+  "~ 30 sec": "~ 30 sec",
+  "≥ 1 min": "≥ 1 min"
 }

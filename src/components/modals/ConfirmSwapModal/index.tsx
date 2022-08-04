@@ -3,13 +3,14 @@ import { Box, Skeleton, Stack, Typography, useTheme } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { REFRESH_QUOTE_DELAY_MS, SupportedChainId } from '../../../constants';
-import { useInterval } from '../../../hooks';
+import { SupportedChainId } from '../../../constants';
+import { useRate } from '../../../hooks/useRate';
+import { useSingleTimeout } from '../../../hooks/useSingleTimeout';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { fetchSwap } from '../../../store/state/swap/swapSlice';
 import { useSwapCallback } from '../../../store/state/swap/useSwapCallback';
-import { useUpdateQuote } from '../../../store/state/swap/useUpdateQuote';
+import { useUsdStablecoins } from '../../../store/state/tokens/prices-in-usd/useUsdStablecoins';
 import { Token } from '../../../store/state/tokens/tokensSlice';
 import { Field } from '../../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../../utils';
@@ -103,100 +104,32 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
   );
 };
 
-enum RefreshStatus {
-  NO_REFRESH_NEEDED,
-  SHOULD_REFRESH,
-  EXTERNAL_REFRESH_OCCURRED,
-  INTERNAL_REFRESH_OCCURRED,
-}
-
-interface PriceState {
-  input: string;
-  output: string;
-}
-
 const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
-  const { INPUT, OUTPUT } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, toTokenAmount } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
+    toTokenAmount: state.swap.swapInfo?.toTokenAmount,
   }));
-  const updateQuote = useUpdateQuote();
 
-  const { swapInfo, txFeeCalculation, lastQuoteUpdateTimestamp, typedValue, slippage, referrerOptions } =
-    useAppSelector((state) => state.swap);
+  const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions } = useAppSelector((state) => state.swap);
 
-  const [price, setPrice] = useState<PriceState>({
-    input: '0',
-    output: '0',
-  });
   const [slippageModalOpen, setSlippageModalOpen] = useState<boolean>(false);
   const [gasPriceModalOpen, setGasPriceModalOpen] = useState<boolean>(false);
-  const [refreshStatus, setRefreshStatus] = useState<RefreshStatus>(RefreshStatus.NO_REFRESH_NEEDED);
+  const [loadingSwap, setLoadingSwap] = useState<boolean>(false);
+  const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
 
-  const [displayedToTokenAmount, setDisplayedToTokenAmount] = useState<string>('0');
+  const { startTimeout, abortTimeout } = useSingleTimeout(() => setShouldRefresh(true), 5000);
+  const { defaultStablecoin } = useUsdStablecoins();
 
-  // if less than 5 seconds before next refresh, show suggest refresh button
-  const updateRefreshStatus = () => {
-    switch (refreshStatus) {
-      case RefreshStatus.INTERNAL_REFRESH_OCCURRED:
-      case RefreshStatus.EXTERNAL_REFRESH_OCCURRED:
-        return;
-      default: {
-        const newStatus =
-          performance.now() - lastQuoteUpdateTimestamp > REFRESH_QUOTE_DELAY_MS - 5000
-            ? RefreshStatus.SHOULD_REFRESH
-            : RefreshStatus.NO_REFRESH_NEEDED;
-        if (newStatus !== refreshStatus) {
-          setRefreshStatus(newStatus);
-        }
-      }
-    }
-  };
+  const updateSwap = () => {
+    if (!isOpen || !INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
+    setLoadingSwap(true);
 
-  // update refresh status every second
-  useInterval(updateRefreshStatus, 1000);
-
-  // if quote was updated externally, show red refresh button
-  useEffect(() => {
-    if (isOpen && refreshStatus !== RefreshStatus.INTERNAL_REFRESH_OCCURRED) {
-      setRefreshStatus(RefreshStatus.EXTERNAL_REFRESH_OCCURRED);
-    } else {
-      setRefreshStatus(RefreshStatus.NO_REFRESH_NEEDED);
-    }
-  }, [lastQuoteUpdateTimestamp]);
-
-  useEffect(() => {
-    if (refreshStatus === RefreshStatus.INTERNAL_REFRESH_OCCURRED) {
-      updateQuote();
-    } else if (refreshStatus === RefreshStatus.NO_REFRESH_NEEDED) {
-      setDisplayedToTokenAmount(swapInfo?.toTokenAmount || '0x00');
-    }
-  }, [refreshStatus, swapInfo]);
-
-  useEffect(() => {
-    isOpen && swapInfo && setDisplayedToTokenAmount(swapInfo.toTokenAmount);
-  }, [isOpen]);
-
-  useEffect(() => {
-    const outputAmount = swapInfo?.toTokenAmount;
-    if (Number(swapInfo?.toTokenAmount) && Number(typedValue)) {
-      // @ts-ignore
-      const output = typedValue / outputAmount;
-      // @ts-ignore
-      const input = outputAmount / typedValue;
-      setPrice({
-        input: input.toFixed(4),
-        output: output.toFixed(4),
-      });
-    }
-  }, [swapInfo?.toTokenAmount, typedValue]);
-
-  useEffect(() => {
-    if (!INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
+    const referrerOptionsByChainId = referrerOptions[chainId as SupportedChainId];
     dispatch(
       fetchSwap({
         swapInfo: {
@@ -206,23 +139,39 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
           fromAddress: String(account),
           slippage,
           disableEstimate: true,
+          gasPrice: Number(txFeeCalculation?.customGasPrice?.maxFee)
+            ? txFeeCalculation?.customGasPrice?.maxFee
+            : txFeeCalculation?.gasPriceInfo?.price,
           gasLimit: txFeeCalculation?.gasLimit,
-          referrerAddress: referrerOptions[chainId as SupportedChainId]?.referrerAddress,
-          fee: referrerOptions[chainId as SupportedChainId]?.fee,
+          referrerAddress: referrerOptionsByChainId?.referrerAddress,
+          fee: referrerOptionsByChainId?.fee,
         },
         chainId,
       })
     );
-  }, [
-    INPUT,
-    OUTPUT,
-    account,
-    typedValue,
-    slippage,
-    txFeeCalculation?.gasPriceInfo.price,
-    txFeeCalculation?.gasLimit,
-    referrerOptions,
-  ]);
+  };
+
+  const price = useRate((typedValue || '0').toString(), toTokenAmount || '0');
+
+  useEffect(() => {
+    if (isOpen) {
+      startTimeout();
+      updateSwap();
+    } else {
+      abortTimeout();
+      setLoadingSwap(true);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    setShouldRefresh(false);
+    setLoadingSwap(false);
+    startTimeout();
+  }, [swapInfo]);
+
+  useEffect(() => {
+    setShouldRefresh(true);
+  }, [slippage, txFeeCalculation?.gasPriceInfo.price, txFeeCalculation?.gasLimit]);
 
   const swapCallback = useSwapCallback({
     from: swapInfo?.tx?.from,
@@ -239,6 +188,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   });
 
   const handleSendTx = useCallback(() => {
+    if (loadingSwap) return;
     try {
       swapCallback();
     } catch (error) {
@@ -247,15 +197,11 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   }, [swapCallback]);
 
   const onRefreshClick = () => {
-    if (refreshStatus !== RefreshStatus.EXTERNAL_REFRESH_OCCURRED) {
-      setRefreshStatus(RefreshStatus.INTERNAL_REFRESH_OCCURRED);
-    } else {
-      setRefreshStatus(RefreshStatus.NO_REFRESH_NEEDED);
-    }
+    updateSwap();
   };
 
-  const inputUsdcPrice = INPUT?.priceInUsd && formatUsdFixed(INPUT?.priceInUsd);
-  const outputUsdcPrice = OUTPUT?.priceInUsd && formatUsdFixed(OUTPUT?.priceInUsd);
+  const inputUsdcPrice = INPUT?.priceInUsd && formatUsdFixed(INPUT?.priceInUsd, defaultStablecoin.decimals);
+  const outputUsdcPrice = OUTPUT?.priceInUsd && formatUsdFixed(OUTPUT?.priceInUsd, defaultStablecoin.decimals);
 
   const gasPrice = formatGweiFixed(
     txFeeCalculation.gasPriceSettingsMode === 'basic'
@@ -291,7 +237,11 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
             <SwapTokenBox
               field={Field.OUTPUT}
               token={OUTPUT}
-              amount={parseFloat(formatUnits(displayedToTokenAmount)).toFixed(6)}
+              amount={
+                toTokenAmount && OUTPUT && !loadingSwap
+                  ? parseFloat(formatUnits(toTokenAmount, OUTPUT.decimals)).toFixed(6)
+                  : ''
+              }
               usdcPrice={outputUsdcPrice}
             />
             <Stack>
@@ -430,7 +380,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
               />
             </Stack>
           </Stack>
-          {refreshStatus === RefreshStatus.NO_REFRESH_NEEDED ? (
+          {!shouldRefresh ? (
             <MainButton
               type={MainButtonType.Confirm}
               onClick={handleSendTx}
@@ -441,13 +391,13 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
               <RefreshRateWarningMsg
                 inputTokenSymbol={INPUT.symbol}
                 outputTokenSymbol={OUTPUT.symbol}
-                quoteUpdated={refreshStatus === RefreshStatus.EXTERNAL_REFRESH_OCCURRED}
+                quoteUpdated={shouldRefresh}
               />
               <MainButton
                 type={MainButtonType.Refresh}
                 onClick={onRefreshClick}
                 disabled={!(account && typedValue && swapInfo?.tx?.data)}
-                rateExpired={refreshStatus === RefreshStatus.EXTERNAL_REFRESH_OCCURRED}
+                rateExpired={shouldRefresh}
               />
             </Stack>
           )}

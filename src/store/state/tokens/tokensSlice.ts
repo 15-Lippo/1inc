@@ -50,9 +50,7 @@ export const fetchLiquiditySources = createAsyncThunk(
   'tokens/getLiquiditySourcesInfo',
   async (chainId: number | undefined, { rejectWithValue }) => {
     try {
-      const JSONApiResponse = await InfoApi(chainId).chainProtocolsControllerGetProtocolsImagesRaw();
-      const response = await JSONApiResponse.raw.json();
-      return response;
+      return (await InfoApi(chainId).chainProtocolsControllerGetProtocolsImagesRaw()).raw.json();
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -96,9 +94,7 @@ export const fetchPresets = createAsyncThunk(
   'tokens/getPresetsInfo',
   async (chainId: number | undefined, { rejectWithValue }) => {
     try {
-      const JSONApiResponse = await InfoApi(chainId).chainPresetsControllerGetPresetsRaw();
-      const response = await JSONApiResponse.raw.json();
-      return response;
+      return (await InfoApi(chainId).chainPresetsControllerGetPresetsRaw()).raw.json();
     } catch (error) {
       return rejectWithValue(error);
     }

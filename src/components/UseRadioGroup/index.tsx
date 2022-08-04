@@ -4,8 +4,10 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { styled } from '@mui/material/styles';
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 import { SupportedGasOptions } from '../../hooks';
+import { GasOption } from '../../hooks/useGasPriceOptions';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setCustomGasPrice, setGasPriceInfo } from '../../store/state/swap/swapSlice';
 import { StarIcon } from '../icons';
@@ -46,7 +48,10 @@ const StyledFormControlLabel = styled((props: FormControlLabelProps) => <FormCon
   })
 );
 
-export default function UseRadioGroup({ gasOptions }: any) {
+interface UseRadioGroupProps {
+  gasOptions: { [option in SupportedGasOptions]?: GasOption };
+}
+export default function UseRadioGroup({ gasOptions }: UseRadioGroupProps) {
   const dispatch = useAppDispatch();
 
   // Set the calculated High option as a default value in radio group
@@ -83,10 +88,10 @@ export default function UseRadioGroup({ gasOptions }: any) {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 {gasOptions[v].id === SupportedGasOptions.High && <StarIcon />}
                 <Typography variant="rsm14" sx={{ m: '0 5px' }}>
-                  {gasOptions[v].label}
+                  <Trans>{gasOptions[v].label}</Trans>
                 </Typography>
                 <Typography color="widget.input-secondary-text" variant="rxs12">
-                  {gasOptions[v].timeLabel}
+                  <Trans>{gasOptions[v].timeLabel}</Trans>
                 </Typography>
               </Box>
               <Typography color="widget.input-primary-text" variant="rsm14">

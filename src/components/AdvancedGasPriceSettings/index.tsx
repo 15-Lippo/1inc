@@ -5,7 +5,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { CustomGasPriceFieldId, GasPriceErrorTypes } from '../../constants';
 import { useAdvancedSettings, useFeeRange, useWaitTime } from '../../hooks';
-import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setCustomGasPrice } from '../../store/state/swap/swapSlice';
 import { formatGweiFixed, parseGwei } from '../../utils';
@@ -28,14 +27,15 @@ type FieldErrorState = {
 
 const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
   const { t } = useTranslation();
-  const { account } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const { gasPriceInfo, customGasPrice } = useAppSelector((state) => state.swap.txFeeCalculation);
 
   const { baseFee, baseFeeWei, maxFeeGwei, estPriorityFee, estMaxFee, maxPriorityFeeGwei } = useAdvancedSettings();
 
+  const labelCustom = t('Custom');
+
   const [customSettings, setCustomSettings] = useState<CustomSettingsState>({
-    label: t(customGasPrice.label),
+    label: customGasPrice.label,
     maxFee: '0',
     maxPriorityFee: '0',
     timeLabel: '--/--',
@@ -54,7 +54,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
   useLayoutEffect(() => {
     if (!customSettings.label) {
       setCustomSettings({
-        label: t('Custom'),
+        label: labelCustom,
         maxFee: maxFeeGwei,
         maxPriorityFee: maxPriorityFeeGwei,
         timeLabel: gasPriceInfo.timeLabel,
@@ -138,7 +138,6 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
   // Dispatch Data To Store
   useEffect(() => {
     if (
-      !account ||
       !customSettings.label ||
       fieldError.isInvalidMaxFee ||
       !customSettings.maxPriorityFee ||
@@ -148,7 +147,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
 
     dispatch(
       setCustomGasPrice({
-        label: t('Custom'),
+        label: labelCustom,
         maxPriorityFee: parseGwei(customSettings.maxPriorityFee).toString(),
         maxFee: parseGwei(customSettings.maxFee).toString(),
         range: customSettings.range,
