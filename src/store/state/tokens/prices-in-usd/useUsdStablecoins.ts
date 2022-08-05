@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 
-import { SupportedChainId, Tokens } from '../../../../constants';
+import { Tokens } from '../../../../constants';
 import { useActiveWeb3React } from '../../../../packages/web3-provider';
+import { SupportedChainId } from '../../../../types';
 import { useAppSelector } from '../../../hooks';
 
 export const useUsdStablecoins = () => {

@@ -4,7 +4,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useActiveWeb3React } from '../../../packages/web3-provider';
-import { BackButton, CloseButton, RefreshQuoteButton, ResetSettingsButton, SettingsButton } from '../../buttons';
+import {
+  BackButton,
+  CloseButton,
+  RefreshQuoteButton,
+  ResetSettingsButton,
+  SettingsButton,
+  SwitchNetworkButton,
+} from '../../buttons';
 import { StyledSearchField } from '../../fields';
 import { SearchIcon } from '../../icons';
 
@@ -102,14 +109,7 @@ export const Modal = ({
       }}>
       {headerType === ModalHeaderType.Main ? (
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography
-            sx={{
-              typography: 'sbm16',
-              textAlign: 'center',
-              color: 'widget.text-primary',
-            }}>
-            {textModalType[headerType]}
-          </Typography>
+          <SwitchNetworkButton />
           <Stack direction="row" alignItems="center">
             <RefreshQuoteButton />
             <SettingsButton onClick={openSettings} />

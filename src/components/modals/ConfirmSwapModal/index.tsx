@@ -3,7 +3,6 @@ import { Box, Skeleton, Stack, Typography, useTheme } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { SupportedChainId } from '../../../constants';
 import { useRate } from '../../../hooks/useRate';
 import { useSingleTimeout } from '../../../hooks/useSingleTimeout';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
@@ -12,7 +11,7 @@ import { fetchSwap } from '../../../store/state/swap/swapSlice';
 import { useSwapCallback } from '../../../store/state/swap/useSwapCallback';
 import { useUsdStablecoins } from '../../../store/state/tokens/prices-in-usd/useUsdStablecoins';
 import { Token } from '../../../store/state/tokens/tokensSlice';
-import { Field } from '../../../types';
+import { Field, SupportedChainId } from '../../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../../utils';
 import { AuxButton, MainButton, MainButtonType, SlippageButtonsGroup } from '../../buttons';
 import GasPriceOptions from '../../GasPriceOptions';

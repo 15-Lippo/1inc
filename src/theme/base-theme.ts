@@ -1,6 +1,6 @@
 import { ThemeOptions } from '@mui/material';
 
-import { ExtendedTypographyOptions } from './theme';
+import { ExtendedPaletteOptions, ExtendedTypographyOptions } from './theme';
 
 const baseTheme: ThemeOptions = {
   components: {
@@ -135,6 +135,16 @@ const baseTheme: ThemeOptions = {
       fontSize: '16px',
     },
   } as ExtendedTypographyOptions,
+  palette: {
+    gradientEth: 'linear-gradient(76.32deg, rgba(63, 133, 238, 0.9) 0.29%, rgba(73, 91, 252, 0.84) 92.07%)',
+    gradientBnb: 'linear-gradient(75.38deg, rgba(83, 89, 97, 0.8845) -25.45%, #3C3E46 107.61%)',
+    gradientPolygon: 'linear-gradient(80.26deg, rgba(96, 39, 192, 0.8845) 25.41%, rgba(130, 71, 229, 0.74) 58.36%)',
+    gradientArbitrum: 'linear-gradient(80.1deg, rgba(40, 160, 240, 0.72) 3.59%, #0678C4 57.09%)',
+    gradientOptimism: 'linear-gradient(260.64deg, #C10A1F 40.48%, rgba(233, 4, 29, 0.65) 95.18%)',
+    gradientAvalanche: 'linear-gradient(80.12deg, rgba(180, 45, 40, 0.8845) 3.12%, rgba(245, 73, 66, 0.85) 59.84%)',
+    gradientGnosis: 'linear-gradient(90deg, #037A5B 0%, #22B698 100%)',
+    gradientFantom: 'linear-gradient(90deg, rgba(9, 21, 237, 0.83) 0%, rgba(50, 107, 246, 0.8845) 100%)',
+  } as ExtendedPaletteOptions,
 } as ThemeOptions;
 
 export default baseTheme;

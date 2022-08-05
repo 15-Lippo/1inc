@@ -1,3 +1,4 @@
+import { PaletteOptions } from '@mui/material/styles/createPalette';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 import { CSSProperties } from 'react';
 
@@ -118,4 +119,15 @@ interface ExtendedTypographyOptions extends TypographyOptions {
   //semi-bold
   sblg18: CSSProperties;
   sbm16: CSSProperties;
+}
+
+interface ExtendedPaletteOptions extends PaletteOptions {
+  gradientArbitrum: CSSProperties['color'];
+  gradientAvalanche: CSSProperties['color'];
+  gradientBnb: CSSProperties['color'];
+  gradientEth: CSSProperties['color'];
+  gradientFantom: CSSProperties['color'];
+  gradientGnosis: CSSProperties['color'];
+  gradientOptimism: CSSProperties['color'];
+  gradientPolygon: CSSProperties['color'];
 }

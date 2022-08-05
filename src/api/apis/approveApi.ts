@@ -1,10 +1,9 @@
-import { APIS, SupportedChainId } from '../../constants';
+import { MainnetChainId, networkConfigs } from '../../constants';
+import { SupportedChainId } from '../../types';
 
 export const ApproveApi = (chainId: number | undefined) => {
-  const config = new APIS[chainId ? (chainId as SupportedChainId) : SupportedChainId.MAINNET].Configuration({
+  const config = new networkConfigs[chainId ? (chainId as SupportedChainId) : MainnetChainId].api.Configuration({
     basePath: 'https://api.1inch.io',
   });
-  // @ts-ignore
-  const ApproveApi = new APIS[chainId ? (chainId as SupportedChainId) : SupportedChainId.MAINNET].ApproveApi(config);
-  return ApproveApi;
+  return new networkConfigs[chainId ? (chainId as SupportedChainId) : MainnetChainId].api.ApproveApi(config);
 };

@@ -1,7 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
 
 import TokenHelper from '../../../abi/TokenHelper.json';
-import { SupportedChainId, TOKEN_HELPER_ADDRESS } from '../../../constants';
+import { networkConfigs } from '../../../constants';
+import { SupportedChainId } from '../../../types';
 import { getContract } from '../../../utils';
 
 export interface IUserTokenInfo {
@@ -28,7 +29,7 @@ export async function getTokenInfo(
 
     // Get balances from the contract if only wallet was connected
     if (account) {
-      const tokenHelper = getContract(TOKEN_HELPER_ADDRESS[chainId as SupportedChainId], TokenHelper.abi, lib);
+      const tokenHelper = getContract(networkConfigs[chainId as SupportedChainId].helperContract, TokenHelper.abi, lib);
       tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
     }
 

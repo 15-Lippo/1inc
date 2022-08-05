@@ -123,7 +123,6 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
           )}
         </Stack>
       )}
-
       <Divider variant="middle" sx={{ borderColor: 'widget.border-01' }} />
       <VirtualizedTokenList
         tokensList={!searchValue ? data : filteredResults}

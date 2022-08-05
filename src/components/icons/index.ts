@@ -1,6 +1,7 @@
 export { default as CustomTokensIcon } from './CustomTokensIcon';
 export { default as GasStation } from './GasStation';
 export { default as LockerIcon } from './LockerIcon';
+export * from './networkLogos';
 export { default as NoLogoURI } from './NoLogoURI';
 export { default as NoTokenFoundIcon } from './NoTokenFoundIcon';
 export { PinIcon, UnpinIcon } from './PinIcon';
@@ -9,6 +10,7 @@ export { default as RouteIcon } from './RouteIcon';
 export { default as RouteModalDivider } from './RouteModalDivider';
 export { default as RouteStepArrow } from './RouteStepArrow';
 export { default as SearchIcon } from './SearchIcon';
+export { default as SelectDownArrowButton } from './SelectDownArrowButton';
 export { default as SentArray } from './SentArray';
 export { default as SlippageWaves } from './SlippageWaves';
 export { default as StarIcon } from './StarIcon';

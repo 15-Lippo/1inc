@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { EXPLORER_LINKS, SupportedChainId } from '../../../constants';
+import { MainnetChainId, networkConfigs } from '../../../constants';
+import { SupportedChainId } from '../../../types';
 
 export interface UserState {
   userDarkMode: boolean | null; // the user's choice for dark mode or light mode
@@ -9,7 +10,10 @@ export interface UserState {
 
 export const initialState: UserState = {
   userDarkMode: null,
-  explorer: EXPLORER_LINKS[SupportedChainId.MAINNET],
+  explorer: {
+    name: networkConfigs[MainnetChainId].explorerName,
+    link: networkConfigs[MainnetChainId].blockExplorerUrls[0],
+  },
 };
 
 const userSlice = createSlice({
@@ -25,7 +29,10 @@ const userSlice = createSlice({
     setExplorer(state, { payload: { chainId } }) {
       return {
         ...state,
-        explorer: EXPLORER_LINKS[chainId as SupportedChainId],
+        explorer: {
+          name: networkConfigs[chainId as SupportedChainId]?.explorerName,
+          link: networkConfigs[chainId as SupportedChainId]?.blockExplorerUrls[0],
+        },
       };
     },
   },

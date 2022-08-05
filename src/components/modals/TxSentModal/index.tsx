@@ -2,10 +2,11 @@ import { Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 
-import { EXPLORER_LINKS, SupportedChainId } from '../../../constants';
+import { MainnetChainId, networkConfigs } from '../../../constants';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { cleanLastTxHash } from '../../../store/state/transactions/txSlice';
+import { SupportedChainId } from '../../../types';
 import { MainButton, MainButtonType } from '../../buttons';
 import { SentArray } from '../../icons';
 import { Modal, ModalHeaderType } from '../Modal';
@@ -18,17 +19,16 @@ const TxSentModal = () => {
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
     txHash: state.transactions.lastTxHash,
   }));
-  const [explorer, setExplorer] = useState(EXPLORER_LINKS[SupportedChainId.MAINNET]);
+  const [explorer, setExplorer] = useState(networkConfigs[MainnetChainId]);
 
   useEffect(() => {
     if (chainId) {
-      const exp = EXPLORER_LINKS[chainId as SupportedChainId];
-      setExplorer(exp);
+      setExplorer(networkConfigs[chainId as SupportedChainId]);
     }
   }, [chainId]);
 
   const openExplorer = () => {
-    window.open(`${explorer.link}/tx/${txHash}`, '_blank');
+    window.open(`${explorer.blockExplorerUrls[0]}/tx/${txHash}`, '_blank');
   };
 
   const closeModal = () => {
@@ -51,10 +51,8 @@ const TxSentModal = () => {
         <MainButton
           type={MainButtonType.Explorer}
           onClick={openExplorer}
-          explorerName={explorer.name}
-          sx={{
-            mb: '8px',
-          }}
+          explorerName={explorer.explorerName}
+          sx={{ mb: '8px' }}
         />
         <MainButton type={MainButtonType.Close} onClick={closeModal} />
       </Stack>

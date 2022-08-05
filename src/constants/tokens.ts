@@ -1,5 +1,4 @@
-import { Field } from '../types';
-import { SupportedChainId } from './chains';
+import { Field, SupportedChainId } from '../types';
 
 export const NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
