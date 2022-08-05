@@ -15,22 +15,28 @@ export interface IUserTokenInfo {
 
 export async function getTokenInfo(
   lib: JsonRpcProvider | undefined,
-  account: string,
   chainId: number,
   addresses: string[],
-  spender: string
+  spender: string,
+  account?: string
 ): Promise<Promise<IUserTokenInfo> | undefined> {
-  if (!lib) return;
+  if (!lib || !addresses.length) return;
   //@ts-ignore
   const favoriteTokens = JSON.parse(localStorage.getItem('favorite-tokens'));
-  const tokenHelper = getContract(TOKEN_HELPER_ADDRESS[chainId as SupportedChainId], TokenHelper.abi, lib);
   try {
-    const tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
+    let tokenInfo;
+
+    // Get balances from the contract if only wallet was connected
+    if (account) {
+      const tokenHelper = getContract(TOKEN_HELPER_ADDRESS[chainId as SupportedChainId], TokenHelper.abi, lib);
+      tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
+    }
+
     const result: IUserTokenInfo = {};
     for (let i = 0; i < addresses.length; i++) {
       result[addresses[i]] = {
-        balance: tokenInfo[i].balance.toString(),
-        allowance: tokenInfo[i].allowance.toString(),
+        balance: tokenInfo ? tokenInfo[i].balance.toString() : '',
+        allowance: tokenInfo ? tokenInfo[i].allowance.toString() : '',
         pinned: favoriteTokens[chainId].includes(addresses[i]),
         priceInUsd: '',
       };
@@ -57,12 +63,12 @@ const chunkArray = (list: any[], chunkSize: number) => {
  */
 export async function getTokenBalances(
   lib: JsonRpcProvider | undefined,
-  account: string,
   chainId: number,
   addresses: string[],
-  spender: string
+  spender: string,
+  account?: string
 ) {
-  if (!addresses.length || !account || !lib) return [];
+  if (!addresses.length) return [];
   const arrayLength = 200;
 
   // Add native currency
@@ -75,7 +81,7 @@ export async function getTokenBalances(
   const promises = [];
   for (const chunk of chunks) {
     // After the first connect to ethereum mainnet fork all promises will return not right away. Please connect wallet an wait (5-10 min)
-    promises.push(await getTokenInfo(lib, account, chainId, chunk, spender));
+    promises.push(await getTokenInfo(lib, chainId, chunk, spender, account));
   }
   const result = await Promise.all(promises);
   return result.reduce((pV, cV) => {

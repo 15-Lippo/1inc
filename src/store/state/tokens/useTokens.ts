@@ -21,17 +21,15 @@ export const useTokens = () => {
 
   useEffect(() => {
     if (addresses.length) return;
-    console.log('tokens...');
     dispatch(fetchTokens(chainId));
-    console.log('...tokens');
   }, []);
 
   useEffect(() => {
-    if (!account || !addresses.length || !chainId || !spender.address) return;
+    if (!addresses.length || !chainId || !spender.address) return;
 
     console.log('balances...');
     const getBalances = async () => {
-      const result = await getTokenBalances(library, account, chainId, addresses, spender.address);
+      const result = await getTokenBalances(library, chainId, addresses, spender.address, account);
       dispatch(updateAllTokenBalances(result));
     };
 

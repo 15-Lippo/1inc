@@ -21,7 +21,11 @@ export const fetchQuote = createAsyncThunk('swap/getQuoteInfo', async (params: F
   try {
     return (await SwapApi(params.chainId).exchangeControllerGetQuoteRaw(params.quoteInfo)).raw.json();
   } catch (error) {
-    // @ts-ignore
+    const e = await error.json();
+    if (e.description) {
+      const { description } = e;
+      throw new Error(description.replace(/^./, description[0].toUpperCase()));
+    }
     throw error.message;
   }
 });

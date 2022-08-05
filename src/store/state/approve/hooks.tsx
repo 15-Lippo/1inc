@@ -22,9 +22,7 @@ export function useApproval() {
 
   useEffect(() => {
     if (spender.address) return;
-    console.log('spender...');
     dispatch(fetchApproveSpender(chainId));
-    console.log('...spender');
   }, [spender.address]);
 
   const approveStatus = useMemo(() => {
@@ -68,7 +66,7 @@ export function useApproval() {
 
       await tx.wait();
 
-      const updatedBalance = await getTokenInfo(library, account, chainId, [INPUT.address], spender.address);
+      const updatedBalance = await getTokenInfo(library, chainId, [INPUT.address], spender.address, account);
       dispatch(setLastTxHash(tx.hash));
       updatedBalance && dispatch(updateTokenInfo(updatedBalance));
     } catch ({ message }) {

@@ -28,10 +28,10 @@ export function useSwapCallback(swapTxInfo: TransactionRequest) {
       if (tx.hash) {
         const updatedBalance = await getTokenInfo(
           library,
-          account,
           chainId,
           [INPUT, OUTPUT, '0x0000000000000000000000000000000000000000'],
-          spender.address
+          spender.address,
+          account
         );
         dispatch(setLastTxHash(tx.hash));
         dispatch(updateAllTokenBalances(updatedBalance));

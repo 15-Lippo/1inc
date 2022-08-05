@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../constants';
-import { SupportedGasOptions, useAlertMessage, useGasPriceOptions, useInterval, useLocalStorage } from '../hooks';
+import { SupportedGasOptions, useAlertMessage, useGasPriceOptions, useInterval } from '../hooks';
 import { useActiveWeb3React } from '../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { ApproveStatus } from '../store/state/approve/approveSlice';
@@ -75,7 +75,6 @@ function SwapWidget({ width }: SwapWidgetProps) {
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
     txFeeCalculation: state.swap.txFeeCalculation,
   }));
-  const [, setFavoriteTokens] = useLocalStorage('favorite-tokens', Tokens.FAVORITE_TOKENS);
   const { approvalTxFee, estimateGasLimit: estimateApprovalCost } = useCalculateApprovalCost();
 
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
@@ -103,7 +102,6 @@ function SwapWidget({ width }: SwapWidgetProps) {
   }, [INPUT, OUTPUT, chainId]);
 
   useEffect(() => {
-    if (!localStorage.getItem('favorite-tokens')) setFavoriteTokens(Tokens.FAVORITE_TOKENS);
     if (chainId) dispatch(setExplorer({ chainId }));
   }, [chainId]);
 

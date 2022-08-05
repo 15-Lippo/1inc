@@ -70,5 +70,5 @@ export const useUpdateUsdcPriceForSelectedTokens = () => {
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]],
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]],
   }));
-  return () => updateUsdPrices([INPUT.address, OUTPUT.address]);
+  return () => updateUsdPrices([INPUT?.address, OUTPUT?.address]);
 };
