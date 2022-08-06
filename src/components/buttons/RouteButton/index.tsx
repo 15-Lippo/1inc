@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from '@mui/material';
+import { Button, buttonClasses, ButtonProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
@@ -19,7 +19,7 @@ const StyledRouteButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ t
   lineHeight: '100%',
   textTransform: 'none',
   color: theme.palette.widget['text-secondary'],
-  '& .MuiButton-endIcon': {
+  [`& .${buttonClasses.endIcon}`]: {
     margin: '0 0 0 5px',
   },
   '&:hover': {
@@ -29,7 +29,7 @@ const StyledRouteButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ t
   '&:hover svg path': {
     fill: theme.palette.widget['text-primary'],
   },
-  '&:hover .MuiButton-endIcon svg path': {
+  [`&:hover .${buttonClasses.endIcon} svg path`]: {
     fill: theme.palette.widget['text-primary'],
   },
 }));

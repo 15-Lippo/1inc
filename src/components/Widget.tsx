@@ -8,10 +8,10 @@ import { I18nextProvider, useTranslation } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from '../constants';
+import { defaultTheme } from '../mui/theme';
 import { ActiveWeb3Provider, useActiveProvider } from '../packages/web3-provider';
 import store from '../store';
 import { setDefaultSettings } from '../store/state/swap/swapSlice';
-import { defaultTheme } from '../theme';
 import { ReferrerOptions } from '../types';
 import { validateReferrerOptions } from '../utils';
 import { validateDefaultTokensOptions, validateDefaultValue } from '../utils/validateDefaults';

@@ -1,4 +1,13 @@
-import { InputAdornment, TextField, TextFieldProps, Theme, Typography } from '@mui/material';
+import {
+  formHelperTextClasses,
+  InputAdornment,
+  inputBaseClasses,
+  outlinedInputClasses,
+  TextField,
+  TextFieldProps,
+  Theme,
+  Typography,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
@@ -19,7 +28,7 @@ const primaryBorderStyle = (error: any, value: any, id: any, theme: Theme) => {
 };
 
 const StyledTextField: StyledComponent<any> = styled(TextField)<TextFieldProps>(({ theme, id, value, error }) => ({
-  '& .MuiInputBase-formControl': {
+  [`& .${inputBaseClasses.formControl}`]: {
     color: theme.palette.widget['text-primary'],
     background: theme.palette.widget['input-bg'],
     borderRadius: '12px',
@@ -27,23 +36,23 @@ const StyledTextField: StyledComponent<any> = styled(TextField)<TextFieldProps>(
   '& fieldset': {
     border: `1px solid ${primaryBorderStyle(error, value, id, theme)}`,
   },
-  '& .MuiInputBase-formControl.Mui-error fieldset': {
+  [`& .${inputBaseClasses.formControl} .${inputBaseClasses.error} fieldset`]: {
     borderColor: primaryBorderStyle(error, value, id, theme),
   },
-  '&:hover .MuiInputBase-formControl fieldset': {
+  [`&:hover .${inputBaseClasses.formControl} fieldset`]: {
     border: `1px solid ${primaryBorderStyle(error, value, id, theme)}`,
   },
-  '&:focus-within .MuiInputBase-formControl fieldset': {
+  [`&:focus-within .${inputBaseClasses.formControl} fieldset`]: {
     border: `1px solid ${primaryBorderStyle(error, value, id, theme)}`,
   },
-  '& .MuiOutlinedInput-input': {
+  [`& ${outlinedInputClasses.input}`]: {
     borderRadius: '12px',
     border: `1px solid ${theme.palette.widget['input-bg']}`,
     padding: '15px',
   },
-  '& .MuiFormHelperText-root': {
+  [`& .${formHelperTextClasses.root}`]: {
     marginLeft: '0',
-    '&.Mui-error': {
+    [`& .${inputBaseClasses.error}`]: {
       color:
         error && value && id === CustomGasPriceFieldId.maxPriorityFee
           ? theme.palette.widget['input-border-warn']

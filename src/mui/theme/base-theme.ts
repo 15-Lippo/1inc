@@ -1,4 +1,5 @@
 import { ThemeOptions } from '@mui/material';
+import { accordionSummaryClasses, formControlLabelClasses } from '@mui/material';
 
 import { ExtendedPaletteOptions, ExtendedTypographyOptions } from './theme';
 
@@ -7,7 +8,7 @@ const baseTheme: ThemeOptions = {
     MuiButtonBase: {
       styleOverrides: {
         root: {
-          '&.MuiAccordionSummary-root.Mui-expanded': {
+          [`& .${accordionSummaryClasses.expanded}`]: {
             minHeight: 0,
           },
         },
@@ -21,7 +22,7 @@ const baseTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           margin: 0,
-          '&.MuiFormControlLabel-root .MuiFormControlLabel-label': {
+          [`& .${formControlLabelClasses.root} ${formControlLabelClasses.label}`]: {
             width: '100%',
           },
         },
@@ -43,12 +44,12 @@ const baseTheme: ThemeOptions = {
         root: {
           padding: 0,
           minHeight: 0,
-          '.MuiAccordionSummary-content': {
+          [`.${accordionSummaryClasses.content}`]: {
             height: '3rem',
             alignItems: 'center',
             margin: 0,
           },
-          '.MuiAccordionSummary-content.Mui-expanded': {
+          [`.${accordionSummaryClasses.content}.${accordionSummaryClasses.expanded}`]: {
             margin: 0,
           },
         },

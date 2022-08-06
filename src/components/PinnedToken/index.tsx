@@ -1,4 +1,12 @@
-import { Avatar, IconButton, ListItem, ListItemButton, ListItemText, useTheme } from '@mui/material';
+import {
+  Avatar,
+  IconButton,
+  ListItem,
+  ListItemButton,
+  listItemButtonClasses,
+  ListItemText,
+  useTheme,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -14,10 +22,10 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   '&:hover': {
     background: theme.palette.widget['bg-01'],
   },
-  '& .MuiListItemButton-root': {
+  [`& .${listItemButtonClasses.root}`]: {
     padding: '9px 12px',
   },
-  '&:hover .MuiListItemButton-root': {
+  [`&:hover .${listItemButtonClasses.root}`]: {
     background: 'none',
   },
   '&:hover .removeButton': {

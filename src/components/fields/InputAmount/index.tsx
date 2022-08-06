@@ -1,5 +1,6 @@
 import { formatUnits, parseUnits } from '@ethersproject/units';
 import { StandardTextFieldProps, TextField } from '@mui/material';
+import { outlinedInputClasses } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
@@ -11,14 +12,14 @@ import { Field } from '../../../types';
 
 const StyledTextField: StyledComponent<StandardTextFieldProps> = styled(TextField)(({ theme }) => ({
   width: '100%',
-  '& .MuiOutlinedInput-root': {
+  [`& .${outlinedInputClasses.root}`]: {
     color: theme.palette.widget['text-primary'],
     border: 'none',
     background: theme.palette.widget['input-bg'],
     '& fieldset': {
       border: 'none',
     },
-    '& .MuiOutlinedInput-input': {
+    [`& .${outlinedInputClasses.input}`]: {
       padding: '0',
       textAlign: 'right',
     },

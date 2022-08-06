@@ -1,4 +1,12 @@
-import { Paper, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps, useTheme } from '@mui/material';
+import {
+  Paper,
+  ToggleButton,
+  toggleButtonClasses,
+  ToggleButtonGroup,
+  toggleButtonGroupClasses,
+  ToggleButtonGroupProps,
+  useTheme,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React, { useState } from 'react';
@@ -15,11 +23,11 @@ export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = 
     alignItems: 'center',
     width: '100%',
     display: 'flex',
-    '& .MuiToggleButtonGroup-grouped': {
+    [`& .${toggleButtonGroupClasses.grouped}`]: {
       color: theme.palette.widget['input-primary-text'],
       margin: theme.spacing(0.5),
       border: 0,
-      '&.Mui-disabled': {
+      [`& .${toggleButtonGroupClasses.disabled}`]: {
         border: 0,
       },
       '&:not(:first-of-type)': {
@@ -28,7 +36,7 @@ export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = 
       '&:first-of-type': {
         borderRadius: '8px',
       },
-      '&.Mui-selected, &.Mui-selected:hover': {
+      [`&. ${toggleButtonClasses.selected}, &.${toggleButtonClasses.selected}:hover`]: {
         backgroundColor: theme.palette.widget['input-bg-01'],
         color: theme.palette.widget['input-primary-text'],
       },

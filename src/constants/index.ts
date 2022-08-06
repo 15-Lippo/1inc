@@ -1,5 +1,6 @@
 export const REFRESH_QUOTE_DELAY = 10;
 export const REFRESH_QUOTE_DELAY_MS = REFRESH_QUOTE_DELAY * 1000;
+export const CSS_PREFIX = 'swap-widget-';
 
 export { CustomGasPriceFieldId, GasPriceErrorTypes } from './gasSettings';
 export type { SupportedLocale } from './locales';
