@@ -1,5 +1,15 @@
 import { isAddress } from '@ethersproject/address';
-import { Avatar, Box, Checkbox, FormControlLabel, FormGroup, Stack, Typography, useTheme } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Checkbox,
+  checkboxClasses,
+  FormControlLabel,
+  FormGroup,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -249,7 +259,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
                       paddingLeft: '0',
                       color: 'widget.checkbox-01',
                       borderRadius: 4,
-                      '&.Mui-checked': {
+                      [`& .${checkboxClasses.checked}`]: {
                         borderRadius: '4px',
                         color: 'widget.checkbox-00',
                       },

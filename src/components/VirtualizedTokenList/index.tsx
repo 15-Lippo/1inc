@@ -4,10 +4,12 @@ import {
   Avatar,
   Box,
   Button,
+  buttonClasses,
   CircularProgress,
   ListItem,
   ListItemAvatar,
   ListItemButton,
+  listItemButtonClasses,
   ListItemText,
 } from '@mui/material';
 import React from 'react';
@@ -63,7 +65,7 @@ const VirtualizedTokenList = ({
     return (
       <ListItem
         sx={{
-          '& .MuiListItemButton-root:hover': {
+          [`& .${listItemButtonClasses.root}:hover`]: {
             bgcolor: 'widget.bg-01',
           },
         }}
@@ -123,7 +125,7 @@ const VirtualizedTokenList = ({
               variant="contained"
               sx={{
                 color: 'widget.text-main-btn-01',
-                '&.MuiButton-root': {
+                [`& .${buttonClasses.root}`]: {
                   backgroundColor: 'widget.bg-04',
                 },
                 '&:hover': {

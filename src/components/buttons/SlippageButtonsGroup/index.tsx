@@ -1,4 +1,5 @@
 import {
+  outlinedInputClasses,
   Paper,
   ToggleButton,
   toggleButtonClasses,
@@ -124,8 +125,8 @@ export const SlippageButtonsGroup = () => {
               WebkitAppearance: 'none',
               margin: 0,
             },
-            '& .MuiOutlinedInput-root': {
-              '& .MuiOutlinedInput-input': {
+            [`& .${outlinedInputClasses.root}`]: {
+              [`& .${outlinedInputClasses.input}`]: {
                 textAlign: 'center',
                 padding: '11px',
               },

@@ -9,6 +9,7 @@ import {
   ListItemText,
   MenuItem,
   MenuList,
+  svgIconClasses,
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -191,7 +192,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
             <MenuItem onClick={() => setOpenCustomTokens(true)}>
               <ListItemIcon
                 sx={{
-                  '&:hover .MuiSvgIcon-root, &:hover #count-of-custom-tokens': {
+                  [`&:hover .${svgIconClasses.root}, &:hover #count-of-custom-tokens`]: {
                     color: 'widget.text-primary',
                   },
                 }}>
