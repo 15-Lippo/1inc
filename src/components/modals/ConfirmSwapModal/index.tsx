@@ -108,10 +108,11 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
-  const { INPUT, OUTPUT, toTokenAmount } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, toTokenAmount, lastQuoteUpdateTimestamp } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
     toTokenAmount: state.swap.swapInfo?.toTokenAmount,
+    lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
   }));
 
   const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions } = useAppSelector((state) => state.swap);
@@ -125,7 +126,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   const { defaultStablecoin } = useUsdStablecoins();
 
   const updateSwap = () => {
-    if (!isOpen || !INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
+    if (!INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
     setLoadingSwap(true);
 
     const referrerOptionsByChainId = referrerOptions[chainId as SupportedChainId];
@@ -161,6 +162,10 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
       setLoadingSwap(true);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    !isOpen && updateSwap();
+  }, [lastQuoteUpdateTimestamp]);
 
   useEffect(() => {
     setShouldRefresh(false);
@@ -222,7 +227,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
             <SwapTokenBox
               field={Field.INPUT}
               token={INPUT}
-              amount={formatUnits(typedValue || '0x00')}
+              amount={formatUnits(typedValue || '0x00', INPUT.decimals)}
               usdcPrice={inputUsdcPrice}
             />
             <SwitchTokensIcon
