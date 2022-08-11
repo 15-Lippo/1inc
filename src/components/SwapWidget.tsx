@@ -49,7 +49,6 @@ function SwapWidget({ width }: SwapWidgetProps) {
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const {
     INPUT,
-    OUTPUT,
     typedValue,
     protocols,
     tokensList,
@@ -63,7 +62,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
   } = useAppSelector((state) => ({
     quoteError: state.swap.quoteError,
     INPUT: state.swap.INPUT,
-    OUTPUT: state.swap.OUTPUT,
+    // OUTPUT: state.swap.OUTPUT,
     typedValue: state.swap.typedValue,
     protocols: state.swap.quoteInfo?.protocols,
     tokensList: state.tokens.tokens,
@@ -94,15 +93,13 @@ function SwapWidget({ width }: SwapWidgetProps) {
     if (gasPriceInfo?.price === '0' || !gasPriceInfo?.price) {
       dispatch(setGasPriceInfo(gasOptions[SupportedGasOptions.High]));
     }
-  }, [gasOptions, blockNum]);
+  }, [gasOptions, blockNum, chainId]);
 
   useEffect(() => {
-    if (INPUT && OUTPUT) return;
-    if (chainId) dispatch(applyDefaultSettings({ chainId }));
-  }, [INPUT, OUTPUT, chainId]);
-
-  useEffect(() => {
-    if (chainId) dispatch(setExplorer({ chainId }));
+    if (chainId) {
+      dispatch(setExplorer({ chainId }));
+      dispatch(applyDefaultSettings({ chainId }));
+    }
   }, [chainId]);
 
   const hasEnoughBalanceByAddress = (paymentCost: BigNumberish, tokenAddress: string): boolean => {
@@ -160,7 +157,6 @@ function SwapWidget({ width }: SwapWidgetProps) {
     inputToken?.address,
     outputToken?.address,
     typedValue,
-    chainId,
     account,
     referrerOptions,
     txFeeCalculation?.gasPriceInfo?.price,

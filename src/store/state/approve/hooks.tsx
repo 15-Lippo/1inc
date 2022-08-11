@@ -26,7 +26,7 @@ export function useApproval() {
   }, [spender.address]);
 
   const approveStatus = useMemo(() => {
-    if (!INPUT || !account || !typedValue) return ApproveStatus.UNKNOWN;
+    if (!INPUT || !INPUT.address || !account || !typedValue) return ApproveStatus.UNKNOWN;
 
     // IF IS NATIVE
     if (INPUT.address.toLowerCase() === '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')

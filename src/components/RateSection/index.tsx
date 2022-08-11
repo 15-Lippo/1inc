@@ -37,8 +37,10 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
     price.output !== '0' && loadingQuote === 'succeeded' ? setLoading(false) : setLoading(true);
   }, [price, loadingQuote]);
 
-  const inputInUsd = INPUT?.priceInUsd && formatUsdFixed(INPUT?.priceInUsd, defaultStablecoin.decimals);
-  const outputInUsd = OUTPUT?.priceInUsd && formatUsdFixed(OUTPUT?.priceInUsd, defaultStablecoin.decimals);
+  const inputInUsd =
+    INPUT?.priceInUsd && defaultStablecoin && formatUsdFixed(INPUT?.priceInUsd, defaultStablecoin.decimals);
+  const outputInUsd =
+    OUTPUT?.priceInUsd && defaultStablecoin && formatUsdFixed(OUTPUT?.priceInUsd, defaultStablecoin.decimals);
 
   return (
     <Stack

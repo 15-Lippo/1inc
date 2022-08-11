@@ -20,9 +20,9 @@ export const useTokens = () => {
   const addresses = useMemo(() => Object.keys(tokens), [JSON.stringify(tokens)]);
 
   useEffect(() => {
-    if (addresses.length) return;
+    if (!chainId) return;
     dispatch(fetchTokens(chainId));
-  }, []);
+  }, [chainId]);
 
   useEffect(() => {
     if (!addresses.length || !chainId || !spender.address) return;

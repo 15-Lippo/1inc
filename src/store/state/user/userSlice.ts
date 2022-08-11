@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { MainnetChainId, networkConfigs } from '../../../constants';
+import { networkConfigs } from '../../../constants';
 import { SupportedChainId } from '../../../types';
 
 export interface UserState {
@@ -11,8 +11,8 @@ export interface UserState {
 export const initialState: UserState = {
   userDarkMode: null,
   explorer: {
-    name: networkConfigs[MainnetChainId].explorerName,
-    link: networkConfigs[MainnetChainId].blockExplorerUrls[0],
+    name: networkConfigs[SupportedChainId.MAINNET].explorerName,
+    link: networkConfigs[SupportedChainId.MAINNET].blockExplorerUrls[0],
   },
 };
 

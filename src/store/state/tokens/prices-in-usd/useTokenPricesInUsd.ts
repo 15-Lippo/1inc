@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Token, updatePriceTokenInUsd } from '../tokensSlice';
 import { useUsdStablecoins } from './useUsdStablecoins';
 
-export const useTokenPricesInUsd = (usdStablecoinAddresses: string[], defaultStablecoin: Token) => {
+export const useTokenPricesInUsd = (usdStablecoinAddresses: string[], defaultStablecoin: Token | undefined) => {
   const { chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
   const tokens = useAppSelector((state) => state.tokens.tokens);
@@ -29,7 +29,7 @@ export const useTokenPricesInUsd = (usdStablecoinAddresses: string[], defaultSta
   };
 
   return async (addresses: string[]) => {
-    if (!addresses.length || !defaultStablecoin) return;
+    if (!addresses.length || !defaultStablecoin || !usdStablecoinAddresses.length) return;
 
     const usdStablecoinAddressesSet = new Set<string>(usdStablecoinAddresses);
     const updateResults: (Promise<string> | string)[] = [];
@@ -38,7 +38,8 @@ export const useTokenPricesInUsd = (usdStablecoinAddresses: string[], defaultSta
       if (usdStablecoinAddressesSet.has(address)) {
         updateResults.push(one(defaultStablecoin.decimals));
       } else {
-        updateResults.push(fetchTokenUsdPrice(address, tokens[address].decimals, defaultStablecoin.address));
+        tokens[address] &&
+          updateResults.push(fetchTokenUsdPrice(address, tokens[address].decimals, defaultStablecoin.address));
       }
     });
 

@@ -47,7 +47,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
 
   const valueInUsd = useMemo(
     () =>
-      inputTokenPriceInUsd && typedValue && defaultStablecoin
+      inputTokenPriceInUsd && typedValue && INPUT && defaultStablecoin
         ? parseFloat(
             formatUnits(
               BigNumber.from(typedValue).mul(BigNumber.from(inputTokenPriceInUsd)),

@@ -103,7 +103,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
       headerType={ModalHeaderType.SelectToken}
       closeModal={closeModal}
       isOpen={isOpen}>
-      {chainId && !_.isEmpty(tokens) && (
+      {chainId && !_.isEmpty(tokens) && favoriteTokens[chainId] && (
         <Stack
           direction="row"
           flexWrap="wrap"

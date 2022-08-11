@@ -18,7 +18,7 @@ export const useUpdateQuote = () => {
   const updateUsdcPriceForSelectedTokens = useUpdateUsdcPriceForSelectedTokens();
 
   return () => {
-    if (!Number(typedValue)) return;
+    if (!Number(typedValue) || !Number(txFeeCalculation?.gasPriceInfo?.price)) return;
 
     dispatch(
       fetchQuote({

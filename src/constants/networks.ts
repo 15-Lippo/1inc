@@ -17,16 +17,25 @@ import { toHex } from '../utils';
  */
 export const ALL_SUPPORTED_CHAIN_IDS = new Set(Object.values(SupportedChainId).filter((id) => typeof id === 'number'));
 
-export const MainnetChainId =
-  process.env.NODE_ENV === 'development' ? SupportedChainId.LOCALHOST : SupportedChainId.MAINNET;
-
-const ENABLE_TESTNET = MainnetChainId === SupportedChainId.LOCALHOST;
-
 export const networkConfigs: Record<string, NetworkConfig> = {
-  [MainnetChainId]: {
-    chainName: ENABLE_TESTNET ? 'localhost' : 'Ethereum Mainnet',
-    chainIdHex: toHex(MainnetChainId),
-    rpcUrls: ENABLE_TESTNET ? ['http://127.0.0.1:8545'] : ['https://cloudflare-eth.com'],
+  [SupportedChainId.LOCALHOST]: {
+    chainName: 'Localhost 8545',
+    chainIdHex: toHex(SupportedChainId.LOCALHOST),
+    rpcUrls: ['http://127.0.0.1:8545'],
+    nativeCurrency: {
+      name: 'Ether',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    explorerName: 'Localhost',
+    blockExplorerUrls: ['https://etherscan.io'],
+    helperContract: process.env.REACT_APP_HELPER_CONTRACT || '0x31A40a1a176f66fd63ca8075eAE682D2Dc438B2B',
+    api: ethereumApi,
+  },
+  [SupportedChainId.MAINNET]: {
+    chainName: 'Ethereum Mainnet',
+    chainIdHex: toHex(SupportedChainId.MAINNET),
+    rpcUrls: ['https://cloudflare-eth.com'],
     nativeCurrency: {
       name: 'Ether',
       symbol: 'ETH',
@@ -34,7 +43,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     },
     explorerName: 'EtherScan',
     blockExplorerUrls: ['https://etherscan.io'],
-    helperContract: process.env.REACT_APP_HELPER_CONTRACT || '0x31A40a1a176f66fd63ca8075eAE682D2Dc438B2B',
+    helperContract: '0x31A40a1a176f66fd63ca8075eAE682D2Dc438B2B',
     api: ethereumApi,
   },
   [SupportedChainId.BINANCE]: {
@@ -136,3 +145,14 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     api: fantomApi,
   },
 };
+
+/**
+ * Returns networkConfigs depends on chainId
+ * number | undefined -> returns networkConfigs | undefined
+ */
+export function getNetworkConfig(chainId: number | undefined): NetworkConfig | undefined {
+  if (chainId) {
+    return networkConfigs[chainId] ?? undefined;
+  }
+  return undefined;
+}

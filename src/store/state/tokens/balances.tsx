@@ -26,10 +26,11 @@ export async function getTokenInfo(
   const favoriteTokens = JSON.parse(localStorage.getItem('favorite-tokens'));
   try {
     let tokenInfo;
+    const contractAddress = networkConfigs[chainId as SupportedChainId].helperContract;
 
     // Get balances from the contract if only wallet was connected
-    if (account) {
-      const tokenHelper = getContract(networkConfigs[chainId as SupportedChainId].helperContract, TokenHelper.abi, lib);
+    if (account && contractAddress) {
+      const tokenHelper = getContract(contractAddress, TokenHelper.abi, lib);
       tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
     }
 

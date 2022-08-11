@@ -63,7 +63,7 @@ const InputAmount = ({ inputId }: SendProps) => {
     if (typedValue && INPUT && parseTypedAmount(amount, INPUT.decimals) !== typedValue) {
       setAmount(formatUnits(typedValue, INPUT.decimals));
     }
-  }, [typedValue]);
+  }, [typedValue, INPUT?.decimals]);
 
   return (
     <StyledTextField

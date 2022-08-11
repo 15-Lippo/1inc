@@ -204,8 +204,10 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     updateSwap();
   };
 
-  const inputUsdcPrice = INPUT?.priceInUsd && formatUsdFixed(INPUT?.priceInUsd, defaultStablecoin.decimals);
-  const outputUsdcPrice = OUTPUT?.priceInUsd && formatUsdFixed(OUTPUT?.priceInUsd, defaultStablecoin.decimals);
+  const inputUsdcPrice =
+    INPUT?.priceInUsd && defaultStablecoin && formatUsdFixed(INPUT?.priceInUsd, defaultStablecoin.decimals);
+  const outputUsdcPrice =
+    OUTPUT?.priceInUsd && defaultStablecoin && formatUsdFixed(OUTPUT?.priceInUsd, defaultStablecoin.decimals);
 
   const gasPrice = formatGweiFixed(
     txFeeCalculation.gasPriceSettingsMode === 'basic'

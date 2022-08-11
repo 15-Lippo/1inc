@@ -4,6 +4,7 @@ import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
 import { Tokens } from '../../../constants';
+import { getNetworkConfig } from '../../../constants/networks';
 import { SupportedGasOptions } from '../../../hooks';
 import { GasOption } from '../../../hooks/useGasPriceOptions';
 import { DefaultTokenOptions, Field, ReferrerOptions } from '../../../types';
@@ -218,12 +219,18 @@ const swapSlice = createSlice({
       state.defaultTypedValue = defaultTypedValue ?? state.defaultTypedValue;
     },
     applyDefaultSettings(state, { payload: { chainId } }) {
-      state[Field.INPUT] = state.defaultInputTokenAddress[chainId] || Tokens.FAVORITE_TOKENS[chainId][0];
-      // @ts-ignore
-      state[Field.OUTPUT] =
-        state.defaultOutputTokenAddress[chainId] ||
-        Tokens.FAVORITE_TOKENS[chainId].filter((token: string) => token != state[Field.INPUT])[0];
-      state.typedValue = state.defaultTypedValue[chainId]?.toString() || '';
+      const info = getNetworkConfig(chainId);
+      const onSupportedChain = info !== undefined;
+
+      // set default tokens ans typedValue if only connector on supported chain id
+      if (onSupportedChain) {
+        state[Field.INPUT] = state.defaultInputTokenAddress[chainId] || Tokens.FAVORITE_TOKENS[chainId][0];
+        // @ts-ignore
+        state[Field.OUTPUT] =
+          state.defaultOutputTokenAddress[chainId] ||
+          Tokens.FAVORITE_TOKENS[chainId].filter((token: string) => token != state[Field.INPUT])[0];
+        state.typedValue = state.defaultTypedValue[chainId]?.toString() || '';
+      }
     },
     setGasLimit(state, { payload: gasLimit }) {
       return {

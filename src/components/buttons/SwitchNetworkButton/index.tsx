@@ -1,5 +1,5 @@
-import { useTheme } from '@mui/material';
 import {
+  FormControl,
   MenuItem,
   menuItemClasses,
   MenuItemProps,
@@ -7,13 +7,16 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { MainnetChainId } from '../../../constants';
+import { getNetworkConfig } from '../../../constants/networks';
+import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { NetworkListBtnType, SupportedChainId } from '../../../types';
+import { switchNetwork } from '../../../utils';
 import {
   ArbitrumLogo,
   AvalancheLogo,
@@ -27,8 +30,8 @@ import {
 } from '../../icons';
 
 const networkListBtn: Record<string, NetworkListBtnType> = {
-  [SupportedChainId[MainnetChainId]]: {
-    label: MainnetChainId,
+  [SupportedChainId[SupportedChainId.MAINNET]]: {
+    label: SupportedChainId.MAINNET,
     name: 'Ethereum',
     logo: EthereumLogo,
   },
@@ -86,15 +89,38 @@ const StyledMenuItem: StyledComponent<any> = styled(MenuItem)<MenuItemProps>(({ 
 }));
 
 const SwitchNetworkButton = () => {
+  const { chainId, connector, account } = useActiveWeb3React();
   const theme = useTheme();
-  const [network, setNetwork] = useState<string>(MainnetChainId.toString());
+  const [network, setNetwork] = useState<string>();
 
-  const changeNetwork = (event: SelectChangeEvent) => {
-    setNetwork(event.target.value);
+  useEffect(() => {
+    const info = getNetworkConfig(chainId);
+    const onSupportedChain = info !== undefined;
+    if (chainId && onSupportedChain) {
+      // in select component we can't choose an object, but we can save full object as a sting
+      const supportedOption = JSON.stringify(networkListBtn[SupportedChainId[chainId.toString()]]);
+      setNetwork(supportedOption);
+    }
+    if (!onSupportedChain) setNetwork('');
+  }, [chainId]);
+
+  // useEffect(() => {
+  //   const chainChanged = (chainId: string) => setNetwork(parseInt(chainId, 16).toString());
+  //   ethereum.on('chainChanged', chainChanged);
+  //   return () => ethereum.removeListener('chainChanged', chainChanged);
+  // }, []);
+
+  const changeNetwork = async (event: SelectChangeEvent) => {
+    try {
+      const v = JSON.parse(event.target.value);
+      await switchNetwork(connector, Number(v.label));
+    } catch (err) {
+      console.error('Error in changeNetwork:', err);
+    }
   };
 
   const background = {
-    [MainnetChainId]: theme.palette['gradientEth'],
+    [SupportedChainId.MAINNET]: theme.palette['gradientEth'],
     [SupportedChainId.ARBITRUM_ONE]: theme.palette['gradientArbitrum'],
     [SupportedChainId.OPTIMISM]: theme.palette['gradientOptimism'],
     [SupportedChainId.POLYGON]: theme.palette['gradientPolygon'],
@@ -105,72 +131,107 @@ const SwitchNetworkButton = () => {
   };
 
   return (
-    <Select
-      id="switch-network"
-      style={{
-        background: background[network],
-      }}
-      sx={{
-        borderRadius: '12px',
-        minWidth: '132px',
-        cursor: 'pointer',
-        [`& .${outlinedInputClasses.input}`]: {
-          display: 'flex',
-          alignItems: 'center',
-          columnGap: '5px',
-          minHeight: '20px',
-          padding: '8px 10px',
-          lineHeight: '16px',
-          '& span': {
-            color: 'widget.text-primary-02',
+    <FormControl>
+      <Select
+        style={{
+          background: account && (network ? background[JSON.parse(network).label] : theme.palette.widget['bg-03']),
+        }}
+        sx={{
+          borderRadius: '12px',
+          minWidth: '132px',
+          cursor: 'pointer',
+          [`& .${outlinedInputClasses.input}`]: {
+            display: 'flex',
+            alignItems: 'center',
+            columnGap: '5px',
+            minHeight: '20px',
+            padding: '8px 10px',
+            lineHeight: '16px',
+            '& span': {
+              color: 'widget.text-primary-02',
+            },
+            '& svg': {
+              minWidth: '20px',
+            },
+            '&.Mui-disabled': {
+              WebkitTextFillColor: theme.palette.widget['text-disabled'],
+            },
           },
-          '& svg': {
-            minWidth: '20px',
+          '& fieldset': {
+            border: 'none',
           },
-        },
-        '& fieldset': {
-          border: 'none',
-        },
-        '& .selectDownArrowButton': {
-          position: 'absolute',
-          right: '7px',
-          userSelect: 'none',
-          pointerEvents: 'none',
-        },
-        '& [aria-expanded=true] ~ .selectDownArrowButton': {
-          transform: 'rotate(180deg)',
-          WebkitTransform: 'rotate(180deg)',
-          MozTransform: 'rotate(180deg)',
-          OTransform: 'rotate(180deg)',
-          MsTransform: 'rotate(180deg)',
-        },
-      }}
-      value={network}
-      onChange={changeNetwork}
-      IconComponent={() => <SelectDownArrowButton color={theme.palette.widget['icon-06']} />}
-      MenuProps={{
-        MenuListProps: {
-          sx: {
-            padding: '8px 0',
-            backgroundColor: 'widget.bg-02',
+          '& .selectDownArrowButton': {
+            position: 'absolute',
+            right: '7px',
+            userSelect: 'none',
+            pointerEvents: 'none',
           },
-        },
-        TransitionProps: {
-          style: {
-            borderRadius: '16px',
-            backgroundColor: theme.palette.widget['bg-02'],
+          '& [aria-expanded=true] ~ .selectDownArrowButton': {
+            transform: 'rotate(180deg)',
+            WebkitTransform: 'rotate(180deg)',
+            MozTransform: 'rotate(180deg)',
+            OTransform: 'rotate(180deg)',
+            MsTransform: 'rotate(180deg)',
           },
-        },
-      }}>
-      {Object.values(networkListBtn).map((network: NetworkListBtnType) => (
-        <StyledMenuItem key={network.name} value={network.label}>
-          {network.logo()}
-          <Typography color="widget.text-primary" variant="rsm14">
-            {network.name}
-          </Typography>
-        </StyledMenuItem>
-      ))}
-    </Select>
+          '&.Mui-disabled': {
+            background: theme.palette.widget['bg-disabled'],
+          },
+        }}
+        id="switch-network"
+        labelId="custom-select-label"
+        onChange={changeNetwork}
+        disabled={!account}
+        displayEmpty
+        IconComponent={() => (
+          <SelectDownArrowButton
+            color={!account ? theme.palette.widget['text-disabled'] : theme.palette.widget['icon-06']}
+          />
+        )}
+        MenuProps={{
+          MenuListProps: {
+            sx: {
+              padding: '8px 0',
+              backgroundColor: 'widget.bg-02',
+            },
+          },
+          TransitionProps: {
+            style: {
+              borderRadius: '16px',
+              backgroundColor: theme.palette.widget['bg-02'],
+            },
+          },
+        }}
+        value={network || ''}
+        renderValue={(v) =>
+          v && network ? (
+            <Typography
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                width: 'inherit',
+              }}
+              color="widget.text-primary-02"
+              variant="rsm14">
+              {networkListBtn[SupportedChainId[JSON.parse(network).label]]?.logo()}
+              &nbsp;&nbsp;
+              {JSON.parse(network).name}
+            </Typography>
+          ) : (
+            <Typography color="widget.text-primary-02" variant="rsm14">
+              Switch network
+            </Typography>
+          )
+        }>
+        {Object.values(networkListBtn).map((v: NetworkListBtnType) => (
+          <StyledMenuItem key={v.name} value={JSON.stringify(v)}>
+            {v?.logo()}
+            <Typography color="widget.text-primary" variant="rsm14">
+              {v.name}
+            </Typography>
+          </StyledMenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 

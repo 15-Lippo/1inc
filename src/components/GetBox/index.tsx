@@ -3,6 +3,8 @@ import { Box, Link, Skeleton, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Trans } from 'react-i18next';
 
+import { Tokens } from '../../constants';
+import { useActiveWeb3React } from '../../packages/web3-provider';
 import { useAppSelector } from '../../store/hooks';
 import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
 import { Field } from '../../types';
@@ -13,6 +15,7 @@ interface GetBoxProps {
 }
 
 const GetBox = ({ onSelectToken }: GetBoxProps) => {
+  const { chainId } = useActiveWeb3React();
   const { estimateGasLimit } = useCalculateTxCost();
   const { quoteInfo, loadingQuote, swapInfo, txFeeCalculation } = useAppSelector((state) => state.swap);
   const { typedValue, OUTPUT } = useAppSelector((state) => state.swap);
@@ -26,9 +29,12 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
   const txCostInTokenInput =
     txFeeCalculation?.txFee && parseFloat(formatUnits(txFeeCalculation?.txFee, 'ether')).toFixed(4);
 
+  const usdcToken = chainId && tokens[Tokens.DOLLAR_TIED_TOKENS[chainId][0]];
+
   const txCostInUsdPerNativeToken =
-    tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']?.priceInUsd &&
-    parseFloat(formatUnits(tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']?.priceInUsd, 6)).toFixed(2);
+    usdcToken &&
+    tokens[Tokens.NATIVE_TOKEN_ADDRESS]?.priceInUsd &&
+    parseFloat(formatUnits(tokens[Tokens.NATIVE_TOKEN_ADDRESS]?.priceInUsd as string, usdcToken.decimals)).toFixed(2);
 
   const txCostInUsd = Number(txCostInTokenInput) * Number(txCostInUsdPerNativeToken);
 

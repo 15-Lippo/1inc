@@ -14,7 +14,8 @@ export const useUsdStablecoins = () => {
     const usdStablecoinAddresses = Tokens.DOLLAR_TIED_TOKENS[(chainId as SupportedChainId) || SupportedChainId.MAINNET];
 
     if (!usdStablecoinAddresses || !usdStablecoinAddresses.length) {
-      throw new Error(`No stablecoins provided for chainId ${chainId}`);
+      console.error(`No stablecoins provided for chainId ${chainId}`);
+      return { usdStablecoinAddresses: [], defaultStablecoin: undefined };
     }
 
     const defaultStablecoinAddress = usdStablecoinAddresses[0]; // will be used for usd prices

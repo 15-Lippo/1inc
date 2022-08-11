@@ -121,7 +121,7 @@ export const DOLLAR_TIED_TOKENS = {
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
   ],
   [SupportedChainId.FANTOM]: [
-    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
+    '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC

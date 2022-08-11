@@ -2,7 +2,7 @@ import { Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 
-import { MainnetChainId, networkConfigs } from '../../../constants';
+import { networkConfigs } from '../../../constants';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { cleanLastTxHash } from '../../../store/state/transactions/txSlice';
@@ -19,7 +19,7 @@ const TxSentModal = () => {
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
     txHash: state.transactions.lastTxHash,
   }));
-  const [explorer, setExplorer] = useState(networkConfigs[MainnetChainId]);
+  const [explorer, setExplorer] = useState(networkConfigs[SupportedChainId.MAINNET]);
 
   useEffect(() => {
     if (chainId) {
