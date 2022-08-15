@@ -32,7 +32,7 @@ const wrapperStyle = {
   justifyContent: 'space-between',
   width: '320px',
   height: 'fit-content',
-  boxShadow: '0px 12px 24px #E2E9F6',
+  // boxShadow: '0px 12px 24px #E2E9F6',
   borderRadius: '24px',
   bgcolor: 'widget.bg-02',
   padding: '16px',

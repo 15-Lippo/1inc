@@ -1,16 +1,24 @@
 import i18n from 'i18next';
-import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
+import translationEN from './locales/en/translation.json';
+import translationUA from './locales/ua/translation.json';
+
+const resources = {
+  en: {
+    translation: translationEN,
+  },
+  ua: {
+    translation: translationUA,
+  },
+};
+
 i18n
-  // load translation using http -> see /public/locales
-  // learn more: https://github.com/i18next/i18next-http-backend
-  .use(Backend)
   .use(initReactI18next)
-  // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    fallbackLng: 'en',
+    resources,
+    lng: 'en',
     // debug: true,
     // saveMissing: true,
     interpolation: {

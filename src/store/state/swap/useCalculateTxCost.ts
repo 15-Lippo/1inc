@@ -14,7 +14,7 @@ export const useCalculateTxCost = () => {
   const swapInfo = useAppSelector((state) => state.swap.swapInfo);
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const slippage = useAppSelector((state) => state.swap.slippage);
-  const [gasLimitFromProvider, setGasLimitFromProvider] = useState<string>('150000');
+  const [gasLimitFromProvider, setGasLimitFromProvider] = useState<string>('160000');
 
   useEffect(() => {
     if (!chainId) return;

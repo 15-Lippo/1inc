@@ -157,7 +157,7 @@ export const initialState: SwapState = {
       timeLabel: '',
     },
     gasPriceSettingsMode: 'basic',
-    gasLimit: '130000',
+    gasLimit: '',
     maxFeePerGas: '',
     txFee: '',
   },

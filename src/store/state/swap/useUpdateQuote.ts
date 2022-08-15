@@ -30,6 +30,7 @@ export const useUpdateQuote = () => {
           gasPrice: Number(txFeeCalculation?.customGasPrice?.maxFee)
             ? txFeeCalculation?.customGasPrice?.maxFee
             : txFeeCalculation?.gasPriceInfo?.price,
+          // gasLimit: txFeeCalculation?.gasLimit,
           fee: referrerOptions[chainId as SupportedChainId]?.fee,
         },
         chainId,

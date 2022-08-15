@@ -1,11 +1,16 @@
 {
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
   "compilerOptions": {
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "lib": ["dom", "dom.iterable", "esnext"],
     "strict": false,
     "noFallthroughCasesInSwitch": true,
     "outDir": "dist",
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "jsx": "react",
     "sourceMap": true,
@@ -19,7 +24,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es5",
+    "target": "es6",
     "allowJs": false,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -27,6 +32,6 @@
     "isolatedModules": true
     //    "noEmit": true
   },
-  "include": ["src"],
+  "include": ["./src", "webpack.config.ts"],
   "exclude": ["node_modules", "dist", "src/api"]
 }

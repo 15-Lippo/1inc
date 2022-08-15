@@ -93,7 +93,7 @@ export const Modal = ({
         justifyContent: headerType === ModalHeaderType.AdvancedSettings ? 'flex-start' : 'space-between',
         flexDirection: 'column',
         display: hide ? 'none' : 'flex',
-        boxShadow: '0px 12px 24px #E2E9F6',
+        // boxShadow: '0px 12px 24px #E2E9F6',
         borderRadius: '24px',
         position: 'absolute',
         bgcolor: 'widget.bg-main',

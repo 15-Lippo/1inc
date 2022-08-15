@@ -1,8 +1,7 @@
-import { BigNumberish } from '@ethersproject/bignumber';
 import _ from 'lodash';
 
 import { ALL_SUPPORTED_CHAIN_IDS } from '../constants';
-import { DefaultTokenOptions, ReferrerOptions } from '../types';
+import { DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '../types';
 
 const addressRegex = /^0x[a-fA-F0-9]{40}$/;
 
@@ -48,11 +47,18 @@ export const validateDefaultTokensOptions = (input?: DefaultTokenOptions, output
   return '';
 };
 
-export const validateDefaultValue = (value: { [chainId: number]: BigNumberish }) => {
-  if (_.isEmpty(value)) {
+export const validateDefaultValue = (params: defaultTypedValueOptions): string => {
+  if (_.isEmpty(params)) {
     return 'Empty object passed as defaultValue';
   }
-  if (!Object.values(value).every((val) => Number(val))) {
+
+  const { hasNotSupported, notSupported } = validateSupportedChains(Object.keys(params));
+
+  if (hasNotSupported) {
+    return `${notSupported} chains are not supported`;
+  }
+
+  if (!Object.values(params).every((val) => Number(val))) {
     return 'defaultValue keys must be chainIds and values must be BigNumbers with decimals that correspond to default input token';
   }
   return '';

@@ -87,6 +87,17 @@ const nereusPalette: PaletteOptions = {
   },
 };
 
-const theme = createTheme(baseTheme, { palette: nereusPalette });
+const theme = createTheme(baseTheme, {
+  palette: nereusPalette,
+  components: {
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        grouped: {
+          color: nereusPalette.widget['input-primary-text'],
+        },
+      },
+    },
+  },
+});
 
 export default theme;

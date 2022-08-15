@@ -183,7 +183,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     to: swapInfo?.tx?.to,
     data: swapInfo?.tx?.data,
     value: swapInfo?.tx?.value,
-    gasLimit: txFeeCalculation?.gasLimit,
+    // gasLimit: txFeeCalculation?.gasLimit,
     ...(txFeeCalculation.gasPriceSettingsMode === 'basic'
       ? { gasPrice: txFeeCalculation.gasPriceInfo.price }
       : {

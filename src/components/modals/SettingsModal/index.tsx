@@ -1,5 +1,4 @@
-import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import { ArrowForwardIosRounded, ExpandMoreRounded } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -73,6 +72,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
             scrollbarWidth: 'none',
           }}>
           <Accordion
+            disableGutters
             elevation={0}
             defaultExpanded
             sx={{
@@ -83,7 +83,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
             }}>
             <AccordionSummary
               expandIcon={
-                <ExpandMoreRoundedIcon
+                <ExpandMoreRounded
                   sx={{
                     color: 'widget.icon-02',
                   }}
@@ -142,7 +142,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
             }}>
             <AccordionSummary
               expandIcon={
-                <ExpandMoreRoundedIcon
+                <ExpandMoreRounded
                   sx={{
                     color: 'widget.icon-02',
                   }}
@@ -189,7 +189,12 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
             </AccordionDetails>
           </Accordion>
           <MenuList>
-            <MenuItem onClick={() => setOpenCustomTokens(true)}>
+            <MenuItem
+              sx={{
+                p: 0,
+                mt: '15px',
+              }}
+              onClick={() => setOpenCustomTokens(true)}>
               <ListItemIcon
                 sx={{
                   [`&:hover .${svgIconClasses.root}, &:hover #count-of-custom-tokens`]: {
@@ -210,7 +215,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                 <Typography id="count-of-custom-tokens" color="widget.text-secondary" variant="rsm14">
                   {countOfCustomTokens()}
                 </Typography>
-                <ArrowForwardIosRoundedIcon sx={{ ml: '13px', color: 'widget.icon-02', id: 'arrow', fontSize: 16 }} />
+                <ArrowForwardIosRounded sx={{ ml: '13px', color: 'widget.icon-02', id: 'arrow', fontSize: 16 }} />
               </ListItemIcon>
             </MenuItem>
           </MenuList>

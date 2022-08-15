@@ -1,8 +1,8 @@
-import './SwapWidget.css';
+import './Swap.css';
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Box } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../constants';
@@ -35,11 +35,11 @@ import RateSection from './RateSection';
 import SendBox from './SendBox';
 import WalletConnect from './WalletConnect';
 
-export type SwapWidgetProps = {
+export type SwapProps = {
   width?: string | number;
 };
 
-function SwapWidget({ width }: SwapWidgetProps) {
+function Swap({ width }: SwapProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
@@ -86,6 +86,14 @@ function SwapWidget({ width }: SwapWidgetProps) {
   });
   const { errorMessage, setErrorMessage, shouldOpenModal, clearMessage } = useAlertMessage();
   const updateQuote = useUpdateQuote();
+
+  const widgetWidth = useMemo(() => {
+    if (width && width < 400) {
+      console.warn(`Widget width must be at least 300px (you set it to ${width}). Falling back to 400px.`);
+      return 400;
+    }
+    return width ?? 400;
+  }, [width]);
 
   useEffect(() => {
     dispatch(cleanLastTxHash());
@@ -161,21 +169,26 @@ function SwapWidget({ width }: SwapWidgetProps) {
     <Box
       component="div"
       sx={{
+        '::-webkit-scrollbar': {
+          display: 'none',
+        },
         position: 'relative',
-        height: 'inherit',
-        width,
+        height: '537px',
+        width: widgetWidth,
         '& ::-webkit-scrollbar': {
           width: '8px',
           height: '8px',
         },
         '& ::-webkit-scrollbar-track': {
-          backgroundColor: 'widget.bg-main',
+          display: 'none',
+          // backgroundColor: 'widget.bg-main',
         },
         '& ::-webkit-scrollbar-thumb': {
-          backgroundColor: 'widget.border-01',
-          borderRadius: '4px',
-          border: '2px solid',
-          borderColor: 'widget.bg-main',
+          display: 'none',
+          // backgroundColor: 'widget.border-01',
+          // borderRadius: '4px',
+          // border: '2px solid',
+          // borderColor: 'widget.bg-main',
         },
       }}>
       <Modal
@@ -225,4 +238,4 @@ function SwapWidget({ width }: SwapWidgetProps) {
   );
 }
 
-export default SwapWidget;
+export default Swap;

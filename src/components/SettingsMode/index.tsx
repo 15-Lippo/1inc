@@ -1,8 +1,9 @@
-import { Paper, ToggleButton } from '@mui/material';
+import { Paper } from '@mui/material';
 import React from 'react';
 import { Trans } from 'react-i18next';
 
 import { StyledToggleButtonGroup } from '../buttons';
+import { StyledToggleButton } from '../buttons/SlippageButtonsGroup';
 
 interface SettingsModeProps {
   mode: 'basic' | 'advanced';
@@ -20,7 +21,7 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
         borderRadius: '12px',
       }}>
       <StyledToggleButtonGroup value={mode} exclusive onChange={handleChangeMode}>
-        <ToggleButton
+        <StyledToggleButton
           sx={{
             textTransform: 'none',
             width: '100%',
@@ -28,8 +29,8 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
           }}
           value="basic">
           <Trans>Basic</Trans>
-        </ToggleButton>
-        <ToggleButton
+        </StyledToggleButton>
+        <StyledToggleButton
           sx={{
             textTransform: 'none',
             width: '100%',
@@ -37,7 +38,7 @@ const SettingsMode = ({ mode, handleChangeMode }: SettingsModeProps) => {
           }}
           value="advanced">
           <Trans>Advanced</Trans>
-        </ToggleButton>
+        </StyledToggleButton>
       </StyledToggleButtonGroup>
     </Paper>
   );

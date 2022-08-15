@@ -1,11 +1,10 @@
 import {
-  outlinedInputClasses,
   Paper,
   ToggleButton,
   toggleButtonClasses,
   ToggleButtonGroup,
-  toggleButtonGroupClasses,
   ToggleButtonGroupProps,
+  ToggleButtonProps,
   useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -18,17 +17,27 @@ import { setSlippage } from '../../../store/state/swap/swapSlice';
 import { StyledSearchField } from '../../fields';
 import { SlippageWarningMsg } from '../../messages';
 
+export const StyledToggleButton: StyledComponent<ToggleButtonProps> = styled(ToggleButton)(({ theme }) => ({
+  color: theme.palette.widget['input-primary-text'],
+  borderRadius: '8px',
+  margin: '4px',
+  [`&.${toggleButtonClasses.selected}, &.${toggleButtonClasses.selected}:hover`]: {
+    backgroundColor: theme.palette.widget['input-bg-01'],
+    color: theme.palette.widget['input-primary-text'],
+  },
+}));
+
 export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = styled(ToggleButtonGroup)(
   ({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
     display: 'flex',
-    [`& .${toggleButtonGroupClasses.grouped}`]: {
+    '& .MuiToggleButtonGroup-grouped': {
       color: theme.palette.widget['input-primary-text'],
       margin: theme.spacing(0.5),
       border: 0,
-      [`& .${toggleButtonGroupClasses.disabled}`]: {
+      '&.Mui-disabled': {
         border: 0,
       },
       '&:not(:first-of-type)': {
@@ -36,10 +45,6 @@ export const StyledToggleButtonGroup: StyledComponent<ToggleButtonGroupProps> = 
       },
       '&:first-of-type': {
         borderRadius: '8px',
-      },
-      [`&. ${toggleButtonClasses.selected}, &.${toggleButtonClasses.selected}:hover`]: {
-        backgroundColor: theme.palette.widget['input-bg-01'],
-        color: theme.palette.widget['input-primary-text'],
       },
       '&:hover': {
         backgroundColor: theme.palette.widget['input-bg'],
@@ -83,36 +88,36 @@ export const SlippageButtonsGroup = () => {
           exclusive
           onChange={handleChange}
           aria-label="slippage-percent">
-          <ToggleButton
+          <StyledToggleButton
             sx={{
               typography: 'rm16',
             }}
             value="0.1">
             0.1%
-          </ToggleButton>
-          <ToggleButton
+          </StyledToggleButton>
+          <StyledToggleButton
             sx={{
               typography: 'rm16',
             }}
             value="0.5">
             0.5%
-          </ToggleButton>
-          <ToggleButton
+          </StyledToggleButton>
+          <StyledToggleButton
             sx={{
               width: '55px',
               typography: 'rm16',
             }}
             value="1">
             1%
-          </ToggleButton>
-          <ToggleButton
+          </StyledToggleButton>
+          <StyledToggleButton
             sx={{
               width: '55px',
               typography: 'rm16',
             }}
             value="3">
             3%
-          </ToggleButton>
+          </StyledToggleButton>
         </StyledToggleButtonGroup>
         <StyledSearchField
           InputProps={{ inputProps: { min: 0, max: 50 } }}
@@ -125,8 +130,8 @@ export const SlippageButtonsGroup = () => {
               WebkitAppearance: 'none',
               margin: 0,
             },
-            [`& .${outlinedInputClasses.root}`]: {
-              [`& .${outlinedInputClasses.input}`]: {
+            '& .MuiOutlinedInput-root': {
+              '& .MuiOutlinedInput-input': {
                 textAlign: 'center',
                 padding: '11px',
               },

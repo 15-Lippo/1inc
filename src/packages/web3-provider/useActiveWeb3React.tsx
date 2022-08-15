@@ -5,6 +5,7 @@ import { EMPTY } from '@web3-react/empty';
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types';
 import { Url } from '@web3-react/url';
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
+import React from 'react';
 
 import JsonRpcConnector from './JsonRpcConnector';
 
@@ -45,10 +46,8 @@ export function ActiveWeb3Provider({
     if (jsonRpcEndpoint) {
       let connector, hooks;
       if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-        // @ts-ignore
         [connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint));
       } else {
-        // @ts-ignore
         [connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint));
       }
       connector.activate();

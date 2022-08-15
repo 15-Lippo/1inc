@@ -1,3 +1,5 @@
+import { BigNumberish } from '@ethersproject/bignumber';
+
 export type ReferrerOptions = {
   [chainId in SupportedChainId]?: {
     referrerAddress: string;
@@ -7,6 +9,10 @@ export type ReferrerOptions = {
 
 export type DefaultTokenOptions = {
   [chainId in SupportedChainId]?: string | 'NATIVE';
+};
+
+export type defaultTypedValueOptions = {
+  [chainId in SupportedChainId]?: BigNumberish;
 };
 
 export type NetworkConfig = {

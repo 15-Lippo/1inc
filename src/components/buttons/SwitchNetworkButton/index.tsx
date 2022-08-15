@@ -1,14 +1,4 @@
-import {
-  FormControl,
-  MenuItem,
-  menuItemClasses,
-  MenuItemProps,
-  outlinedInputClasses,
-  Select,
-  SelectChangeEvent,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { FormControl, MenuItem, MenuItemProps, Select, SelectChangeEvent, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React, { useEffect, useState } from 'react';
@@ -81,7 +71,7 @@ const StyledMenuItem: StyledComponent<any> = styled(MenuItem)<MenuItemProps>(({ 
   backgroundColor: theme.palette.widget['bg-02'],
   lineHeight: '16px',
   color: theme.palette.widget['text-primary-02'],
-  [`& .${menuItemClasses.selected}`]: {
+  '&.Mui-selected': {
     backgroundColor: `${theme.palette.widget['bg-02']} !important`,
     '& span': { color: theme.palette.widget['text-primary-01'] },
   },
@@ -140,7 +130,7 @@ const SwitchNetworkButton = () => {
           borderRadius: '12px',
           minWidth: '132px',
           cursor: 'pointer',
-          [`& .${outlinedInputClasses.input}`]: {
+          '& .MuiOutlinedInput-input': {
             display: 'flex',
             alignItems: 'center',
             columnGap: '5px',

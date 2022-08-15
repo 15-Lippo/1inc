@@ -1,5 +1,4 @@
 import { ThemeOptions } from '@mui/material';
-import { accordionSummaryClasses, formControlLabelClasses } from '@mui/material';
 
 import { ExtendedPaletteOptions, ExtendedTypographyOptions } from './theme';
 
@@ -8,7 +7,7 @@ const baseTheme: ThemeOptions = {
     MuiButtonBase: {
       styleOverrides: {
         root: {
-          [`& .${accordionSummaryClasses.expanded}`]: {
+          '&$expanded': {
             minHeight: 0,
           },
         },
@@ -20,17 +19,25 @@ const baseTheme: ThemeOptions = {
     },
     MuiFormControlLabel: {
       styleOverrides: {
+        label: {
+          width: '100%',
+        },
         root: {
           margin: 0,
-          [`& .${formControlLabelClasses.root} ${formControlLabelClasses.label}`]: {
-            width: '100%',
-          },
         },
       },
     },
     MuiAccordion: {
       styleOverrides: {
+        expanded: {},
         root: {
+          '&:first-of-type': {
+            margin: 0,
+          },
+          '&$expanded': {
+            margin: 'auto',
+          },
+          margin: 0,
           '&:before': {
             backgroundColor: 'white',
           },
@@ -41,17 +48,15 @@ const baseTheme: ThemeOptions = {
     },
     MuiAccordionSummary: {
       styleOverrides: {
+        content: {
+          margin: 0,
+          '&$expanded': {
+            margin: 0,
+          },
+        },
+        expanded: {},
         root: {
           padding: 0,
-          minHeight: 0,
-          [`.${accordionSummaryClasses.content}`]: {
-            height: '3rem',
-            alignItems: 'center',
-            margin: 0,
-          },
-          [`.${accordionSummaryClasses.content}.${accordionSummaryClasses.expanded}`]: {
-            margin: 0,
-          },
         },
       },
     },
@@ -92,9 +97,42 @@ const baseTheme: ThemeOptions = {
         },
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+        },
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px',
+          margin: '4px',
+        },
+      },
+    },
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          display: 'flex',
+        },
+        grouped: {
+          disabled: {
+            border: 0,
+          },
+          border: 0,
+          borderRadius: '8px !important',
+        },
+      },
+    },
   },
   typography: {
-    fontFamily: ['Roboto', 'sans-serif'].join(','),
+    fontFamily: "'Roboto', sans-serif",
     rxxlg24: {
       fontWeight: 400,
       fontSize: '24px',

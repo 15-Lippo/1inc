@@ -85,6 +85,17 @@ const defaultPalette: PaletteOptions = {
   },
 };
 
-const defaultTheme = createTheme(baseTheme, { palette: defaultPalette });
+const defaultTheme = createTheme(baseTheme, {
+  palette: defaultPalette,
+  components: {
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        grouped: {
+          color: defaultPalette.widget['input-primary-text'],
+        },
+      },
+    },
+  },
+});
 
 export default defaultTheme;
