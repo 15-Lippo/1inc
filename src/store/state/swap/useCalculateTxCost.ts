@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { TransactionRequest } from '@ethersproject/providers';
 import { useCallback, useEffect, useState } from 'react';
 
+import { networkConfigs } from '../../../constants';
 import { useActiveWeb3React } from '../../../packages/web3-provider';
 import { calculateGasMargin, calculateTxFee } from '../../../utils';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -9,11 +10,16 @@ import { setGasLimit, setTxFee } from './swapSlice';
 
 export const useCalculateTxCost = () => {
   const dispatch = useAppDispatch();
-  const { account, library } = useActiveWeb3React();
+  const { account, library, chainId } = useActiveWeb3React();
   const swapInfo = useAppSelector((state) => state.swap.swapInfo);
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const slippage = useAppSelector((state) => state.swap.slippage);
   const [gasLimitFromProvider, setGasLimitFromProvider] = useState<string>('150000');
+
+  useEffect(() => {
+    if (!chainId) return;
+    setGasLimitFromProvider(networkConfigs[chainId].minGasLimit);
+  }, [chainId]);
 
   useEffect(() => {
     dispatch(setGasLimit(gasLimitFromProvider));

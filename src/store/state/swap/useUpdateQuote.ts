@@ -18,7 +18,8 @@ export const useUpdateQuote = () => {
   const updateUsdcPriceForSelectedTokens = useUpdateUsdcPriceForSelectedTokens();
 
   return () => {
-    if (!Number(typedValue) || !Number(txFeeCalculation?.gasPriceInfo?.price)) return;
+    if (!Number(typedValue) || !Number(txFeeCalculation?.gasPriceInfo?.price) || !INPUT.address || !OUTPUT.address)
+      return;
 
     dispatch(
       fetchQuote({
@@ -29,7 +30,6 @@ export const useUpdateQuote = () => {
           gasPrice: Number(txFeeCalculation?.customGasPrice?.maxFee)
             ? txFeeCalculation?.customGasPrice?.maxFee
             : txFeeCalculation?.gasPriceInfo?.price,
-          gasLimit: txFeeCalculation?.gasLimit,
           fee: referrerOptions[chainId as SupportedChainId]?.fee,
         },
         chainId,

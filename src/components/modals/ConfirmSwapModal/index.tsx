@@ -164,6 +164,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   }, [isOpen]);
 
   useEffect(() => {
+    if (!INPUT?.userBalance) return;
     !isOpen && updateSwap();
   }, [lastQuoteUpdateTimestamp]);
 

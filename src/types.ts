@@ -22,6 +22,7 @@ export type NetworkConfig = {
   explorerName: string;
   helperContract: string;
   api: any;
+  minGasLimit: string;
 };
 
 export type NetworkListBtnType = {

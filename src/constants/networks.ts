@@ -31,6 +31,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://etherscan.io'],
     helperContract: process.env.REACT_APP_HELPER_CONTRACT || '0x31A40a1a176f66fd63ca8075eAE682D2Dc438B2B',
     api: ethereumApi,
+    minGasLimit: '150000',
   },
   [SupportedChainId.MAINNET]: {
     chainName: 'Ethereum Mainnet',
@@ -45,6 +46,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://etherscan.io'],
     helperContract: '0x31A40a1a176f66fd63ca8075eAE682D2Dc438B2B',
     api: ethereumApi,
+    minGasLimit: '150000',
   },
   [SupportedChainId.BINANCE]: {
     chainName: 'Binance Smart Chain Mainnet',
@@ -59,6 +61,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://bscscan.com'],
     helperContract: '',
     api: binanceApi,
+    minGasLimit: '200000',
   },
   [SupportedChainId.POLYGON]: {
     chainName: 'Polygon Mainnet',
@@ -73,6 +76,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://polygonscan.com'],
     helperContract: '',
     api: polygonApi,
+    minGasLimit: '200000',
   },
   [SupportedChainId.OPTIMISM]: {
     chainName: 'Optimism',
@@ -87,6 +91,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://optimistic.etherscan.io'],
     helperContract: '',
     api: optimismApi,
+    minGasLimit: '200000',
   },
   [SupportedChainId.ARBITRUM_ONE]: {
     chainName: 'Arbitrum One',
@@ -101,6 +106,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://arbiscan.io'],
     helperContract: '',
     api: arbitrumApi,
+    minGasLimit: '200000',
   },
   [SupportedChainId.GNOSIS]: {
     chainName: 'Gnosis Chain',
@@ -115,6 +121,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
     helperContract: '',
     api: gnosisApi,
+    minGasLimit: '200000',
   },
   [SupportedChainId.AVALANCHE]: {
     chainName: 'Avalanche C-Chain',
@@ -129,6 +136,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://snowtrace.io'],
     helperContract: '',
     api: avalancheApi,
+    minGasLimit: '200000',
   },
   [SupportedChainId.FANTOM]: {
     chainName: 'Fantom Opera',
@@ -143,6 +151,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     blockExplorerUrls: ['https://ftmscan.com'],
     helperContract: '',
     api: fantomApi,
+    minGasLimit: '200000',
   },
 };
 

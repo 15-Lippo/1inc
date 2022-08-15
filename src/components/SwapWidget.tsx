@@ -153,14 +153,7 @@ function SwapWidget({ width }: SwapWidgetProps) {
 
   useEffect(() => {
     updateQuote();
-  }, [
-    inputToken?.address,
-    outputToken?.address,
-    typedValue,
-    account,
-    referrerOptions,
-    txFeeCalculation?.gasPriceInfo?.price,
-  ]);
+  }, [inputToken?.address, outputToken?.address, typedValue, referrerOptions, txFeeCalculation?.gasPriceInfo?.price]);
 
   const routeSteps = totalRouteSteps(protocols);
 
