@@ -1,4 +1,4 @@
-import { Box, Skeleton, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { formatUsdFixed } from '../../utils';
 import { RouteButton } from '../buttons';
 import { TooltipIcon } from '../icons';
 import { LightTooltip } from '../LightTooltip';
+import SkeletonText from '../SkeletonText';
 
 interface RateSectionProps {
   openRoute: () => void;
@@ -57,18 +58,12 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
           <Trans>Rate</Trans>
         </Typography>
         {loading ? (
-          <Skeleton
-            sx={{
-              bgcolor: 'widget.skeleton-00',
-            }}
-            animation="wave"
-            width="151px"
-          />
+          <SkeletonText width="151px" height="19px" />
         ) : (
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-            <Typography variant="rxs12">{`1 ${OUTPUT.symbol} = ${price.output} ${INPUT.symbol} ${
-              OUTPUT?.priceInUsd && `(~$${outputInUsd})`
-            }`}</Typography>
+            <Typography variant="rxs12">
+              {`1 ${OUTPUT.symbol} = ${price.output} ${INPUT.symbol} ${OUTPUT?.priceInUsd && `(~$${outputInUsd})`}`}
+            </Typography>
             <LightTooltip
               leaveDelay={200}
               arrow
@@ -119,13 +114,7 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
             totalRouteSteps={totalRouteSteps}
           />
         ) : (
-          <Skeleton
-            sx={{
-              bgcolor: 'widget.skeleton-00',
-            }}
-            animation="wave"
-            width="80px"
-          />
+          <SkeletonText width="80px" height="19px" />
         )}
       </Box>
     </Stack>

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
-import { Box, Link, Skeleton, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ import { AuxButton } from '../buttons';
 import SelectTokenButton from '../buttons/SelectTokenButton';
 import { InputAmount } from '../fields';
 import { LockerIcon } from '../icons';
+import SkeletonText from '../SkeletonText';
 
 interface SendBoxProps {
   onSelectToken: () => void;
@@ -89,6 +90,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           justifyContent: 'space-between',
           display: 'flex',
           alignItems: 'center',
+          height: '19px',
         }}>
         <Link
           target="_blank"
@@ -114,13 +116,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
               <AuxButton onClick={onMaxClick} text={t('Max')} sx={{ lineHeight: '19px' }} />
             </Box>
           ) : (
-            <Skeleton
-              sx={{
-                bgcolor: 'widget.skeleton-01',
-              }}
-              animation="wave"
-              width="100px"
-            />
+            <SkeletonText height="19px" bgcolor="widget.skeleton-01" />
           ))}
       </Box>
 
@@ -144,18 +140,12 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           {INPUT?.name}
         </Typography>
         {valueInUsd && loadingQuote === 'succeeded' ? (
-          <Typography variant="rxs12" sx={{ color: 'widget.text-secondary', lineHeight: '19px' }}>
+          <Typography variant="rxs12" lineHeight="19px" color="widget.text-secondary">
             ~$
             {valueInUsd}
           </Typography>
         ) : (
-          <Skeleton
-            sx={{
-              bgcolor: 'widget.skeleton-01',
-            }}
-            animation="wave"
-            width="100px"
-          />
+          <SkeletonText height="19px" bgcolor="widget.skeleton-01" />
         )}
       </Box>
     </Box>

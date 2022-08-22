@@ -1,5 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
-import { Box, Skeleton, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -17,6 +17,7 @@ import { AuxButton, MainButton, MainButtonType, SlippageButtonsGroup } from '../
 import GasPriceOptions from '../../GasPriceOptions';
 import { SwitchTokensIcon } from '../../icons';
 import { RefreshRateWarningMsg } from '../../messages';
+import SkeletonText from '../../SkeletonText';
 import { Modal, ModalHeaderType } from '../Modal';
 import SignTxModal from '../SignTxModal';
 import TxSentModal from '../TxSentModal';
@@ -48,55 +49,30 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
         padding: '17px 17px 21px',
       }}>
       <Stack direction="row" justifyContent="space-between">
-        <Typography
-          variant="rxs12"
-          sx={{
-            color: 'widget.text-secondary',
-            lineHeight: '14px',
-            mb: '17px',
-          }}>
+        <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary" sx={{ mb: '17px' }}>
           {text}
         </Typography>
         {usdcPrice ? (
-          <Typography
-            variant="rxs12"
-            sx={{
-              color: 'widget.text-secondary',
-              lineHeight: '14px',
-            }}>
+          <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
             ~${usdcPrice}
           </Typography>
         ) : (
-          <Skeleton
-            sx={{
-              bgcolor: 'widget.skeleton-00',
-            }}
-            animation="wave"
-            height={14}
-            width="60px"
-          />
+          <SkeletonText width="60px" height="14px" />
         )}
       </Stack>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box sx={{ display: 'flex' }}>
           <img style={{ width: '24px', height: '24px' }} src={token.logoURI} alt="logo" />
-          <Typography color="widget.text-primary" variant="mxlg20" sx={{ margin: '0 12px 0' }}>
+          <Typography variant="mxlg20" lineHeight="24px" color="widget.text-primary" sx={{ margin: '0 12px' }}>
             {token.symbol}
           </Typography>
         </Box>
         {amount ? (
-          <Typography color="widget.text-primary" variant="mxlg20" lineHeight="24px">
+          <Typography variant="mxlg20" lineHeight="24px" color="widget.text-primary">
             {amount}
           </Typography>
         ) : (
-          <Skeleton
-            sx={{
-              bgcolor: 'widget.skeleton-00',
-            }}
-            animation="wave"
-            height={28}
-            width="110px"
-          />
+          <SkeletonText width="110px" height="24px" />
         )}
       </Stack>
     </Box>
@@ -253,126 +229,68 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
             />
             <Stack>
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
-                <Typography
-                  variant="rxs12"
-                  sx={{
-                    color: 'widget.text-secondary',
-                    lineHeight: '14px',
-                  }}>
+                <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
                   1 {INPUT && INPUT.symbol} <Trans>price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   {inputUsdcPrice ? (
-                    <Typography
-                      variant="rxs12"
-                      sx={{
-                        lineHeight: '14px',
-                        color: 'widget.text-secondary',
-                      }}>
+                    <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
                       ~${inputUsdcPrice}
                     </Typography>
                   ) : (
-                    <Skeleton
-                      sx={{
-                        bgcolor: 'widget.skeleton-00',
-                      }}
-                      animation="wave"
-                      height={14}
-                      width="60px"
-                    />
+                    <SkeletonText width="60px" height="14px" />
                   )}
                   {price.input ? (
-                    <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">{` ${price.input}  ${
-                      INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)
-                    }`}</Typography>
+                    <Typography variant="rxs12" lineHeight="14px" color="widget.text-primary">
+                      {` ${price.input}  ${INPUT && (INPUT.symbol === 'ETH' ? 'Ξ' : INPUT.symbol)}`}
+                    </Typography>
                   ) : (
-                    <Skeleton
-                      sx={{
-                        bgcolor: 'widget.skeleton-00',
-                      }}
-                      animation="wave"
-                      height={14}
-                      width="80px"
-                    />
+                    <SkeletonText width="80px" height="14px" />
                   )}
                 </Box>
               </Stack>
 
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
-                <Typography
-                  variant="rxs12"
-                  sx={{
-                    color: 'widget.text-secondary',
-                    lineHeight: '14px',
-                  }}>
+                <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
                   1 {OUTPUT && OUTPUT.symbol} <Trans>price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   {outputUsdcPrice ? (
-                    <Typography
-                      variant="rxs12"
-                      sx={{
-                        lineHeight: '14px',
-                        color: 'widget.text-secondary',
-                      }}>
+                    <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
                       ~${outputUsdcPrice}
                     </Typography>
                   ) : (
-                    <Skeleton
-                      sx={{
-                        bgcolor: 'widget.skeleton-00',
-                      }}
-                      animation="wave"
-                      height={14}
-                      width="50px"
-                    />
+                    <SkeletonText width="50px" height="14px" />
                   )}
                   {price.output ? (
-                    <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">{` ${price.output}  ${
-                      OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)
-                    }`}</Typography>
+                    <Typography variant="rxs12" lineHeight="14px" color="widget.text-primary">
+                      {` ${price.output}  ${OUTPUT && (OUTPUT.symbol === 'ETH' ? 'Ξ' : OUTPUT.symbol)}`}
+                    </Typography>
                   ) : (
-                    <Skeleton
-                      sx={{
-                        bgcolor: 'widget.skeleton-00',
-                      }}
-                      animation="wave"
-                      height={14}
-                      width="70px"
-                    />
+                    <SkeletonText width="70px" height="14px" />
                   )}
                 </Box>
               </Stack>
 
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
-                <Typography
-                  variant="rxs12"
-                  sx={{
-                    color: 'widget.text-secondary',
-                    lineHeight: '14px',
-                  }}>
+                <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
                   <Trans>Gas price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   <AuxButton onClick={() => setGasPriceModalOpen(true)} text={t('Edit')} />
-                  <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">
+                  <Typography variant="rxs12" lineHeight="14px" color="widget.text-primary">
                     {`${gasPrice} Gwei`}
                   </Typography>
                 </Box>
               </Stack>
 
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
-                <Typography
-                  variant="rxs12"
-                  sx={{
-                    color: 'widget.text-secondary',
-                    lineHeight: '14px',
-                  }}>
+                <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
                   <Trans>Slippage</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
                   <AuxButton onClick={() => setSlippageModalOpen(true)} text={t('Edit')} />
-                  <Typography color="widget.text-primary" variant="rxs12" lineHeight="14px">
+                  <Typography variant="rxs12" lineHeight="14px" color="widget.text-primary">
                     {slippage}%
                   </Typography>
                 </Box>

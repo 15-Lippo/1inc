@@ -1,5 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
-import { Box, Link, Skeleton, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Trans } from 'react-i18next';
 
@@ -9,6 +9,7 @@ import { useAppSelector } from '../../store/hooks';
 import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
 import { Field } from '../../types';
 import { SelectTokenButton } from '../buttons';
+import SkeletonText from '../SkeletonText';
 
 interface GetBoxProps {
   onSelectToken: () => void;
@@ -89,11 +90,7 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
             padding: '2px 7px 3px',
             backgroundColor: 'widget.bg-07',
           }}>
-          <Typography
-            variant="rxs12"
-            sx={{
-              color: 'widget.text-primary-02',
-            }}>
+          <Typography variant="rxs12" color="widget.text-primary-02">
             <Trans>Best quote</Trans>
           </Typography>
         </Box>
@@ -104,22 +101,11 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
           }}>
           <Typography variant="rm16">1inch</Typography>
           {quoteInfo && quoteInfo.toTokenAmount && typedValue && loadingQuote === 'succeeded' ? (
-            <Typography
-              variant="mlg18"
-              sx={{
-                lineHeight: '24px',
-              }}>
+            <Typography variant="mlg18" lineHeight="24px">
               {parseFloat(formatUnits(quoteInfo?.toTokenAmount, quoteInfo.toToken?.decimals)).toFixed(6)}
             </Typography>
           ) : (
-            <Skeleton
-              sx={{
-                bgcolor: 'widget.skeleton-00',
-              }}
-              animation="wave"
-              height={24}
-              width="151px"
-            />
+            <SkeletonText width="151px" height="24px" />
           )}
         </Box>
 
@@ -129,19 +115,12 @@ const GetBox = ({ onSelectToken }: GetBoxProps) => {
             justifyContent: 'space-between',
           }}>
           {txCostInTokenInput && txCostInUsd && typedValue && loadingQuote === 'succeeded' ? (
-            <Typography variant="rxs12" sx={{ color: 'widget.text-secondary', lineHeight: '24px' }}>
+            <Typography variant="rxs12" lineHeight="24px" color="widget.text-secondary">
               <Trans>Tx cost</Trans>
               {` ${txCostInTokenInput} Ξ (~$${txCostInUsd.toFixed(2)})`}
             </Typography>
           ) : (
-            <Skeleton
-              sx={{
-                bgcolor: 'widget.skeleton-00',
-              }}
-              animation="wave"
-              height={24}
-              width="151px"
-            />
+            <SkeletonText width="151px" height="24px" />
           )}
         </Box>
       </Box>
