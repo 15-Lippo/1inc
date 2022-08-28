@@ -32,6 +32,7 @@ const SelectTokenButton = ({ field, onClick }: SelectedTokenProps) => {
 
   return token ? (
     <StyledSelectTokenButton
+      data-testid={field === Field.INPUT ? 'input-token' : 'output-token'}
       sx={{
         minWidth: 'fit-content',
         typography: 'rlg18',
