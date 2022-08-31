@@ -167,6 +167,7 @@ function Swap({ width }: SwapProps) {
 
   return (
     <Box
+      data-testid="widget-root"
       component="div"
       sx={{
         '::-webkit-scrollbar': {

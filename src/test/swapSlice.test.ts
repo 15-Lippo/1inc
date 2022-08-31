@@ -1,6 +1,6 @@
-import { Field } from '../../../types';
-import reducer, { selectCurrency, setSlippage, switchCurrencies, typeInput } from '../swap/swapSlice';
-import { initialState as swapInitialState, setTxFee } from './swapSlice';
+import reducer, { selectCurrency, setSlippage, switchCurrencies, typeInput } from '../store/state/swap/swapSlice';
+import { initialState as swapInitialState, setTxFee } from '../store/state/swap/swapSlice';
+import { Field } from '../types';
 
 export const initialState = swapInitialState;
 
