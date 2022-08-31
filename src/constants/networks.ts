@@ -9,7 +9,7 @@ import {
   polygonApi,
 } from '@yozh-io/1inch-widget-api-client';
 
-import { NetworkConfig, SupportedChainId } from '../types';
+import { DefaultRpcJsonEndpoint, NetworkConfig, SupportedChainId } from '../types';
 import { toHex } from '../utils';
 
 /**
@@ -21,7 +21,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.LOCALHOST]: {
     chainName: 'Localhost 8545',
     chainIdHex: toHex(SupportedChainId.LOCALHOST),
-    rpcUrls: ['http://127.0.0.1:8545'],
     nativeCurrency: {
       name: 'Ether',
       symbol: 'ETH',
@@ -36,7 +35,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.MAINNET]: {
     chainName: 'Ethereum Mainnet',
     chainIdHex: toHex(SupportedChainId.MAINNET),
-    rpcUrls: ['https://cloudflare-eth.com'],
     nativeCurrency: {
       name: 'Ether',
       symbol: 'ETH',
@@ -51,7 +49,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.BINANCE]: {
     chainName: 'Binance Smart Chain Mainnet',
     chainIdHex: toHex(SupportedChainId.BINANCE),
-    rpcUrls: ['https://bsc-dataseed1.ninicoin.io'],
     nativeCurrency: {
       name: 'Binance Chain Native Token',
       symbol: 'BNB',
@@ -66,7 +63,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.POLYGON]: {
     chainName: 'Polygon Mainnet',
     chainIdHex: toHex(SupportedChainId.POLYGON),
-    rpcUrls: ['https://polygon-rpc.com/'],
     nativeCurrency: {
       name: 'MATIC',
       symbol: 'MATIC',
@@ -81,7 +77,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.OPTIMISM]: {
     chainName: 'Optimism',
     chainIdHex: toHex(SupportedChainId.OPTIMISM),
-    rpcUrls: ['https://mainnet.optimism.io/'],
     nativeCurrency: {
       name: 'Ether',
       symbol: 'ETH',
@@ -101,7 +96,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
       symbol: 'ETH',
       decimals: 18,
     },
-    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
     explorerName: 'ArbiScan',
     blockExplorerUrls: ['https://arbiscan.io'],
     helperContract: '',
@@ -111,7 +105,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.GNOSIS]: {
     chainName: 'Gnosis Chain',
     chainIdHex: toHex(SupportedChainId.GNOSIS),
-    rpcUrls: ['https://rpc.gnosischain.com'],
     nativeCurrency: {
       name: 'xDAI',
       symbol: 'xDAI',
@@ -126,7 +119,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.AVALANCHE]: {
     chainName: 'Avalanche C-Chain',
     chainIdHex: toHex(SupportedChainId.AVALANCHE),
-    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
     nativeCurrency: {
       name: 'Avalanche',
       symbol: 'AVAX',
@@ -141,7 +133,6 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.FANTOM]: {
     chainName: 'Fantom Opera',
     chainIdHex: toHex(SupportedChainId.FANTOM),
-    rpcUrls: ['https://rpc.ftm.tools'],
     nativeCurrency: {
       name: 'Fantom',
       symbol: 'FTM',
@@ -153,6 +144,18 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     api: fantomApi,
     minGasLimit: '200000',
   },
+};
+
+export const RPC_URLS: DefaultRpcJsonEndpoint = {
+  [SupportedChainId.LOCALHOST]: 'http://127.0.0.1:8545',
+  [SupportedChainId.MAINNET]: 'https://cloudflare-eth.com',
+  [SupportedChainId.OPTIMISM]: 'https://mainnet.optimism.io/',
+  [SupportedChainId.BINANCE]: 'https://bsc-dataseed1.ninicoin.io',
+  [SupportedChainId.GNOSIS]: 'https://rpc.gnosischain.com',
+  [SupportedChainId.POLYGON]: 'https://polygon-rpc.com/',
+  [SupportedChainId.FANTOM]: 'https://rpc.ftm.tools',
+  [SupportedChainId.ARBITRUM_ONE]: 'https://arb1.arbitrum.io/rpc',
+  [SupportedChainId.AVALANCHE]: 'https://api.avax.network/ext/bc/C/rpc',
 };
 
 /**

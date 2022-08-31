@@ -2,11 +2,13 @@ import { ExternalProvider, JsonRpcProvider, Web3Provider } from '@ethersproject/
 import { initializeConnector, Web3ReactHooks } from '@web3-react/core';
 import { EIP1193 } from '@web3-react/eip1193';
 import { EMPTY } from '@web3-react/empty';
+import { Network } from '@web3-react/network';
 import { Connector, Provider as Eip1193Provider } from '@web3-react/types';
-import { Url } from '@web3-react/url';
+import _ from 'lodash';
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from 'react';
 import React from 'react';
 
+import { DefaultRpcJsonEndpoint } from '../../types';
 import JsonRpcConnector from './JsonRpcConnector';
 
 type Web3ContextType = {
@@ -33,7 +35,7 @@ export function useActiveWeb3React() {
 }
 
 interface ActiveWeb3ProviderProps {
-  jsonRpcEndpoint?: string | JsonRpcProvider;
+  jsonRpcEndpoint?: DefaultRpcJsonEndpoint;
   provider?: Eip1193Provider | JsonRpcProvider;
 }
 
@@ -43,13 +45,11 @@ export function ActiveWeb3Provider({
   children,
 }: PropsWithChildren<ActiveWeb3ProviderProps>) {
   const network = useMemo(() => {
-    if (jsonRpcEndpoint) {
-      let connector, hooks;
-      if (JsonRpcProvider.isProvider(jsonRpcEndpoint)) {
-        [connector, hooks] = initializeConnector((actions) => new JsonRpcConnector(actions, jsonRpcEndpoint));
-      } else {
-        [connector, hooks] = initializeConnector((actions) => new Url(actions, jsonRpcEndpoint));
-      }
+    if (!_.isEmpty(jsonRpcEndpoint)) {
+      const [connector, hooks] = initializeConnector(
+        // @ts-ignore
+        (actions) => new Network({ actions, urlMap: jsonRpcEndpoint, defaultChainId: 1 })
+      );
       connector.activate();
       return { connector, hooks };
     }

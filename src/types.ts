@@ -15,10 +15,13 @@ export type defaultTypedValueOptions = {
   [chainId in SupportedChainId]?: BigNumberish;
 };
 
+export type DefaultRpcJsonEndpoint = {
+  [chainId in SupportedChainId]: string;
+};
+
 export type NetworkConfig = {
   chainName: string;
   chainIdHex: string;
-  rpcUrls: string[];
   nativeCurrency: {
     name: string;
     symbol: string;

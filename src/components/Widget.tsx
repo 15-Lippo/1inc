@@ -8,11 +8,12 @@ import { I18nextProvider, useTranslation } from 'react-i18next';
 import { Provider } from 'react-redux';
 
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from '../constants';
+import { RPC_URLS } from '../constants/networks';
 import { defaultTheme } from '../mui/theme';
 import { ActiveWeb3Provider, useActiveProvider } from '../packages/web3-provider';
 import store from '../store';
 import { setDefaultSettings } from '../store/state/swap/swapSlice';
-import { DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '../types';
+import { DefaultRpcJsonEndpoint, DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '../types';
 import { validateReferrerOptions } from '../utils';
 import { validateDefaultTokensOptions, validateDefaultValue } from '../utils/validateDefaults';
 
@@ -27,7 +28,7 @@ export interface WidgetProps extends Defaults {
   theme?: Theme;
   locale?: SupportedLocale;
   provider?: Eip1193Provider | JsonRpcProvider | Web3Provider;
-  jsonRpcEndpoint?: string | JsonRpcProvider;
+  jsonRpcEndpoint?: DefaultRpcJsonEndpoint;
 }
 
 export default function Widget({
@@ -86,9 +87,7 @@ export default function Widget({
         <CssBaseline />
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
-            <ActiveWeb3Provider
-              provider={provider || web3Provider}
-              jsonRpcEndpoint={jsonRpcEndpoint || process.env.REACT_APP_JSON_RPC_ENDPOINT}>
+            <ActiveWeb3Provider provider={provider || web3Provider} jsonRpcEndpoint={jsonRpcEndpoint || RPC_URLS}>
               {children}
             </ActiveWeb3Provider>
           </Provider>

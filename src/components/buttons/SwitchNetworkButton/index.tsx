@@ -103,7 +103,7 @@ const SwitchNetworkButton = () => {
   const changeNetwork = async (event: SelectChangeEvent) => {
     try {
       const v = JSON.parse(event.target.value);
-      await switchNetwork(connector, Number(v.label));
+      await switchNetwork(connector, Number(v.label), account);
     } catch (err) {
       console.error('Error in changeNetwork:', err);
     }
@@ -124,7 +124,7 @@ const SwitchNetworkButton = () => {
     <FormControl>
       <Select
         style={{
-          background: account && (network ? background[JSON.parse(network).label] : theme.palette.widget['bg-03']),
+          background: network ? background[JSON.parse(network).label] : theme.palette.widget['bg-03'],
         }}
         sx={{
           borderRadius: '12px',
@@ -170,13 +170,8 @@ const SwitchNetworkButton = () => {
         id="switch-network"
         labelId="custom-select-label"
         onChange={changeNetwork}
-        disabled={!account}
         displayEmpty
-        IconComponent={() => (
-          <SelectDownArrowButton
-            color={!account ? theme.palette.widget['text-disabled'] : theme.palette.widget['icon-06']}
-          />
-        )}
+        IconComponent={() => <SelectDownArrowButton color={theme.palette.widget['icon-06']} />}
         MenuProps={{
           MenuListProps: {
             sx: {
