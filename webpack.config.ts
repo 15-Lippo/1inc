@@ -9,7 +9,7 @@ import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import { Configuration, DefinePlugin } from 'webpack';
 
 const config: Configuration = {
-  entry: './src/index.tsx',
+  entry: './src/index.prod.tsx',
   // entry: "./src/main.ts",
   ...(process.env.production || !process.env.development ? {} : { devtool: 'eval-source-map' }),
   output: {

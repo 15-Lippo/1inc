@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
 
-import TokenHelper from '../../../abi/TokenHelper.json';
+import TokenHelper from '../../../abi/TokenHelperABI';
 import { networkConfigs } from '../../../constants';
 import { SupportedChainId } from '../../../types';
 import { getContract } from '../../../utils';

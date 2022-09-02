@@ -62,6 +62,14 @@ const networkListBtn: Record<string, NetworkListBtnType> = {
   },
 };
 
+if (process.env.NODE_ENV === 'development') {
+  networkListBtn[SupportedChainId[SupportedChainId.LOCALHOST]] = {
+    label: SupportedChainId.LOCALHOST,
+    name: 'Localhost',
+    logo: () => <></>,
+  };
+}
+
 const StyledMenuItem: StyledComponent<any> = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -111,6 +119,7 @@ const SwitchNetworkButton = () => {
 
   const background = {
     [SupportedChainId.MAINNET]: theme.palette['gradientEth'],
+    [SupportedChainId.LOCALHOST]: theme.palette['gradientEth'],
     [SupportedChainId.ARBITRUM_ONE]: theme.palette['gradientArbitrum'],
     [SupportedChainId.OPTIMISM]: theme.palette['gradientOptimism'],
     [SupportedChainId.POLYGON]: theme.palette['gradientPolygon'],

@@ -64,6 +64,7 @@ export default class JsonRpcConnector extends Connector {
             params: [{ chainId: desiredChainIdHex }],
           })
           .catch((error: any) => {
+            console.error(error);
             // This error code indicates that the chain has not been added to MetaMask
             if (error.code === 4902 && typeof desiredChainIdOrChainParameters !== 'number') {
               // @ts-ignore
@@ -78,6 +79,7 @@ export default class JsonRpcConnector extends Connector {
           .then(() => this.activate(desiredChainId));
       })
       .catch((error) => {
+        console.error(error);
         cancelActivation?.();
         throw error;
       });
