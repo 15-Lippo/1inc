@@ -5,14 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Tokens } from '../../../constants';
 import { useLocalStorage } from '../../../hooks';
 import { useActiveWeb3React } from '../../../packages';
-import {
-  onPinnedToken,
-  selectCurrency,
-  Token,
-  useAppDispatch,
-  useAppSelector,
-  useUpdateUsdcPricesForBalances,
-} from '../../../store';
+import { selectCurrency, Token, useAppDispatch, useAppSelector, useUpdateUsdcPricesForBalances } from '../../../store';
 import { Field } from '../../../types';
 import { AddToken } from '../../buttons';
 import PinnedToken from '../../PinnedToken';
@@ -87,7 +80,6 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
     if (chainId && favoriteTokens[chainId].length === 8) return;
     chainId && favoriteTokens[chainId].push(address);
     setFavoriteTokens({ ...favoriteTokens });
-    dispatch(onPinnedToken({ key: address, pinned: true }));
   };
 
   const onUnpinToken = (address: string) => {
@@ -97,7 +89,6 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
         1
       );
     setFavoriteTokens({ ...favoriteTokens });
-    dispatch(onPinnedToken({ key: address, pinned: false }));
   };
 
   return (
@@ -108,33 +99,37 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
       closeModal={closeModal}
       isOpen={isOpen}>
       {chainId && !_.isEmpty(tokens) && favoriteTokens[chainId] && (
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 16px 12px' }}>
-          {favoriteTokens[chainId].map(
-            (key: string) =>
-              tokens[key]?.address && (
-                <PinnedToken
-                  key={tokens[key].address}
-                  id={tokens[key].address}
-                  symbol={tokens[key].symbol}
-                  logo={tokens[key].logoURI}
-                  onChoose={onChoose}
-                  onUnpin={onUnpinToken}
-                />
-              )
-          )}
-        </Stack>
+        <>
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            sx={{ alignItems: 'flex-start', columnGap: '6px', rowGap: '8px', m: '20px 16px 12px' }}>
+            {favoriteTokens[chainId].map(
+              (key: string) =>
+                tokens[key]?.address && (
+                  <PinnedToken
+                    key={tokens[key].address}
+                    id={tokens[key].address}
+                    symbol={tokens[key].symbol}
+                    logo={tokens[key].logoURI}
+                    onChoose={onChoose}
+                    onUnpin={onUnpinToken}
+                  />
+                )
+            )}
+          </Stack>
+          <Divider variant="middle" sx={{ borderColor: 'widget.border-01' }} />
+          <VirtualizedTokenList
+            tokensList={!searchValue ? data : filteredResults}
+            onChoose={onChoose}
+            onPinToken={onPinToken}
+            onUnpinToken={onUnpinToken}
+            selectedValue={tokenOnField}
+            pinnedTokens={favoriteTokens[chainId]}
+          />
+        </>
       )}
-      <Divider variant="middle" sx={{ borderColor: 'widget.border-01' }} />
-      <VirtualizedTokenList
-        tokensList={!searchValue ? data : filteredResults}
-        onChoose={onChoose}
-        onPinToken={onPinToken}
-        onUnpinToken={onUnpinToken}
-        selectedValue={tokenOnField}
-      />
+
       {searchValue && !filteredResults.length && (
         <Box
           sx={{

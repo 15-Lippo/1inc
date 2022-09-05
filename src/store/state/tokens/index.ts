@@ -8,7 +8,6 @@ export {
   fetchLiquiditySources,
   fetchPresets,
   fetchTokens,
-  onPinnedToken,
   removeTokenFromAllTokens,
   initialState as tokensInitialState,
   default as tokensReducer,

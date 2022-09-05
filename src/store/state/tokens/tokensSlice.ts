@@ -12,7 +12,6 @@ export interface Token {
   logoURI: string;
   userBalance?: string;
   userAllowance?: string;
-  pinned?: boolean;
   priceInUsd?: string;
   button?: any;
 }
@@ -167,7 +166,6 @@ const tokensSlice = createSlice({
         if (address in tokens) {
           tokens[address].userBalance = action.payload[address].balance;
           tokens[address].userAllowance = action.payload[address].allowance;
-          tokens[address].pinned = action.payload[address].pinned;
           tokens[address].priceInUsd = action.payload[address].priceInUsd;
         }
       }
@@ -196,26 +194,12 @@ const tokensSlice = createSlice({
       if (tokenAddress === native) {
         tokens[inchNative].userBalance = action.payload[native].balance;
         tokens[inchNative].userAllowance = action.payload[native].allowance;
-        tokens[inchNative].pinned = action.payload[native].pinned;
         tokens[inchNative].priceInUsd = action.payload[native].priceInUsd;
       } else {
         tokens[tokenAddress].userBalance = action.payload[tokenAddress].balance;
         tokens[tokenAddress].userAllowance = action.payload[tokenAddress].allowance;
-        tokens[tokenAddress].pinned = action.payload[tokenAddress].pinned;
         tokens[tokenAddress].priceInUsd = action.payload[tokenAddress].priceInUsd;
       }
-    },
-    onPinnedToken(state, { payload: { key, pinned } }: { payload: { key: string; pinned: boolean } }) {
-      return {
-        ...state,
-        tokens: {
-          ...state.tokens,
-          [key]: {
-            ...state.tokens[key],
-            pinned,
-          },
-        },
-      };
     },
     updatePriceTokenInUsd(state, { payload }: { payload: { key: string; priceInUsd?: string }[] }) {
       const updatedTokens = { ...state.tokens };
@@ -277,7 +261,6 @@ export const {
   removeTokenFromAllTokens,
   updateAllTokenBalances,
   updateTokenInfo,
-  onPinnedToken,
   updatePriceTokenInUsd,
 } = tokensSlice.actions;
 

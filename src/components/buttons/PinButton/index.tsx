@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
-import { useAppSelector } from '../../../store';
 import { PinIcon, UnpinIcon } from '../../icons';
 
 const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
@@ -27,11 +26,10 @@ interface Props {
   id: string;
   onPin: (val: string) => void;
   onUnpin: (val: string) => void;
+  pinned: boolean;
 }
 
-const PinButton = ({ id, onPin, onUnpin }: Props) => {
-  const pinned = useAppSelector((state) => state.tokens.tokens[id]?.pinned);
-
+const PinButton = ({ id, onPin, onUnpin, pinned }: Props) => {
   return (
     <StyledIconButton id={id} edge="end" onClick={() => (pinned ? onUnpin(id) : onPin(id))}>
       {pinned ? <PinIcon classNamePath="pinIcon" /> : <UnpinIcon classNamePath="unpinIcon" />}

@@ -28,6 +28,7 @@ interface VirtualizedTokenListProps {
   onPinToken?: (val: string) => void;
   onUnpinToken?: (val: string) => void;
   onRemoveCustomToken?: (val: string) => void;
+  pinnedTokens: string[];
 }
 
 const VirtualizedTokenList = ({
@@ -38,9 +39,12 @@ const VirtualizedTokenList = ({
   onPinToken,
   onUnpinToken,
   onRemoveCustomToken,
+  pinnedTokens,
 }: VirtualizedTokenListProps) => {
   const { account } = useActiveWeb3React();
   const { explorer } = useAppSelector((state) => state.user);
+
+  const pinnedTokensSet = new Set<string>(pinnedTokens);
 
   function renderRow({ index, style }: ListChildComponentProps) {
     const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd, button } = tokensList[index];
@@ -78,7 +82,10 @@ const VirtualizedTokenList = ({
               <LinkButton onClick={openExplorer} />
             </React.Fragment>
           ) : (
-            onPinToken && onUnpinToken && <PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} />
+            onPinToken &&
+            onUnpinToken && (
+              <PinButton id={address} onPin={onPinToken} onUnpin={onUnpinToken} pinned={pinnedTokensSet.has(address)} />
+            )
           )
         }
         disablePadding>

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 
-import { SwapWidget } from '../index';
+import { SwapWidget } from '../index.prod';
 
 it('should render', () => {
   act(() => {

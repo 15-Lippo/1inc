@@ -95,6 +95,7 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
         onChoose={onChoose}
         onRemoveCustomToken={onRemoveCustomToken}
         tokensList={!searchValue ? tokensList : filteredResults}
+        pinnedTokens={[]}
       />
       <Box
         sx={{

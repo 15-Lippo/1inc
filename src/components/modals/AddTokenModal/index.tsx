@@ -182,6 +182,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
           onChoose={onChoose}
           loading={searchLoading}
           tokensList={searchToken?.address ? [searchToken] : []}
+          pinnedTokens={[]}
         />
       </Modal>
       <Modal headerType={ModalHeaderType.Import} isOpen={tokenToImport.open} goBack={closeImportConfirmationModal}>
