@@ -22,11 +22,14 @@ const BpCheckedIcon = styled(BpIcon)(({ theme }) => ({
   background: theme.palette.widget['checkbox-00'],
   border: `1px ${theme.palette.widget['checkbox-00']} solid`,
   '&:before': {
+    content: '""',
+    position: 'absolute',
+    top: 9,
+    left: 9,
     display: 'block',
     width: 13,
     height: 13,
-    backgroundImage: 'radial-gradient(#fff,#fff 28%,transparent 32%)',
-    content: '""',
+    backgroundImage: 'radial-gradient(#fff, #fff 28%, transparent 32%)',
   },
 }));
 
