@@ -56,12 +56,12 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
         <Typography variant="rxs12">
           <Trans>Rate</Trans>
         </Typography>
-        {loading ? (
+        {loading || !outputInUsd ? (
           <SkeletonText width="151px" height="19px" />
         ) : (
           <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
             <Typography variant="rxs12">
-              {`1 ${OUTPUT.symbol} = ${price.output} ${INPUT.symbol} ${OUTPUT?.priceInUsd && `(~$${outputInUsd})`}`}
+              {`1 ${OUTPUT.symbol} = ${price.output} ${INPUT.symbol} (~$${outputInUsd})`}
             </Typography>
             <LightTooltip
               leaveDelay={200}
@@ -104,7 +104,13 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
         <Typography variant="rxs12">
           <Trans>Route</Trans>
         </Typography>
-        {protocols?.length && !_.isEmpty(tokens) && totalRouteSteps && loadingQuote === 'succeeded' ? (
+        {!protocols?.length ||
+        _.isEmpty(tokens) ||
+        !totalRouteSteps ||
+        !INPUT.symbol ||
+        loadingQuote !== 'succeeded' ? (
+          <SkeletonText width="80px" height="19px" />
+        ) : (
           <RouteButton
             tokens={tokens}
             inputTokenSymbol={INPUT.symbol}
@@ -112,8 +118,6 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
             onClick={openRoute}
             totalRouteSteps={totalRouteSteps}
           />
-        ) : (
-          <SkeletonText width="80px" height="19px" />
         )}
       </Box>
     </Stack>
