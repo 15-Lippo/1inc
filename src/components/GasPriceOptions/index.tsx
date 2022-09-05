@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setGasPriceSettingsMode } from '../../store/state/swap/swapSlice';
+import { setGasPriceSettingsMode, useAppDispatch, useAppSelector } from '../../store';
 import AdvancedGasPriceSettings from '../AdvancedGasPriceSettings';
 import SettingsMode from '../SettingsMode';
 import UseRadioGroup from '../UseRadioGroup';

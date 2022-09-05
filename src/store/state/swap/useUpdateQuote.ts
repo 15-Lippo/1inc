@@ -1,7 +1,7 @@
-import { useActiveWeb3React } from '../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../packages';
 import { Field, SupportedChainId } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { useUpdateUsdcPriceForSelectedTokens } from '../tokens/prices-in-usd/useTokenPricesInUsd';
+import { useUpdateUsdcPriceForSelectedTokens } from '../tokens';
 import { fetchQuote } from './swapSlice';
 
 export const useUpdateQuote = () => {

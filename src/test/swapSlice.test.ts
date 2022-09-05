@@ -1,5 +1,12 @@
-import reducer, { selectCurrency, setSlippage, switchCurrencies, typeInput } from '../store/state/swap/swapSlice';
-import { initialState as swapInitialState, setTxFee } from '../store/state/swap/swapSlice';
+import {
+  selectCurrency,
+  setSlippage,
+  setTxFee,
+  swapInitialState,
+  swapReducer,
+  switchCurrencies,
+  typeInput,
+} from '../store';
 import { Field } from '../types';
 
 export const initialState = swapInitialState;
@@ -8,7 +15,7 @@ describe('swapSlice', () => {
   it('set slippage', () => {
     const slippage = 11;
     expect(
-      reducer(
+      swapReducer(
         initialState,
         setSlippage({
           percent: slippage,
@@ -22,7 +29,7 @@ describe('swapSlice', () => {
 
   it('initial state of typeInput', () => {
     return expect(
-      reducer(undefined, {
+      swapReducer(undefined, {
         type: undefined,
       })
     ).toEqual(initialState);
@@ -31,7 +38,7 @@ describe('swapSlice', () => {
   it('typeInput 0.1 in OUTPUT field', () => {
     const typedValue = '0.1';
     expect(
-      reducer(
+      swapReducer(
         initialState,
         typeInput({
           field: Field.OUTPUT,
@@ -50,7 +57,7 @@ describe('swapSlice', () => {
   it('typeInput 1000 in INPUT field', () => {
     const typedValue = '1000';
     expect(
-      reducer(
+      swapReducer(
         initialState,
         typeInput({
           field: Field.INPUT,
@@ -68,7 +75,7 @@ describe('swapSlice', () => {
 
   it('selectCurrency OUTPUT', () => {
     expect(
-      reducer(
+      swapReducer(
         initialState,
         selectCurrency({
           field: Field.OUTPUT,
@@ -91,7 +98,7 @@ describe('swapSlice', () => {
     };
 
     expect(
-      reducer(
+      swapReducer(
         // @ts-ignore
         previousState,
         selectCurrency({
@@ -117,7 +124,7 @@ describe('swapSlice', () => {
       independentField: Field.INPUT,
     };
     // @ts-ignore
-    expect(reducer(previousState, switchCurrencies())).toEqual({
+    expect(swapReducer(previousState, switchCurrencies())).toEqual({
       ...initialState,
       OUTPUT: '0x0000',
       INPUT: '0x1111',
@@ -127,7 +134,7 @@ describe('swapSlice', () => {
   });
   it('set tx fee', () => {
     const fee = '1000';
-    expect(reducer(initialState, setTxFee(fee))).toEqual({
+    expect(swapReducer(initialState, setTxFee(fee))).toEqual({
       ...initialState,
       txFeeCalculation: {
         ...initialState.txFeeCalculation,

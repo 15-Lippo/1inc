@@ -1,26 +1,30 @@
-import './Swap.css';
+import './index.css';
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Box } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../constants';
-import { SupportedGasOptions, useAlertMessage, useGasPriceOptions, useInterval } from '../hooks';
-import { useActiveWeb3React } from '../packages/web3-provider';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { ApproveStatus } from '../store/state/approve/approveSlice';
-import { useApproval } from '../store/state/approve/hooks';
-import { useCalculateApprovalCost } from '../store/state/approve/useCalculateApprovalCost';
-import { applyDefaultSettings, setGasPriceInfo } from '../store/state/swap/swapSlice';
-import { useUpdateQuote } from '../store/state/swap/useUpdateQuote';
-import { useTokens } from '../store/state/tokens/useTokens';
-import { cleanLastTxHash } from '../store/state/transactions/txSlice';
-import { setExplorer } from '../store/state/user/userSlice';
-import { Field } from '../types';
-import { totalRouteSteps } from '../utils';
-import { MainButton, MainButtonType, SwitchTokensButton } from './buttons';
-import GetBox from './GetBox';
+import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../../constants';
+import { useAlertMessage, useGasPriceOptions, useInterval } from '../../hooks';
+import { useActiveWeb3React } from '../../packages';
+import {
+  applyDefaultSettings,
+  ApproveStatus,
+  cleanLastTxHash,
+  setExplorer,
+  setGasPriceInfo,
+  useAppDispatch,
+  useApproval,
+  useAppSelector,
+  useCalculateApprovalCost,
+  useTokens,
+  useUpdateQuote,
+} from '../../store';
+import { Field, SupportedGasOptions } from '../../types';
+import { totalRouteSteps } from '../../utils';
+import { MainButton, MainButtonType, SwitchTokensButton } from '../buttons';
+import GetBox from '../GetBox';
 import {
   AddTokenModal,
   AlertModal,
@@ -30,10 +34,10 @@ import {
   RouteModal,
   SelectTokenModal,
   SettingsModal,
-} from './modals';
-import RateSection from './RateSection';
-import SendBox from './SendBox';
-import WalletConnect from './WalletConnect';
+} from '../modals';
+import RateSection from '../RateSection';
+import SendBox from '../SendBox';
+import WalletConnect from '../WalletConnect';
 
 export type SwapProps = {
   width?: string | number;

@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 
-import { useActiveWeb3React } from '../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../packages';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenBalances } from './balances';
 import { fetchTokens, updateAllTokenBalances } from './tokensSlice';

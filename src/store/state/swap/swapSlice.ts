@@ -3,11 +3,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
-import { Tokens } from '../../../constants';
-import { getNetworkConfig } from '../../../constants/networks';
-import { SupportedGasOptions } from '../../../hooks';
-import { GasOption } from '../../../hooks/useGasPriceOptions';
-import { DefaultTokenOptions, Field, ReferrerOptions } from '../../../types';
+import { getNetworkConfig, Tokens } from '../../../constants';
+import { GasOption } from '../../../hooks';
+import { DefaultTokenOptions, Field, ReferrerOptions, SupportedGasOptions } from '../../../types';
+
 interface FetchQuoteParams {
   quoteInfo: ethereumApi.ExchangeControllerGetQuoteRequest;
   chainId: number | undefined;

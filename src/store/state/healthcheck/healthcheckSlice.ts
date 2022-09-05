@@ -14,16 +14,16 @@ export const fetchHealthcheck = createAsyncThunk(
     }
   }
 );
-export interface TokensState {
+export interface HealthcheckState {
   healthcheckInfo: void;
 }
 
-export const initialState: TokensState = {
+export const initialState: HealthcheckState = {
   healthcheckInfo: undefined,
 };
 
 const healthcheckSlice = createSlice({
-  name: 'tokens',
+  name: 'healthcheck',
   initialState,
   reducers: {},
   extraReducers: (tokens) => {

@@ -12,8 +12,7 @@ import { StyledComponent } from '@mui/styles';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { setSlippage } from '../../../store/state/swap/swapSlice';
+import { setSlippage, useAppDispatch, useAppSelector } from '../../../store';
 import { StyledSearchField } from '../../fields';
 import { SlippageWarningMsg } from '../../messages';
 
@@ -73,6 +72,7 @@ export const SlippageButtonsGroup = () => {
     setCustomSlippage(checkedSlippage.toString());
     dispatch(setSlippage({ percent: checkedSlippage }));
   };
+
   return (
     <React.Fragment>
       <Paper

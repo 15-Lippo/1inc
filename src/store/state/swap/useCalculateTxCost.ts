@@ -3,7 +3,7 @@ import { TransactionRequest } from '@ethersproject/providers';
 import { useCallback, useEffect, useState } from 'react';
 
 import { networkConfigs } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../packages';
 import { calculateGasMargin, calculateTxFee } from '../../../utils';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setGasLimit, setTxFee } from './swapSlice';

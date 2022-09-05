@@ -5,7 +5,7 @@ import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 import React from 'react';
 import { Trans } from 'react-i18next';
 
-import { Token } from '../../../store/state/tokens/tokensSlice';
+import { Token } from '../../../store';
 import { RouteArrow, RouteIcon } from '../../icons';
 
 const StyledRouteButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ theme }) => ({

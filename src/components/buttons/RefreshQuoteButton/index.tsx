@@ -4,8 +4,7 @@ import { StyledComponent } from '@mui/styles';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY_MS } from '../../../constants';
-import { useAppSelector } from '../../../store/hooks';
-import { useUpdateQuote } from '../../../store/state/swap/useUpdateQuote';
+import { useAppSelector, useUpdateQuote } from '../../../store';
 
 const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   borderRadius: '12px',

@@ -6,7 +6,7 @@ import { SxProps } from '@mui/system';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppSelector } from '../../../store/hooks';
+import { useAppSelector } from '../../../store';
 import { Field } from '../../../types';
 import { WalletIcon } from '../../icons';
 
@@ -100,12 +100,10 @@ interface MainButtonProps {
 
 export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName, sx }: MainButtonProps) => {
   const { t } = useTranslation();
-  const { token, quoteError } = useAppSelector((state) => {
-    return {
-      quoteError: state.swap.quoteError,
-      token: state.tokens.tokens[state.swap[Field.INPUT]],
-    };
-  });
+  const { token, quoteError } = useAppSelector((state) => ({
+    quoteError: state.swap.quoteError,
+    token: state.tokens.tokens[state.swap[Field.INPUT]],
+  }));
 
   const textButtonType = {
     [MainButtonType.Connect]: t('Connect wallet'),

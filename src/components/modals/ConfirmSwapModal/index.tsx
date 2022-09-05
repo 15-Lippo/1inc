@@ -3,14 +3,9 @@ import { Box, Stack, Typography, useTheme } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { useRate } from '../../../hooks/useRate';
-import { useSingleTimeout } from '../../../hooks/useSingleTimeout';
-import { useActiveWeb3React } from '../../../packages/web3-provider';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { fetchSwap } from '../../../store/state/swap/swapSlice';
-import { useSwapCallback } from '../../../store/state/swap/useSwapCallback';
-import { useUsdStablecoins } from '../../../store/state/tokens/prices-in-usd/useUsdStablecoins';
-import { Token } from '../../../store/state/tokens/tokensSlice';
+import { useRate, useSingleTimeout } from '../../../hooks';
+import { useActiveWeb3React } from '../../../packages';
+import { fetchSwap, Token, useAppDispatch, useAppSelector, useSwapCallback, useUsdStablecoins } from '../../../store';
 import { Field, SupportedChainId } from '../../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../../utils';
 import { AuxButton, MainButton, MainButtonType, SlippageButtonsGroup } from '../../buttons';

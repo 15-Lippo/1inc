@@ -6,4 +6,4 @@ export { roundPercentInRoutes } from './roundPercentInRoutes';
 export { switchNetwork } from './switchNetwork';
 export { toHex } from './toHex';
 export { totalRouteSteps } from './totalRouteSteps';
-export { validateReferrerOptions } from './validateDefaults';
+export { validateDefaultTokensOptions, validateDefaultValue, validateReferrerOptions } from './validateDefaults';

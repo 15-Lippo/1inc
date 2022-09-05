@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
 import { useMemo } from 'react';
 
-import { useActiveWeb3React } from '../packages/web3-provider';
+import { useActiveWeb3React } from '../packages';
 import { getContract } from '../utils';
 
 export function useContract<T extends Contract = Contract>(

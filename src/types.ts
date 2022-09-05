@@ -56,3 +56,10 @@ export enum Field {
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
 }
+
+export enum SupportedGasOptions {
+  Instant,
+  High,
+  Medium,
+  Low,
+}

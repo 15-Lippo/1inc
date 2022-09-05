@@ -5,8 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { CustomGasPriceFieldId, GasPriceErrorTypes } from '../../constants';
 import { useAdvancedSettings, useFeeRange, useWaitTime } from '../../hooks';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setCustomGasPrice } from '../../store/state/swap/swapSlice';
+import { setCustomGasPrice, useAppDispatch, useAppSelector } from '../../store';
 import { formatGweiFixed, parseGwei } from '../../utils';
 import { MaxFeeButton } from '../buttons';
 import { CustomGasPriceField } from '../fields';

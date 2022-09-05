@@ -1,7 +1,6 @@
 import { AddEthereumChainParameter, Connector } from '@web3-react/types';
 
-import { networkConfigs } from '../constants';
-import { RPC_URLS } from '../constants/networks';
+import { networkConfigs, RPC_URLS } from '../constants';
 import { SupportedChainId } from '../types';
 
 export const switchNetwork = async (connector: Connector, chainId: SupportedChainId, account: string | undefined) => {

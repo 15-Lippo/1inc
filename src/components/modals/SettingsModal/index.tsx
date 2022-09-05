@@ -15,9 +15,14 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { LocalStorageKeys } from '../../../constants';
-import { SupportedGasOptions } from '../../../hooks';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { setCustomGasPrice, setGasPriceInfo, setGasPriceSettingsMode } from '../../../store/state/swap/swapSlice';
+import {
+  setCustomGasPrice,
+  setGasPriceInfo,
+  setGasPriceSettingsMode,
+  useAppDispatch,
+  useAppSelector,
+} from '../../../store';
+import { SupportedGasOptions } from '../../../types';
 import { formatGweiFixed } from '../../../utils';
 import { SlippageButtonsGroup } from '../../buttons';
 import GasPriceOptions from '../../GasPriceOptions';

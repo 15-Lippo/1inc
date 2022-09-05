@@ -2,8 +2,7 @@ import { Paper } from '@mui/material';
 import React from 'react';
 import { Trans } from 'react-i18next';
 
-import { StyledToggleButtonGroup } from '../buttons';
-import { StyledToggleButton } from '../buttons/SlippageButtonsGroup';
+import { StyledToggleButton, StyledToggleButtonGroup } from '../buttons';
 
 interface SettingsModeProps {
   mode: 'basic' | 'advanced';

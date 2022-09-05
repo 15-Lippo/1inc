@@ -3,7 +3,7 @@ import { SxProps } from '@mui/system';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useActiveWeb3React } from '../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../packages';
 import {
   BackButton,
   CloseButton,

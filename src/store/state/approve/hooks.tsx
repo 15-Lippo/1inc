@@ -1,11 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { useCallback, useEffect, useMemo } from 'react';
 
-import { useActiveWeb3React } from '../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../packages';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getTokenInfo } from '../tokens/balances';
-import { updateTokenInfo } from '../tokens/tokensSlice';
-import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transactions/txSlice';
+import { getTokenInfo, updateTokenInfo } from '../tokens';
+import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transactions';
 import { ApproveStatus, fetchApproveSpender, fetchApproveTransaction, updateApproveStatus } from './approveSlice';
 
 export function useApproval() {

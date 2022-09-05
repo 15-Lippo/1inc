@@ -6,10 +6,9 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 import { Trans } from 'react-i18next';
 
-import { SupportedGasOptions } from '../../hooks';
-import { GasOption } from '../../hooks/useGasPriceOptions';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setCustomGasPrice, setGasPriceInfo } from '../../store/state/swap/swapSlice';
+import { GasOption } from '../../hooks';
+import { setCustomGasPrice, setGasPriceInfo, useAppDispatch, useAppSelector } from '../../store';
+import { SupportedGasOptions } from '../../types';
 import { StarIcon } from '../icons';
 
 const BpIcon = styled('span')(({ theme }) => ({
@@ -51,6 +50,7 @@ const StyledFormControlLabel = styled((props: FormControlLabelProps) => <FormCon
 interface UseRadioGroupProps {
   gasOptions: { [option in SupportedGasOptions]?: GasOption };
 }
+
 export default function UseRadioGroup({ gasOptions }: UseRadioGroupProps) {
   const dispatch = useAppDispatch();
 

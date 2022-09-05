@@ -1,7 +1,7 @@
 import { formatUnits } from '@ethersproject/units';
 import { useMemo } from 'react';
 
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../store';
 
 export const useRate = (inputAmount: string, outputAmount: string) => {
   const { INPUT, OUTPUT } = useAppSelector((state) => ({

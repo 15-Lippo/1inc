@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React, { useEffect, useState } from 'react';
 
-import { getNetworkConfig } from '../../../constants/networks';
-import { useActiveWeb3React } from '../../../packages/web3-provider';
+import { getNetworkConfig } from '../../../constants';
+import { useActiveWeb3React } from '../../../packages';
 import { NetworkListBtnType, SupportedChainId } from '../../../types';
 import { switchNetwork } from '../../../utils';
 import {

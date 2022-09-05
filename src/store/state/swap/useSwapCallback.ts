@@ -1,10 +1,9 @@
 import { TransactionRequest } from '@ethersproject/providers';
 
-import { useActiveWeb3React } from '../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../packages';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getTokenInfo } from '../tokens/balances';
-import { updateAllTokenBalances } from '../tokens/tokensSlice';
-import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transactions/txSlice';
+import { getTokenInfo, updateAllTokenBalances } from '../tokens';
+import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transactions';
 
 export function useSwapCallback(swapTxInfo: TransactionRequest) {
   const dispatch = useAppDispatch();

@@ -2,8 +2,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { setIsWaitingTx, setTxErrorMessage } from '../../../store/state/transactions/txSlice';
+import { setIsWaitingTx, setTxErrorMessage, useAppDispatch, useAppSelector } from '../../../store';
 import { MainButton, MainButtonType } from '../../buttons';
 import { TxFailedIcon } from '../../icons';
 import { Modal, ModalHeaderType } from '../Modal';

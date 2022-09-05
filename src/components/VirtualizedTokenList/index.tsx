@@ -15,9 +15,8 @@ import {
 import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
-import { useActiveWeb3React } from '../../packages/web3-provider';
-import { useAppSelector } from '../../store/hooks';
-import { Token } from '../../store/state/tokens/tokensSlice';
+import { useActiveWeb3React } from '../../packages';
+import { Token, useAppSelector } from '../../store';
 import { CloseButton, LinkButton, PinButton } from '../buttons';
 import { NoLogoURI, NoTokenFoundIcon } from '../icons';
 

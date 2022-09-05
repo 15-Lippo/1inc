@@ -1,5 +1,5 @@
 import './index.css';
-import './components/Swap.css';
+import './components/Swap/index.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -10,8 +10,8 @@ import React from 'react';
 
 import Swap, { SwapProps } from './components/Swap';
 import Widget, { WidgetProps } from './components/Widget';
-export { ALL_SUPPORTED_CHAIN_IDS } from './constants';
-export { DEFAULT_LOCALE, networkConfigs, SUPPORTED_LOCALES } from './constants';
+
+export { ALL_SUPPORTED_CHAIN_IDS, DEFAULT_LOCALE, networkConfigs, SUPPORTED_LOCALES } from './constants';
 export { nereusTheme } from './mui/theme';
 
 // types

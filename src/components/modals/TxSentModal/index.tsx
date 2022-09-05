@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 
 import { networkConfigs } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages/web3-provider';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { cleanLastTxHash } from '../../../store/state/transactions/txSlice';
+import { useActiveWeb3React } from '../../../packages';
+import { cleanLastTxHash, useAppDispatch, useAppSelector } from '../../../store';
 import { SupportedChainId } from '../../../types';
 import { MainButton, MainButtonType } from '../../buttons';
 import { SentArray } from '../../icons';

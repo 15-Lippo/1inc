@@ -1,4 +1,4 @@
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../store';
 import { formatGweiFixed, parseGwei } from '../utils';
 
 export const useAdvancedSettings = () => {

@@ -3,9 +3,8 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { useRate } from '../../hooks/useRate';
-import { useAppSelector } from '../../store/hooks';
-import { useUsdStablecoins } from '../../store/state/tokens/prices-in-usd/useUsdStablecoins';
+import { useRate } from '../../hooks';
+import { useAppSelector, useUsdStablecoins } from '../../store';
 import { Field } from '../../types';
 import { formatUsdFixed } from '../../utils';
 import { RouteButton } from '../buttons';

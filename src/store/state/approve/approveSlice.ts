@@ -45,13 +45,13 @@ export const fetchApproveSpender = createAsyncThunk(
   }
 );
 
-export interface TokensState {
+export interface ApproveState {
   approveAllowanceInfo: ApprovalState;
   approveTransactionInfo: ethereumApi.ApproveCalldataResponseDto;
   spender: ethereumApi.ApproveSpenderResponseDto;
 }
 
-export const initialState: TokensState = {
+export const initialState: ApproveState = {
   approveAllowanceInfo: {
     status: ApproveStatus.UNKNOWN,
   },

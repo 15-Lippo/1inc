@@ -6,6 +6,7 @@ interface AddTokenProps {
   walletIsConnected: boolean;
   onClick: () => void;
 }
+
 const AddToken = ({ onClick, walletIsConnected }: AddTokenProps) => {
   const theme = useTheme();
   const { t } = useTranslation();

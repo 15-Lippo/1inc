@@ -1,7 +1,7 @@
 import { parseUnits } from '@ethersproject/units';
 
 import { SwapApi } from '../../../../api';
-import { useActiveWeb3React } from '../../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../../packages';
 import { Field } from '../../../../types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Token, updatePriceTokenInUsd } from '../tokensSlice';

@@ -2,15 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
 import { useEffect, useState } from 'react';
 
-import { useActiveWeb3React } from '../packages/web3-provider';
+import { useActiveWeb3React } from '../packages';
+import { SupportedGasOptions } from '../types';
 import { formatGweiFixed, parseGwei } from '../utils';
-
-export enum SupportedGasOptions {
-  Instant,
-  High,
-  Medium,
-  Low,
-}
 
 export type GasOption = {
   id: SupportedGasOptions;

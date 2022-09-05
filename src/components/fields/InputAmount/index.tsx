@@ -6,8 +6,7 @@ import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { typeInput } from '../../../store/state/swap/swapSlice';
+import { typeInput, useAppDispatch, useAppSelector } from '../../../store';
 import { Field } from '../../../types';
 
 const StyledTextField: StyledComponent<StandardTextFieldProps> = styled(TextField)(({ theme }) => ({

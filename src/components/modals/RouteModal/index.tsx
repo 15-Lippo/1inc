@@ -2,7 +2,7 @@ import { Avatar, Box, Typography } from '@mui/material';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 import React from 'react';
 
-import { useAppSelector } from '../../../store/hooks';
+import { useAppSelector } from '../../../store';
 import { roundPercentInRoutes } from '../../../utils';
 import { NoLogoURI, RouteModalDivider, RouteStepArrow } from '../../icons';
 import { Modal, ModalHeaderType } from '../Modal';

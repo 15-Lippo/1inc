@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
-import { useAppSelector } from '../../../store/hooks';
+import { useAppSelector } from '../../../store';
 import { PinIcon, UnpinIcon } from '../../icons';
 
 const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({

@@ -7,15 +7,12 @@ import { PropsWithChildren } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import { Provider } from 'react-redux';
 
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from '../constants';
-import { RPC_URLS } from '../constants/networks';
-import { defaultTheme } from '../mui/theme';
-import { ActiveWeb3Provider, useActiveProvider } from '../packages/web3-provider';
-import store from '../store';
-import { setDefaultSettings } from '../store/state/swap/swapSlice';
-import { DefaultRpcJsonEndpoint, DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '../types';
-import { validateReferrerOptions } from '../utils';
-import { validateDefaultTokensOptions, validateDefaultValue } from '../utils/validateDefaults';
+import { DEFAULT_LOCALE, RPC_URLS, SUPPORTED_LOCALES, SupportedLocale } from '../../constants';
+import { defaultTheme } from '../../mui/theme';
+import { ActiveWeb3Provider, useActiveProvider } from '../../packages';
+import { setDefaultSettings, store } from '../../store';
+import { DefaultRpcJsonEndpoint, DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '../../types';
+import { validateDefaultTokensOptions, validateDefaultValue, validateReferrerOptions } from '../../utils';
 
 export interface Defaults {
   defaultInputTokenAddress?: DefaultTokenOptions;

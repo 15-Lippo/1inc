@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCallback } from 'react';
 
-import { connectors, Web3ConnectorType } from '../../packages/web3-provider';
+import { connectors, Web3ConnectorType } from '../../packages';
 import { MainButton, MainButtonType } from '../buttons';
 
 const WalletConnect = () => {

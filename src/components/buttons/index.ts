@@ -11,6 +11,6 @@ export { default as ResetSettingsButton } from './ResetSettingsButton';
 export { default as RouteButton } from './RouteButton';
 export { default as SelectTokenButton } from './SelectTokenButton';
 export { default as SettingsButton } from './SettingsButton';
-export { SlippageButtonsGroup, StyledToggleButtonGroup } from './SlippageButtonsGroup';
+export { SlippageButtonsGroup, StyledToggleButton, StyledToggleButtonGroup } from './SlippageButtonsGroup';
 export { default as SwitchNetworkButton } from './SwitchNetworkButton';
 export { default as SwitchTokensButton } from './SwitchTokensButton';

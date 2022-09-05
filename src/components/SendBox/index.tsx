@@ -6,14 +6,10 @@ import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { Tokens } from '../../constants';
-import { useActiveWeb3React } from '../../packages/web3-provider';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { ApproveStatus } from '../../store/state/approve/approveSlice';
-import { typeInput } from '../../store/state/swap/swapSlice';
-import { useUsdStablecoins } from '../../store/state/tokens/prices-in-usd/useUsdStablecoins';
+import { useActiveWeb3React } from '../../packages';
+import { ApproveStatus, typeInput, useAppDispatch, useAppSelector, useUsdStablecoins } from '../../store';
 import { Field } from '../../types';
-import { AuxButton } from '../buttons';
-import SelectTokenButton from '../buttons/SelectTokenButton';
+import { AuxButton, SelectTokenButton } from '../buttons';
 import { InputAmount } from '../fields';
 import { LockerIcon } from '../icons';
 import SkeletonText from '../SkeletonText';

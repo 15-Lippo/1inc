@@ -15,10 +15,15 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import ERC20ABI from '../../../abi/ERC20ABI';
 import { LocalStorageKeys } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages/web3-provider';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { selectCurrency } from '../../../store/state/swap/swapSlice';
-import { addTokenToAllTokens, fetchCoinInfoById, Token } from '../../../store/state/tokens/tokensSlice';
+import { useActiveWeb3React } from '../../../packages';
+import {
+  addTokenToAllTokens,
+  fetchCoinInfoById,
+  selectCurrency,
+  Token,
+  useAppDispatch,
+  useAppSelector,
+} from '../../../store';
 import { Field } from '../../../types';
 import { getContract } from '../../../utils';
 import { MainButton, MainButtonType } from '../../buttons';

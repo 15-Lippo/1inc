@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { Tokens } from '../../../../constants';
-import { useActiveWeb3React } from '../../../../packages/web3-provider';
+import { useActiveWeb3React } from '../../../../packages';
 import { SupportedChainId } from '../../../../types';
 import { useAppSelector } from '../../../hooks';
 

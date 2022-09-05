@@ -2,11 +2,8 @@ import { Box, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { LocalStorageKeys, Tokens } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages/web3-provider';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { selectCurrency } from '../../../store/state/swap/swapSlice';
-import { removeTokenFromAllTokens } from '../../../store/state/tokens/tokensSlice';
-import { Token } from '../../../store/state/tokens/tokensSlice';
+import { useActiveWeb3React } from '../../../packages';
+import { removeTokenFromAllTokens, selectCurrency, Token, useAppDispatch, useAppSelector } from '../../../store';
 import { Field } from '../../../types';
 import { AddToken } from '../../buttons';
 import VirtualizedTokenList from '../../VirtualizedTokenList';

@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
-import { useAppSelector } from '../../../store/hooks';
+import { useAppSelector } from '../../../store';
 import { Field } from '../../../types';
 import { NoLogoURI, SelectDownArrowButton } from '../../icons';
 
@@ -28,11 +28,7 @@ const StyledSelectTokenButton: StyledComponent<any> = styled(Button)<{ field?: F
 
 const SelectTokenButton = ({ field, onClick }: SelectedTokenProps) => {
   const theme = useTheme();
-  const { token } = useAppSelector((state) => {
-    return {
-      token: state.tokens.tokens[state.swap[field]],
-    };
-  });
+  const token = useAppSelector((state) => state.tokens.tokens[state.swap[field]]);
 
   return token ? (
     <StyledSelectTokenButton

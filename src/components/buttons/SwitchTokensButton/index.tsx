@@ -3,8 +3,7 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React from 'react';
 
-import { useAppDispatch } from '../../../store/hooks';
-import { switchCurrencies } from '../../../store/state/swap/swapSlice';
+import { switchCurrencies, useAppDispatch } from '../../../store';
 import { SwitchTokensIcon } from '../../icons';
 
 const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(() => ({

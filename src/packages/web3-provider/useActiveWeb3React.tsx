@@ -9,7 +9,7 @@ import { createContext, PropsWithChildren, useContext, useEffect, useMemo } from
 import React from 'react';
 
 import { DefaultRpcJsonEndpoint } from '../../types';
-import JsonRpcConnector from './JsonRpcConnector';
+import { JsonRpcConnector } from '.';
 
 type Web3ContextType = {
   connector: Connector;

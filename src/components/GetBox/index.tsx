@@ -4,9 +4,8 @@ import React, { useEffect } from 'react';
 import { Trans } from 'react-i18next';
 
 import { Tokens } from '../../constants';
-import { useActiveWeb3React } from '../../packages/web3-provider';
-import { useAppSelector } from '../../store/hooks';
-import { useCalculateTxCost } from '../../store/state/swap/useCalculateTxCost';
+import { useActiveWeb3React } from '../../packages';
+import { useAppSelector, useCalculateTxCost } from '../../store';
 import { Field } from '../../types';
 import { SelectTokenButton } from '../buttons';
 import SkeletonText from '../SkeletonText';
