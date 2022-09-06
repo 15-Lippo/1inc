@@ -1,6 +1,7 @@
 import { Box, Divider, Stack, useTheme } from '@mui/material';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Tokens } from '../../../constants';
 import { useLocalStorage } from '../../../hooks';
@@ -8,6 +9,7 @@ import { useActiveWeb3React } from '../../../packages';
 import { selectCurrency, Token, useAppDispatch, useAppSelector, useUpdateUsdcPricesForBalances } from '../../../store';
 import { Field } from '../../../types';
 import { AddToken } from '../../buttons';
+import { SearchTokenField } from '../../fields';
 import PinnedToken from '../../PinnedToken';
 import VirtualizedTokenList from '../../VirtualizedTokenList';
 import { Modal, ModalHeaderType } from '../Modal';
@@ -23,6 +25,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   const theme = useTheme();
   const { account, chainId } = useActiveWeb3React();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { tokensList, tokenOnField, inputBalance, tokens } = useAppSelector((state) => ({
     tokensList: Object.values(state.tokens.tokens),
     tokenOnField: state.swap[field],
@@ -46,8 +49,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   }, [isOpen]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setSearchValue(value);
+    const value = e.target.value;
     const filteredData = data.filter((item) => {
       if (value.startsWith('0x')) {
         return item.address.toLowerCase().includes(value.toLowerCase());
@@ -58,6 +60,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
         );
       }
     });
+    setSearchValue(value);
     setFilteredResults(filteredData);
   };
 
@@ -92,12 +95,13 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   };
 
   return (
-    <Modal
-      onSearch={onSearch}
-      searchValue={searchValue}
-      headerType={ModalHeaderType.SelectToken}
-      closeModal={closeModal}
-      isOpen={isOpen}>
+    <Modal headerType={ModalHeaderType.SelectToken} closeModal={closeModal} isOpen={isOpen}>
+      <SearchTokenField
+        inputProps={{ placeholder: t('Search by name or address') }}
+        searchValue={searchValue}
+        onChange={onSearch}
+        onClear={() => setSearchValue('')}
+      />
       {chainId && !_.isEmpty(tokens) && favoriteTokens[chainId] && (
         <>
           <Stack

@@ -1,11 +1,13 @@
 import { Box, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { LocalStorageKeys, Tokens } from '../../../constants';
 import { useActiveWeb3React } from '../../../packages';
 import { removeTokenFromAllTokens, selectCurrency, Token, useAppDispatch, useAppSelector } from '../../../store';
 import { Field } from '../../../types';
 import { AddToken } from '../../buttons';
+import { SearchTokenField } from '../../fields';
 import VirtualizedTokenList from '../../VirtualizedTokenList';
 import { Modal, ModalHeaderType } from '../Modal';
 
@@ -22,6 +24,7 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
   const [customTokens, setCustomTokens] = useState({});
   const [searchValue, setSearchValue] = useState<string>('');
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
+  const { t } = useTranslation();
 
   const { allTokens, INPUT_ADDRESS, OUTPUT_ADDRESS } = useAppSelector((state) => ({
     allTokens: Object.values(state.tokens.tokens),
@@ -85,12 +88,13 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
   };
 
   return (
-    <Modal
-      onSearch={onSearch}
-      searchValue={searchValue}
-      headerType={ModalHeaderType.Custom}
-      isOpen={isOpen}
-      goBack={goBack}>
+    <Modal headerType={ModalHeaderType.Custom} isOpen={isOpen} goBack={goBack}>
+      <SearchTokenField
+        inputProps={{ placeholder: t('Search by name') }}
+        searchValue={searchValue}
+        onChange={onSearch}
+        onClear={() => setSearchValue('')}
+      />
       <VirtualizedTokenList
         onChoose={onChoose}
         onRemoveCustomToken={onRemoveCustomToken}

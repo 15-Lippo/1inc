@@ -1,4 +1,4 @@
-import { Box, InputAdornment, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +12,6 @@ import {
   SettingsButton,
   SwitchNetworkButton,
 } from '../../buttons';
-import { StyledSearchField } from '../../fields';
-import { SearchIcon } from '../../icons';
 
 export enum ModalHeaderType {
   Main,
@@ -31,15 +29,13 @@ export enum ModalHeaderType {
   Route,
 }
 
-interface ModalProps {
+export interface BaseModalProps {
   headerType: ModalHeaderType;
   isOpen: boolean;
   closeModal?: () => void;
   goBack?: () => void;
   openSettings?: () => void;
-  onSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onReset?: () => void;
-  searchValue?: string;
   children?: React.ReactNode;
   hide?: boolean;
   sx?: SxProps;
@@ -50,23 +46,14 @@ export const Modal = ({
   isOpen,
   closeModal,
   goBack,
-  onSearch,
   onReset,
-  searchValue,
   openSettings,
   children,
   hide,
   sx,
-}: ModalProps) => {
+}: BaseModalProps) => {
   const { t } = useTranslation();
   const { account } = useActiveWeb3React();
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  const searchFieldText = {
-    [ModalHeaderType.SelectToken]: t('Search by name or address'),
-    [ModalHeaderType.AddToken]: t('Search by address'),
-    [ModalHeaderType.Custom]: t('Search by name'),
-  };
 
   const textModalType = {
     [ModalHeaderType.Main]: t('Swap'),
@@ -167,46 +154,6 @@ export const Modal = ({
               </Box>
             )}
           </Box>
-
-          {headerType === ModalHeaderType.SelectToken ||
-          headerType === ModalHeaderType.AddToken ||
-          headerType === ModalHeaderType.Custom ? (
-            <Box
-              sx={{
-                m: '0 16px',
-              }}>
-              <StyledSearchField
-                id="search-token"
-                variant="outlined"
-                aria-label="search-token"
-                type="search"
-                autoComplete="off"
-                value={searchValue}
-                onChange={onSearch}
-                inputRef={inputRef}
-                InputProps={{
-                  placeholder: searchFieldText[headerType],
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <CloseButton
-                      size="28"
-                      onClick={() => {
-                        if (inputRef.current) {
-                          inputRef.current.value = '';
-                        }
-                      }}
-                    />
-                  ),
-                }}
-                margin="dense"
-                fullWidth
-              />
-            </Box>
-          ) : null}
         </React.Fragment>
       )}
       {children}

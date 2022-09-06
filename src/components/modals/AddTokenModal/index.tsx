@@ -27,6 +27,7 @@ import {
 import { Field } from '../../../types';
 import { getContract } from '../../../utils';
 import { MainButton, MainButtonType } from '../../buttons';
+import { SearchTokenField } from '../../fields';
 import { NoLogoURI, WarningIcon } from '../../icons';
 import VirtualizedTokenList from '../../VirtualizedTokenList';
 import { Modal, ModalHeaderType } from '../Modal';
@@ -167,12 +168,13 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
 
   return (
     <React.Fragment>
-      <Modal
-        onSearch={onSearch}
-        searchValue={searchInput}
-        headerType={ModalHeaderType.AddToken}
-        goBack={closeAddTokenModal}
-        isOpen={isOpen}>
+      <Modal headerType={ModalHeaderType.AddToken} goBack={closeAddTokenModal} isOpen={isOpen}>
+        <SearchTokenField
+          inputProps={{ placeholder: t('Search by address') }}
+          searchValue={searchInput}
+          onChange={onSearch}
+          onClear={() => setSearchInput('')}
+        />
         {searchToken?.address && !searchToken?.button && (
           <Typography sx={{ m: '10px 16px' }} color="widget.text-successful" variant="rm16">
             <Trans>This token has already been added</Trans>
