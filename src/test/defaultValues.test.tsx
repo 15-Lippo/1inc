@@ -2,7 +2,7 @@ import { parseUnits } from '@ethersproject/units';
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { SwapWidget } from '../index';
+import { SwapWidget } from '../index.prod';
 
 describe('Default values', () => {
   it('defaultInputTokenAddress set', async () => {
