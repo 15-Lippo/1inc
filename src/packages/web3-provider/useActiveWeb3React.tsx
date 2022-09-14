@@ -81,7 +81,7 @@ export function ActiveWeb3Provider({
   const active = hooks.useIsActive();
   const chainId = hooks.useChainId();
   const error = hooks.useError();
-  const library = hooks.useProvider();
+  const library = hooks.useProvider({ name: 'wallet', chainId: chainId! });
   const web3 = useMemo(() => {
     // @ts-ignore
     if (connector === EMPTY || !(active || activating)) {
