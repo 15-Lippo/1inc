@@ -28,16 +28,12 @@ export const useCalculateTxCost = () => {
   const estimateGasLimit = useCallback(async () => {
     if (!account || !swapInfo?.tx?.data || !library) return;
 
-    const tx: TransactionRequest = !Number(swapInfo?.tx?.value)
-      ? {
-          to: swapInfo?.tx?.to,
-          data: swapInfo?.tx?.data,
-        }
-      : {
-          to: swapInfo?.tx?.to,
-          data: swapInfo?.tx?.data,
-          value: swapInfo?.tx?.value,
-        };
+    const tx: TransactionRequest = {
+      to: swapInfo?.tx?.to,
+      data: swapInfo?.tx?.data,
+      ...(!Number(swapInfo?.tx?.value) ? {} : { value: swapInfo?.tx?.value }),
+      from: String(account),
+    };
 
     try {
       const gasLimit = await library.estimateGas(tx);

@@ -27,7 +27,7 @@ export const useCalculateApprovalCost = () => {
        is no reason to set "value" because "value" is
        always "0" if the token is not native.
        * */
-      const gasLimit: BigNumber = await library.estimateGas(approveTransactionInfo);
+      const gasLimit: BigNumber = await library.estimateGas({ ...approveTransactionInfo, from: String(account) });
 
       setGasLimitFromProvider(gasLimit);
     } catch ({ message }) {
