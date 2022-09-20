@@ -5,7 +5,7 @@ import { DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '
 
 const addressRegex = /^0x[a-fA-F0-9]{40}$/;
 
-const validateSupportedChains = (chainIds: string[]): { hasNotSupported: boolean; notSupported: string[] } => {
+export const validateSupportedChains = (chainIds: string[]): { hasNotSupported: boolean; notSupported: string[] } => {
   const notSupported = chainIds.filter((chainId: string) => !ALL_SUPPORTED_CHAIN_IDS.has(parseFloat(chainId)));
   return {
     hasNotSupported: notSupported.length > 0,
@@ -36,7 +36,7 @@ export const validateDefaultTokensOptions = (input?: DefaultTokenOptions, output
     return `${notSupported} chains are not supported. You should remove unsupported chains`;
   }
 
-  for (const chainId in ALL_SUPPORTED_CHAIN_IDS) {
+  for (const chainId of ALL_SUPPORTED_CHAIN_IDS) {
     if (input && !addressRegex.test(input[chainId]))
       return `input token address for ${chainId} should be a valid address`;
     if (output && !addressRegex.test(output[chainId]))
@@ -59,7 +59,7 @@ export const validateDefaultValue = (params: defaultTypedValueOptions): string =
   }
 
   if (!Object.values(params).every((val) => Number(val))) {
-    return 'defaultValue keys must be chainIds and values must be BigNumbers with decimals that correspond to default input token';
+    return 'defaultValue keys must be chainIds and values must be BigNumberish (BigNumber | Bytes | bigint | string | number) with decimals that correspond to default input token';
   }
   return '';
 };
