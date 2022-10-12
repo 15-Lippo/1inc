@@ -29,6 +29,7 @@ import {
   AddTokenModal,
   AlertModal,
   ConfirmSwapModal,
+  ConnectionModal,
   Modal,
   ModalHeaderType,
   RouteModal,
@@ -37,7 +38,6 @@ import {
 } from '../modals';
 import RateSection from '../RateSection';
 import SendBox from '../SendBox';
-import WalletConnect from '../WalletConnect';
 
 export type SwapProps = {
   width?: string | number;
@@ -84,6 +84,7 @@ function Swap({ width }: SwapProps) {
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [isAddTokenOpen, setAddTokenOpen] = useState<boolean>(false);
   const [isRouteOpen, setRouteOpen] = useState<boolean>(false);
+  const [isConnectionOpen, setConnectionOpen] = useState<boolean>(false);
   const [isSelectTokenOpen, setSelectTokenOpen] = useState({
     field: Field.INPUT,
     open: false,
@@ -143,7 +144,7 @@ function Swap({ width }: SwapProps) {
   };
 
   const mainButtonByType = () => {
-    if (!account) return <WalletConnect />;
+    if (!account) return <MainButton type={MainButtonType.Connect} onClick={() => setConnectionOpen(true)} />;
     if (!Number(typedValue)) return <MainButton type={MainButtonType.EnterAmount} />;
     if (quoteError && account) return <MainButton type={MainButtonType.Error} />;
     if (status === ApproveStatus.APPROVAL_NEEDED)
@@ -178,7 +179,7 @@ function Swap({ width }: SwapProps) {
           display: 'none',
         },
         position: 'relative',
-        height: '537px',
+        height: '619px',
         width: widgetWidth,
         '& ::-webkit-scrollbar': {
           width: '8px',
@@ -239,6 +240,7 @@ function Swap({ width }: SwapProps) {
         isOpen={isRouteOpen}
         totalRouteSteps={routeSteps}
       />
+      <ConnectionModal goBack={() => setConnectionOpen(false)} isOpen={isConnectionOpen} />
     </Box>
   );
 }

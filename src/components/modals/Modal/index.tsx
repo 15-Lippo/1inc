@@ -27,6 +27,7 @@ export enum ModalHeaderType {
   Import,
   Custom,
   Route,
+  Connection,
 }
 
 export interface BaseModalProps {
@@ -69,6 +70,7 @@ export const Modal = ({
     [ModalHeaderType.Import]: t('Import a token'),
     [ModalHeaderType.Custom]: t('Custom tokens'),
     [ModalHeaderType.Route]: t('Routing'),
+    [ModalHeaderType.Connection]: t('Connection'),
   };
 
   return isOpen ? (

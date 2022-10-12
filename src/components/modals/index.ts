@@ -1,6 +1,7 @@
 export { default as AddTokenModal } from './AddTokenModal';
 export { default as AlertModal } from './AlertModal';
 export { default as ConfirmSwapModal } from './ConfirmSwapModal';
+export { default as ConnectionModal } from './ConnectionModal';
 export { default as CustomTokensModal } from './CustomTokensModal';
 export { Modal, ModalHeaderType } from './Modal';
 export { default as RouteModal } from './RouteModal';

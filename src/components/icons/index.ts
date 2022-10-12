@@ -1,6 +1,7 @@
 export { default as CustomTokensIcon } from './CustomTokensIcon';
 export { default as GasStation } from './GasStation';
 export { default as LockerIcon } from './LockerIcon';
+export { default as MetamaskIcon } from './MetamaskIcon';
 export * from './networkLogos';
 export { default as NoLogoURI } from './NoLogoURI';
 export { default as NoTokenFoundIcon } from './NoTokenFoundIcon';
@@ -17,5 +18,6 @@ export { default as StarIcon } from './StarIcon';
 export { default as SwitchTokensIcon } from './SwitchTokensIcon';
 export { default as TooltipIcon } from './TooltipIcon';
 export { default as TxFailedIcon } from './TxFailedIcon';
+export { default as WalletConnectIcon } from './WalletConnectIcon';
 export { default as WalletIcon } from './WalletIcon';
 export { default as WarningIcon } from './WarningIcon';

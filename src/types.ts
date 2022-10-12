@@ -1,5 +1,7 @@
 import { BigNumberish } from '@ethersproject/bignumber';
 
+import { Web3ConnectorType } from './packages';
+
 export type ReferrerOptions = {
   [chainId in SupportedChainId]?: {
     referrerAddress: string;
@@ -40,6 +42,12 @@ export type NetworkListBtnType = {
   logo: () => void;
 };
 
+export type ConnectionMethod = {
+  name: string;
+  connector: Web3ConnectorType;
+  logo: () => void;
+};
+
 export enum SupportedChainId {
   MAINNET = 1,
   ARBITRUM_ONE = 42161,
@@ -62,4 +70,9 @@ export enum SupportedGasOptions {
   High,
   Medium,
   Low,
+}
+
+export enum SupportedWallets {
+  Metamask = 'Metamask',
+  WalletConnect = 'WalletConnect',
 }
