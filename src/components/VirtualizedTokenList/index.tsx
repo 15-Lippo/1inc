@@ -15,8 +15,10 @@ import {
 import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
+import { Tokens } from '../../constants';
 import { useActiveWeb3React } from '../../packages';
 import { Token, useAppSelector } from '../../store';
+import { SupportedChainId } from '../../types';
 import { CloseButton, LinkButton, PinButton } from '../buttons';
 import { NoLogoURI, NoTokenFoundIcon } from '../icons';
 
@@ -41,8 +43,11 @@ const VirtualizedTokenList = ({
   onRemoveCustomToken,
   pinnedTokens,
 }: VirtualizedTokenListProps) => {
-  const { account } = useActiveWeb3React();
+  const { account, chainId } = useActiveWeb3React();
   const { explorer } = useAppSelector((state) => state.user);
+  const { usdToken } = useAppSelector((state) => ({
+    usdToken: state.tokens.tokens[Tokens.DOLLAR_TIED_TOKENS[chainId as SupportedChainId][0]],
+  }));
 
   const pinnedTokensSet = new Set<string>(pinnedTokens);
 
@@ -60,9 +65,10 @@ const VirtualizedTokenList = ({
         onChoose(tokensList[index].address);
       }
     };
+
     const balanceInUsd =
       Number(userBalance) && Number(priceInUsd)
-        ? formatUnits(BigNumber.from(userBalance).mul(BigNumber.from(priceInUsd)), decimals + 6)
+        ? formatUnits(BigNumber.from(userBalance).mul(BigNumber.from(priceInUsd)), decimals + usdToken.decimals)
         : '0';
 
     return (

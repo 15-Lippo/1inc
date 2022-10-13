@@ -38,10 +38,11 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   const [searchValue, setSearchValue] = useState<string>('');
   const updateUsdcPricesForBalances = useUpdateUsdcPricesForBalances();
 
+  // TODO: need to fix deps for timely updating of data in this hook. Added "tokens" as temporary solution.
   useEffect(() => {
     if (!tokensList.length) return;
     setData(tokensList);
-  }, [tokensList.length, inputBalance]);
+  }, [tokensList.length, inputBalance, tokens]);
 
   useEffect(() => {
     if (!data.length || !chainId) return;
