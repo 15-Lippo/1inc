@@ -26,7 +26,9 @@ export async function getTokenInfo(
   const favoriteTokens = JSON.parse(localStorage.getItem('favorite-tokens'));
   try {
     let tokenInfo;
-    const contractAddress = networkConfigs[chainId as SupportedChainId].helperContract;
+    const contractAddress =
+      // use env to get balance locally the on fork
+      process.env.REACT_APP_HELPER_CONTRACT || networkConfigs[chainId as SupportedChainId].helperContract;
 
     // Get balances from the contract if only wallet was connected
     if (account && contractAddress) {

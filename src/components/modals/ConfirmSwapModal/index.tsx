@@ -113,7 +113,8 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
           gasPrice: Number(txFeeCalculation?.customGasPrice?.maxFee)
             ? txFeeCalculation?.customGasPrice?.maxFee
             : txFeeCalculation?.gasPriceInfo?.price,
-          gasLimit: txFeeCalculation?.gasLimit,
+          // TODO https://github.com/yozh-io/1inch-widget/issues/236
+          // gasLimit: txFeeCalculation?.gasLimit,
           referrerAddress: referrerOptionsByChainId?.referrerAddress,
           fee: referrerOptionsByChainId?.fee,
         },

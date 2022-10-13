@@ -28,7 +28,7 @@ export const networkConfigs: Record<string, NetworkConfig> = {
     },
     explorerName: 'Localhost',
     blockExplorerUrls: ['https://etherscan.io'],
-    helperContract: process.env.REACT_APP_HELPER_CONTRACT || '0x9E7a4300FBC63c59eC556E5F9962a125D369e42C',
+    helperContract: '0x9E7a4300FBC63c59eC556E5F9962a125D369e42C',
     api: ethereumApi,
     minGasLimit: '150000',
   },
