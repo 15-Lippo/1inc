@@ -57,6 +57,7 @@ function Swap({ width }: SwapProps) {
     protocols,
     tokensList,
     quoteError,
+    swapError,
     approveTransactionInfo,
     referrerOptions,
     inputToken,
@@ -65,6 +66,7 @@ function Swap({ width }: SwapProps) {
     lastQuoteUpdateTimestamp,
   } = useAppSelector((state) => ({
     quoteError: state.swap.quoteError,
+    swapError: state.swap.swapError,
     INPUT: state.swap.INPUT,
     // OUTPUT: state.swap.OUTPUT,
     typedValue: state.swap.typedValue,
@@ -146,7 +148,7 @@ function Swap({ width }: SwapProps) {
   const mainButtonByType = () => {
     if (!account) return <MainButton type={MainButtonType.Connect} onClick={() => setConnectionOpen(true)} />;
     if (!Number(typedValue)) return <MainButton type={MainButtonType.EnterAmount} />;
-    if (quoteError && account) return <MainButton type={MainButtonType.Error} />;
+    if ((quoteError || swapError) && account) return <MainButton type={MainButtonType.Error} />;
     if (status === ApproveStatus.APPROVAL_NEEDED)
       return <MainButton type={MainButtonType.Approve} onClick={handleApproveClick} />;
     if (!hasEnoughBalanceByAddress(typedValue, INPUT)) return <MainButton type={MainButtonType.InsufficientBalance} />;

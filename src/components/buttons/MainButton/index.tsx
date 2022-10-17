@@ -100,9 +100,10 @@ interface MainButtonProps {
 
 export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName, sx }: MainButtonProps) => {
   const { t } = useTranslation();
-  const { token, quoteError } = useAppSelector((state) => ({
-    quoteError: state.swap.quoteError,
+  const { token, quoteError, swapError } = useAppSelector((state) => ({
     token: state.tokens.tokens[state.swap[Field.INPUT]],
+    quoteError: state.swap.quoteError,
+    swapError: state.swap.swapError,
   }));
 
   const textButtonType = {
@@ -119,7 +120,7 @@ export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName,
     [MainButtonType.Loading]: '',
     [MainButtonType.Explorer]: t('View on', { explorerName }),
     [MainButtonType.Import]: t(`Import`),
-    [MainButtonType.Error]: quoteError?.message,
+    [MainButtonType.Error]: quoteError?.message || swapError?.message,
   };
 
   return (

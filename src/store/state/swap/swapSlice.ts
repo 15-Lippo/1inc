@@ -6,6 +6,7 @@ import { SwapApi } from '../../../api';
 import { getNetworkConfig, Tokens } from '../../../constants';
 import { GasOption } from '../../../hooks';
 import { DefaultTokenOptions, Field, ReferrerOptions, SupportedGasOptions } from '../../../types';
+import { getSwapApiData } from '../../../utils';
 
 interface FetchQuoteParams {
   quoteInfo: ethereumApi.ExchangeControllerGetQuoteRequest;
@@ -18,24 +19,11 @@ interface FetchSwapParams {
 }
 
 export const fetchQuote = createAsyncThunk('swap/getQuoteInfo', async (params: FetchQuoteParams) => {
-  try {
-    return (await SwapApi(params.chainId).exchangeControllerGetQuoteRaw(params.quoteInfo)).raw.json();
-  } catch (error) {
-    const e = await error.json();
-    if (e.description) {
-      const { description } = e;
-      throw new Error(description.replace(/^./, description[0].toUpperCase()));
-    }
-    throw error.message;
-  }
+  return getSwapApiData(SwapApi(params.chainId).exchangeControllerGetQuoteRaw(params.quoteInfo));
 });
 
 export const fetchSwap = createAsyncThunk('swap/getSwapInfo', async (params: FetchSwapParams) => {
-  try {
-    return (await SwapApi(params.chainId).exchangeControllerGetSwapRaw(params.swapInfo)).raw.json();
-  } catch (error) {
-    console.error(error);
-  }
+  return getSwapApiData(SwapApi(params.chainId).exchangeControllerGetSwapRaw(params.swapInfo));
 });
 
 export interface SwapState {
@@ -68,7 +56,9 @@ export interface SwapState {
   };
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
+  readonly loadingSwapInfo?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly quoteError?: any;
+  readonly swapError?: any;
   lastQuoteUpdateTimestamp: number;
 }
 
@@ -162,7 +152,9 @@ export const initialState: SwapState = {
   },
   loading: 'idle',
   loadingQuote: 'idle',
+  loadingSwapInfo: 'idle',
   quoteError: null,
+  swapError: null,
   lastQuoteUpdateTimestamp: -1,
 };
 
@@ -289,8 +281,24 @@ const swapSlice = createSlice({
         state.lastQuoteUpdateTimestamp = performance.now();
       }
     });
+    user.addCase(fetchSwap.pending, (state) => {
+      state.loadingSwapInfo = 'pending';
+    });
+    user.addCase(fetchSwap.rejected, (state, action) => {
+      if (state.loadingSwapInfo === 'pending') {
+        state.loadingSwapInfo = 'idle';
+        state.swapError = action.error;
+      }
+    });
     user.addCase(fetchSwap.fulfilled, (state, action) => {
-      state.swapInfo = action.payload;
+      if (action.payload?.statusCode && action.payload?.statusCode !== 200) {
+        state.loadingSwapInfo = 'failed';
+        state.swapError = action.payload.description;
+      } else {
+        state.loadingSwapInfo = 'succeeded';
+        state.swapError = null;
+        state.swapInfo = action.payload;
+      }
     });
   },
 });
