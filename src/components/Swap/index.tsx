@@ -103,7 +103,6 @@ function Swap({ width }: SwapProps) {
   }, [width]);
 
   useEffect(() => {
-    dispatch(cleanLastTxHash());
     // Set default high gas price option:
     if (gasPriceInfo?.price === '0' || !gasPriceInfo?.price) {
       dispatch(setGasPriceInfo(gasOptions[SupportedGasOptions.High]));
@@ -112,6 +111,7 @@ function Swap({ width }: SwapProps) {
 
   useEffect(() => {
     if (chainId) {
+      dispatch(cleanLastTxHash());
       dispatch(setExplorer({ chainId }));
       dispatch(applyDefaultSettings({ chainId }));
     }
