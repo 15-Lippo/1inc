@@ -66,7 +66,7 @@ if (process.env.NODE_ENV === 'development') {
   networkListBtn[SupportedChainId[SupportedChainId.LOCALHOST]] = {
     label: SupportedChainId.LOCALHOST,
     name: 'Localhost',
-    logo: () => <></>,
+    logo: () => <React.Fragment />,
   };
 }
 

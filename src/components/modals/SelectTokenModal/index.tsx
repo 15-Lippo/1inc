@@ -104,7 +104,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
         onClear={() => setSearchValue('')}
       />
       {chainId && !_.isEmpty(tokens) && favoriteTokens[chainId] && (
-        <>
+        <React.Fragment>
           <Stack
             direction="row"
             flexWrap="wrap"
@@ -132,7 +132,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
             selectedValue={tokenOnField}
             pinnedTokens={favoriteTokens[chainId]}
           />
-        </>
+        </React.Fragment>
       )}
 
       {searchValue && !filteredResults.length && (

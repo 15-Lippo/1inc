@@ -43,7 +43,7 @@ const VirtualizedTokenList = ({
   onRemoveCustomToken,
   pinnedTokens,
 }: VirtualizedTokenListProps) => {
-  const { account, chainId } = useActiveWeb3React();
+  const { chainId } = useActiveWeb3React();
   const { explorer } = useAppSelector((state) => state.user);
   const { usdToken } = useAppSelector((state) => ({
     usdToken: state.tokens.tokens[Tokens.DOLLAR_TIED_TOKENS[chainId as SupportedChainId][0]],
@@ -175,7 +175,7 @@ const VirtualizedTokenList = ({
           <CircularProgress sx={{ color: 'widget.icon-10' }} />
         </Box>
       ) : tokensList.length ? (
-        <FixedSizeList height={account ? 280 : 374} width={'100%'} itemSize={72} itemCount={tokensList.length}>
+        <FixedSizeList height={500} width={'100%'} itemSize={72} itemCount={tokensList.length}>
           {renderRow}
         </FixedSizeList>
       ) : (

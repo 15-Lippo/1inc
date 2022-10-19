@@ -124,7 +124,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           height: '48px',
         }}>
         <SelectTokenButton onClick={onSelectToken} field={Field.INPUT} />
-        <Box>{status === ApproveStatus.APPROVAL_NEEDED && <LockerIcon />}</Box>
+        <Box sx={{ ml: '8px' }}>{status === ApproveStatus.APPROVAL_NEEDED && <LockerIcon />}</Box>
         <InputAmount inputId={Field.INPUT} />
       </Box>
 

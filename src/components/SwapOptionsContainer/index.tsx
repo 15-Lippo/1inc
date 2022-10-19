@@ -54,20 +54,21 @@ const SwapOptionsContainer = () => {
       <Grid item>
         <SwapOptionItem
           optionName="1inch"
-          onClick={() => alert('Selected 1inch')}
+          isBestQuote={true}
+          onClick={() => console.log('Selected 1inch')}
           quoteLabel={oneInchItemLabels.quote}
           txCostLabel={oneInchItemLabels.txCost}
         />
       </Grid>
-      <Grid item>
-        <SwapOptionItem
-          optionName="Uniswap"
-          isBestQuote={true}
-          onClick={() => alert('Selected Uniswap')}
-          quoteLabel={'placeholder'}
-          txCostLabel={'0.1337'}
-        />
-      </Grid>
+      {/*<Grid item>*/}
+      {/*  <SwapOptionItem*/}
+      {/*    optionName="Uniswap"*/}
+      {/*    isBestQuote={true}*/}
+      {/*    onClick={() => alert('Selected Uniswap')}*/}
+      {/*    quoteLabel={'placeholder'}*/}
+      {/*    txCostLabel={'0.1337'}*/}
+      {/*  />*/}
+      {/*</Grid>*/}
     </Grid>
   );
 };

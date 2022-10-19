@@ -181,7 +181,7 @@ function Swap({ width }: SwapProps) {
           display: 'none',
         },
         position: 'relative',
-        height: '619px',
+        height: '537px',
         width: widgetWidth,
         '& ::-webkit-scrollbar': {
           width: '8px',
