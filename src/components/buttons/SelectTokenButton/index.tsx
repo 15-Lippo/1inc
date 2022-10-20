@@ -41,7 +41,7 @@ const SelectTokenButton = ({ field, onClick }: SelectedTokenProps) => {
       variant="text"
       onClick={onClick}
       startIcon={
-        <Avatar src={token.logoURI} style={{ width: 24, height: 24 }}>
+        <Avatar src={token.logoURI} sx={{ width: 24, height: 24, backgroundColor: 'transparent' }}>
           <NoLogoURI />
         </Avatar>
       }

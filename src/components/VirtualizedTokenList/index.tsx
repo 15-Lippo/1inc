@@ -97,7 +97,11 @@ const VirtualizedTokenList = ({
         disablePadding>
         <ListItemButton onClick={handleClick} disabled={address === selectedValue}>
           {address && (
-            <ListItemAvatar>{logoURI ? <Avatar src={logoURI} alt={symbol} /> : <NoLogoURI />}</ListItemAvatar>
+            <ListItemAvatar>
+              <Avatar src={logoURI} alt={symbol} sx={{ backgroundColor: 'transparent' }}>
+                <NoLogoURI />
+              </Avatar>
+            </ListItemAvatar>
           )}
           <ListItemText
             primaryTypographyProps={{

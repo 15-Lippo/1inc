@@ -197,7 +197,10 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
             mb: '14px',
           }}>
           <Stack direction="row">
-            <Avatar src={tokenToImport?.token?.logoURI} alt={tokenToImport?.token?.symbol}>
+            <Avatar
+              src={tokenToImport?.token?.logoURI}
+              alt={tokenToImport?.token?.symbol}
+              sx={{ backgroundColor: 'transparent' }}>
               <NoLogoURI />
             </Avatar>
             <Stack sx={{ ml: '16px' }} direction="column" justifyContent="space-between">

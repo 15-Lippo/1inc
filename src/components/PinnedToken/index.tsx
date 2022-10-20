@@ -92,7 +92,7 @@ const PinnedToken = ({ id, symbol, logo, onChoose, onUnpin }: Props) => {
       }
       disablePadding>
       <ListItemButton onClick={() => onChoose(id)}>
-        <Avatar src={logo} alt={symbol} sx={{ height: '24px', width: '24px' }}>
+        <Avatar src={logo} alt={symbol} sx={{ height: '24px', width: '24px', backgroundColor: 'transparent' }}>
           <NoLogoURI />
         </Avatar>
         <ListItemText

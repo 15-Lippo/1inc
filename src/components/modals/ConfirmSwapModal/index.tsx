@@ -1,5 +1,5 @@
 import { formatUnits } from '@ethersproject/units';
-import { Box, Stack, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Stack, Typography, useTheme } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -10,7 +10,7 @@ import { Field, SupportedChainId } from '../../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../../utils';
 import { AuxButton, MainButton, MainButtonType, SlippageButtonsGroup } from '../../buttons';
 import GasPriceOptions from '../../GasPriceOptions';
-import { SwitchTokensIcon } from '../../icons';
+import { NoLogoURI, SwitchTokensIcon } from '../../icons';
 import { RefreshRateWarningMsg } from '../../messages';
 import SkeletonText from '../../SkeletonText';
 import { Modal, ModalHeaderType } from '../Modal';
@@ -57,7 +57,9 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
       </Stack>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Box sx={{ display: 'flex' }}>
-          <img style={{ width: '24px', height: '24px' }} src={token.logoURI} alt="logo" />
+          <Avatar src={token.logoURI} sx={{ width: 24, height: 24, backgroundColor: 'transparent' }}>
+            <NoLogoURI />
+          </Avatar>
           <Typography variant="mxlg20" lineHeight="24px" color="widget.text-primary" sx={{ margin: '0 12px' }}>
             {token.symbol}
           </Typography>

@@ -80,7 +80,7 @@ const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalPr
                             <Avatar
                               src={tokens[step[0].toTokenAddress]?.logoURI}
                               alt={tokens[step[0].toTokenAddress]?.symbol}
-                              sx={{ width: 24, height: 24 }}>
+                              sx={{ width: 24, height: 24, backgroundColor: 'transparent' }}>
                               <NoLogoURI />
                             </Avatar>
                             <Typography variant="mm16" color="widget.text-primary">
@@ -144,7 +144,7 @@ const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalPr
         <Avatar
           alt={tokens[INPUT]?.symbol}
           src={tokens[INPUT]?.logoURI}
-          sx={{ position: 'absolute', width: 32, height: 32 }}>
+          sx={{ position: 'absolute', width: 32, height: 32, backgroundColor: 'transparent' }}>
           <NoLogoURI />
         </Avatar>
         <RouteModalDivider styles={{ bottom: -30 }} />
@@ -180,7 +180,7 @@ const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalPr
         <Avatar
           alt={tokens[OUTPUT]?.symbol}
           src={tokens[OUTPUT]?.logoURI}
-          sx={{ position: 'absolute', top: -12, width: 32, height: 32 }}>
+          sx={{ position: 'absolute', top: -12, width: 32, height: 32, backgroundColor: 'transparent' }}>
           <NoLogoURI />
         </Avatar>
       </Box>
