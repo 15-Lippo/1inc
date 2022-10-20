@@ -6,6 +6,7 @@ import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 
+import { Constants } from '../../../constants';
 import { typeInput, useAppDispatch, useAppSelector } from '../../../store';
 import { Field } from '../../../types';
 
@@ -49,25 +50,33 @@ const InputAmount = ({ inputId }: SendProps) => {
       _.debounce((value: string, field: Field, decimals: number) => {
         const valueInWei = parseTypedAmount(value, decimals);
         dispatch(typeInput({ field, typedValue: valueInWei }));
-      }, 1000),
+      }, 1200),
     [INPUT]
   );
 
   const handleChange = ({ target }: any) => {
-    setAmount(target.value);
-    if (INPUT) debouncedTypedValueSetter(target.value, target.id, INPUT.decimals);
+    const { value, id } = target;
+    const test = Constants.INPUT_REGEX.test(value);
+
+    if (test) {
+      setAmount(value);
+      if (INPUT) debouncedTypedValueSetter(value, id, INPUT.decimals);
+    }
   };
 
   useEffect(() => {
     if (typedValue && INPUT && parseTypedAmount(amount, INPUT.decimals) !== typedValue) {
-      setAmount(formatUnits(typedValue, INPUT.decimals));
+      const value = formatUnits(typedValue, INPUT.decimals);
+      Constants.VALUE_LENGTH_REGEX.test(value) ? setAmount(Number(value).toFixed(6).toString()) : setAmount(value);
     }
   }, [typedValue, INPUT?.decimals]);
 
   return (
     <StyledTextField
+      autoComplete="off"
       inputProps={{
-        min: 0,
+        inputMode: 'numeric',
+        type: 'text',
       }}
       sx={{
         '& input': {
@@ -75,7 +84,6 @@ const InputAmount = ({ inputId }: SendProps) => {
         },
       }}
       id={inputId}
-      type="number"
       value={amount}
       onChange={handleChange}
     />
