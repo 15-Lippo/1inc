@@ -1,10 +1,14 @@
 import { BigNumberish } from '@ethersproject/bignumber';
+import { TransactionRequest } from '@ethersproject/providers';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { SwapApi } from '../../../api';
 import { getNetworkConfig, Tokens } from '../../../constants';
+import { ProtocolName } from '../../../constants/protocolNames';
 import { GasOption } from '../../../hooks';
+import { QuoteUpdater } from '../../../hooks/update/types';
+import { QuoteInfo } from '../../../services/update';
 import { DefaultTokenOptions, Field, ReferrerOptions, SupportedGasOptions } from '../../../types';
 import { getSwapApiData } from '../../../utils';
 
@@ -25,6 +29,39 @@ export const fetchQuote = createAsyncThunk('swap/getQuoteInfo', async (params: F
 export const fetchSwap = createAsyncThunk('swap/getSwapInfo', async (params: FetchSwapParams) => {
   return getSwapApiData(SwapApi(params.chainId).exchangeControllerGetSwapRaw(params.swapInfo));
 });
+
+interface UpdateQuoteThunkArg {
+  updaters: QuoteUpdater[];
+  updateId: number;
+}
+
+export const updateQuote = createAsyncThunk(
+  'swap/updateQuote',
+  async ({ updaters }: UpdateQuoteThunkArg, { rejectWithValue }) => {
+    const promises: Promise<QuoteInfo>[] = [];
+    updaters.forEach((u: QuoteUpdater) => {
+      promises.push(u.update());
+    });
+    try {
+      const quoteData = await Promise.all(promises);
+      console.log('Quote data:', quoteData);
+      return quoteData.reduce((acc, curr, i) => {
+        acc[updaters[i].name] = curr;
+        return acc;
+      }, {});
+    } catch (e) {
+      console.error(e);
+      return rejectWithValue(e.message);
+    }
+  }
+);
+
+export interface TxInfo {
+  tx?: TransactionRequest;
+  toTokenAmount: string;
+  gasLimit: string;
+  route: any; // TODO come up with standard interface
+}
 
 export interface SwapState {
   readonly independentField: Field;
@@ -59,7 +96,10 @@ export interface SwapState {
   readonly loadingSwapInfo?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly quoteError?: any;
   readonly swapError?: any;
-  lastQuoteUpdateTimestamp: number;
+  readonly lastQuoteUpdateTimestamp: number;
+  readonly lastQuoteCallId: number;
+  readonly swapData: { [protocolName: string]: QuoteInfo };
+  readonly selectedMethod: string;
 }
 
 export const initialState: SwapState = {
@@ -156,6 +196,9 @@ export const initialState: SwapState = {
   quoteError: null,
   swapError: null,
   lastQuoteUpdateTimestamp: -1,
+  lastQuoteCallId: -1,
+  swapData: {},
+  selectedMethod: ProtocolName.ONE_INCH,
 };
 
 const swapSlice = createSlice({
@@ -259,26 +302,26 @@ const swapSlice = createSlice({
         txFeeCalculation: { ...state.txFeeCalculation, txFee },
       };
     },
+    selectSwapMethod(state, { payload: selectedMethod }) {
+      console.log('Selected swap method:', selectedMethod);
+      return {
+        ...state,
+        selectedMethod,
+      };
+    },
   },
   extraReducers: (user) => {
-    user.addCase(fetchQuote.pending, (state) => {
-      state.loadingQuote = 'pending';
-    });
     user.addCase(fetchQuote.rejected, (state, action) => {
       if (state.loadingQuote === 'pending') {
-        state.loadingQuote = 'idle';
         state.quoteError = action.error;
       }
     });
     user.addCase(fetchQuote.fulfilled, (state, action) => {
       if (action.payload?.statusCode && action.payload?.statusCode !== 200) {
-        state.loadingQuote = 'failed';
         state.quoteError = action.payload.description;
       } else {
-        state.loadingQuote = 'succeeded';
         state.quoteError = null;
         state.quoteInfo = action.payload;
-        state.lastQuoteUpdateTimestamp = performance.now();
       }
     });
     user.addCase(fetchSwap.pending, (state) => {
@@ -300,6 +343,27 @@ const swapSlice = createSlice({
         state.swapInfo = action.payload;
       }
     });
+    user.addCase(updateQuote.pending, (state, action) => {
+      state.loadingQuote = 'pending';
+      state.lastQuoteCallId = action.meta.arg.updateId;
+      console.log('PENDING UPDATE QUOTE');
+    });
+    user.addCase(updateQuote.fulfilled, (state, action) => {
+      if (state.lastQuoteCallId !== action.meta.arg.updateId) {
+        console.log(`QUOTE REQUEST WITH ID ${action.meta.arg.updateId} WAS INVALIDATED`);
+        return;
+      }
+      state.swapData = action.payload;
+      state.lastQuoteUpdateTimestamp = performance.now();
+      state.loadingQuote = 'succeeded';
+      console.log('UPDATE QUOTE FULFILLED');
+    });
+    user.addCase(updateQuote.rejected, (state, action) => {
+      state.loadingQuote = 'idle';
+      state.quoteError = action.payload;
+      console.error(action.payload);
+      console.log('UPDATE QUOTE REJECTED');
+    });
   },
 });
 
@@ -316,6 +380,7 @@ export const {
   setGasPriceInfo,
   setCustomGasPrice,
   setGasPriceSettingsMode,
+  selectSwapMethod,
 } = swapSlice.actions;
 
 const { reducer } = swapSlice;

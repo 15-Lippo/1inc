@@ -6,6 +6,7 @@ import React, { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { Tokens } from '../../constants';
+import { useApproveStatus } from '../../hooks/approve/useApproveStatus';
 import { useActiveWeb3React } from '../../packages';
 import { ApproveStatus, typeInput, useAppDispatch, useAppSelector, useUsdStablecoins } from '../../store';
 import { Field } from '../../types';
@@ -22,10 +23,9 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { account } = useActiveWeb3React();
-  const { INPUT, status, typedValue, inputTokenPriceInUsd, loadingQuote, explorer, txFee, lastQuoteUpdateTimestamp } =
+  const { INPUT, typedValue, inputTokenPriceInUsd, loadingQuote, explorer, txFee, lastQuoteUpdateTimestamp } =
     useAppSelector((state) => ({
       INPUT: state.tokens.tokens[state.swap.INPUT],
-      status: state.approve.approveAllowanceInfo.status,
       typedValue: state.swap.typedValue,
       inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
       loadingQuote: state.swap.loadingQuote,
@@ -34,6 +34,8 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
       lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
     }));
   const { defaultStablecoin } = useUsdStablecoins();
+
+  const status = useApproveStatus();
 
   const userBalance = useMemo(() => {
     if (_.isEmpty(INPUT)) return;

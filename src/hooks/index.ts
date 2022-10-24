@@ -1,3 +1,4 @@
+export { useUpdate } from './update/useUpdate';
 export { useAdvancedSettings } from './useAdvancedSettings';
 export { useAlertMessage } from './useAlertMessage';
 export { useContract } from './useContract';

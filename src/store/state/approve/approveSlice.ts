@@ -24,8 +24,7 @@ export const fetchApproveTransaction = createAsyncThunk(
   async (params: FetchApproveTransactionParams, { rejectWithValue }) => {
     try {
       const JSONApiResponse = await ApproveApi(params.chainId).chainApproveControllerGetCallDataRaw(params.approveInfo);
-      const response = await JSONApiResponse.raw.json();
-      return response;
+      return await JSONApiResponse.raw.json();
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -37,11 +36,19 @@ export const fetchApproveSpender = createAsyncThunk(
   async (chainId: number | undefined, { rejectWithValue }) => {
     try {
       const JSONApiResponse = await ApproveApi(chainId).chainApproveControllerGetSpenderRaw();
-      const response = await JSONApiResponse.raw.json();
-      return response;
+      return await JSONApiResponse.raw.json();
     } catch (error) {
       return rejectWithValue(error);
     }
+  }
+);
+
+export const updateSingleAllowance = createAsyncThunk(
+  'approve/updateAllowance',
+  async (updater: () => Promise<string>) => {
+    const res = await updater();
+    console.log('FETCHED ALLOWANCE:', res);
+    return res;
   }
 );
 
@@ -49,6 +56,7 @@ export interface ApproveState {
   approveAllowanceInfo: ApprovalState;
   approveTransactionInfo: ethereumApi.ApproveCalldataResponseDto;
   spender: ethereumApi.ApproveSpenderResponseDto;
+  allowance: string;
 }
 
 export const initialState: ApproveState = {
@@ -62,6 +70,7 @@ export const initialState: ApproveState = {
     value: '',
   },
   spender: { address: '' },
+  allowance: '',
 };
 
 const approveSlice = createSlice({
@@ -78,6 +87,16 @@ const approveSlice = createSlice({
     });
     tokens.addCase(fetchApproveSpender.fulfilled, (state, action) => {
       state.spender = action.payload;
+    });
+    tokens.addCase(updateSingleAllowance.pending, () => {
+      console.log('PENDING UPDATE ALLOWANCE');
+    });
+    tokens.addCase(updateSingleAllowance.fulfilled, (state, action) => {
+      state.allowance = action.payload;
+      console.log('UPDATE ALLOWANCE FULFILLED');
+    });
+    tokens.addCase(updateSingleAllowance.rejected, () => {
+      console.log('UPDATE ALLOWANCE REJECTED');
     });
   },
 });

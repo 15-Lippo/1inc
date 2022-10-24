@@ -92,7 +92,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', // USD//C
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
       250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
-      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
       42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
       43114: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
     };
@@ -103,7 +102,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
       137: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
       250: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e', // DAI
-      1337: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
       42161: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
       43114: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
     };
@@ -120,7 +118,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', // USD//C
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
       250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
-      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
       42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
       43114: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
     };
@@ -133,7 +130,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
       137: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
       250: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e', // DAI
-      1337: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
       42161: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
       43114: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
     };
@@ -150,7 +146,6 @@ describe('validateDefaultTokensOptions', () => {
       // 100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', // USD//C
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
       250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
-      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
       42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
       43114: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
     };
@@ -161,7 +156,6 @@ describe('validateDefaultTokensOptions', () => {
       // 100: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
       137: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
       250: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e', // DAI
-      1337: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
       42161: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
       43114: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
     };
@@ -178,7 +172,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', // USD//C
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
       250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
-      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
       42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
       43114: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
     };
@@ -189,7 +182,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
       137: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
       250: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e', // DAI
-      1337: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
       42161: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
       43114: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
     };
@@ -206,7 +198,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', // USD//C
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
       250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
-      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
       42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
       43114: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
     };
@@ -217,7 +208,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
       137: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
       250: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e', // DAI
-      1337: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
       42161: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
       43114: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
     };
@@ -234,7 +224,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', // USD//C
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
       250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
-      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
       42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
       43114: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
     };
@@ -245,7 +234,6 @@ describe('validateDefaultTokensOptions', () => {
       // 100: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
       137: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
       250: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e', // DAI
-      1337: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
       42161: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
       43114: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
     };
@@ -262,7 +250,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', // USD//C
       137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
       250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75', // USDC
-      1337: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
       42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC
       43114: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e', // USDC
     };
@@ -273,7 +260,6 @@ describe('validateDefaultTokensOptions', () => {
       100: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d', // WXDAI
       137: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
       250: '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e', // DAI
-      1337: '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
       42161: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
       43114: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70', // DAI.e
     };

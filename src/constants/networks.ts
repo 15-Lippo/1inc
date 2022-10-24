@@ -18,21 +18,6 @@ import { toHex } from '../utils';
 export const ALL_SUPPORTED_CHAIN_IDS = new Set(Object.values(SupportedChainId).filter((id) => typeof id === 'number'));
 
 export const networkConfigs: Record<string, NetworkConfig> = {
-  [SupportedChainId.LOCALHOST]: {
-    chainName: 'Localhost 8545',
-    chainIdHex: toHex(SupportedChainId.LOCALHOST),
-    nativeCurrency: {
-      name: 'Ether',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    explorerName: 'Localhost',
-    blockExplorerUrls: ['https://etherscan.io'],
-    // use env to get balance locally the on fork
-    helperContract: process.env.REACT_APP_HELPER_CONTRACT_ETHEREUM || '0x9E7a4300FBC63c59eC556E5F9962a125D369e42C',
-    api: ethereumApi,
-    minGasLimit: '150000',
-  },
   [SupportedChainId.MAINNET]: {
     chainName: 'Ethereum Mainnet',
     chainIdHex: toHex(SupportedChainId.MAINNET),
@@ -148,8 +133,8 @@ export const networkConfigs: Record<string, NetworkConfig> = {
 };
 
 export const RPC_URLS: DefaultRpcJsonEndpoint = {
-  [SupportedChainId.LOCALHOST]: 'http://127.0.0.1:8545',
-  [SupportedChainId.MAINNET]: 'https://cloudflare-eth.com',
+  // [SupportedChainId.LOCALHOST]: 'http://127.0.0.1:8545',
+  [SupportedChainId.MAINNET]: 'https://rpc.ankr.com/eth',
   [SupportedChainId.OPTIMISM]: 'https://mainnet.optimism.io/',
   [SupportedChainId.BINANCE]: 'https://bsc-dataseed1.ninicoin.io',
   [SupportedChainId.GNOSIS]: 'https://rpc.gnosischain.com',

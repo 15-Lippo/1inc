@@ -132,3 +132,20 @@ git commit -m "feat: changed hooks"
 
 Subject can not be empty allowed to use `feat`, `fix`, `BREAKING CHANGE` all details here:
 https://www.conventionalcommits.org/en/v1.0.0/
+
+## Connecting to fork
+
+1. Run fork with hardhat and set chainId of the real network. Like 137, 1 etc. By default, hardhat uses 1337 chainId on localhost.
+``npx hardhat node --fork https://eth-mainnet.alchemyapi.io/v2/<key>``
+   https://hardhat.org/hardhat-network/docs/guides/forking-other-networks
+   
+2. Open MetaMask -> Settings -> Networks and configure your localhost. Example:
+```
+    RPC: http://127.0.0.1:8545
+    ChainId: 137
+    Currency symbol: MATIC
+```
+
+If this chain ID is already in use, just remove an original network.
+
+3. Open widget on the localhost and connect your wallet. Widget will automatically connect to localhost according to chain ID.

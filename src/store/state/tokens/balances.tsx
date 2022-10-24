@@ -30,6 +30,7 @@ export async function getTokenInfo(
 
     // Get balances from the contract if only wallet was connected
     if (account && contractAddress) {
+      console.log('Getting balances...');
       const tokenHelper = getContract(contractAddress, TokenHelper.abi, lib);
       tokenInfo = await tokenHelper.batchTokenInfo(account, addresses, spender);
     }

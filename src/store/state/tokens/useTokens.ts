@@ -26,15 +26,12 @@ export const useTokens = () => {
 
   useEffect(() => {
     if (!addresses.length || !chainId || !spender.address) return;
-
-    console.log('balances...');
     const getBalances = async () => {
       const result = await getTokenBalances(library, chainId, addresses, spender.address, account);
       dispatch(updateAllTokenBalances(result));
     };
 
     getBalances();
-    console.log('...balances');
   }, [account, spender.address, chainId, countOfTokens]);
 
   return { tokens, addresses };

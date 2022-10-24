@@ -4,6 +4,7 @@ import { StyledComponent } from '@mui/styles';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY_MS } from '../../../constants';
+import { useUpdate } from '../../../hooks';
 import { useAppSelector, useUpdateQuote } from '../../../store';
 
 const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(({ theme }) => ({
@@ -37,6 +38,7 @@ const RefreshQuoteButton = () => {
   const [rotate, setRotate] = useState(false);
   const [fillOffset, setFillOffset] = useState(0);
   const updateQuote = useUpdateQuote();
+  const update = useUpdate();
   const requestRef = useRef<number>(0);
 
   const updateRefreshProgress = (time: number) => {
@@ -49,6 +51,7 @@ const RefreshQuoteButton = () => {
     setRotate(true);
     setTimeout(() => setRotate(false), 800); // animation is 600ms, +200 for it to remain black a bit longer
     updateQuote();
+    update && update();
   };
 
   useEffect(() => {

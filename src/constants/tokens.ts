@@ -1,6 +1,7 @@
 import { Field, SupportedChainId } from '../types';
 
 export const NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const DEFAULT_TOKENS = {
   [Field.INPUT]: NATIVE_TOKEN_ADDRESS,
@@ -24,14 +25,6 @@ export const MAIN_TOKENS = [
 ];
 
 export const FAVORITE_TOKENS = {
-  [SupportedChainId.LOCALHOST]: [
-    NATIVE_TOKEN_ADDRESS,
-    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    '0x6b175474e89094c44da98b954eedeac495271d0f',
-    '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-    '0x111111111117dc0aa78b770fa6a738034120c302',
-  ],
   [SupportedChainId.MAINNET]: [
     NATIVE_TOKEN_ADDRESS,
     '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -100,11 +93,6 @@ export const FAVORITE_TOKENS = {
 
 // TODO add more addresses
 export const DOLLAR_TIED_TOKENS = {
-  [SupportedChainId.LOCALHOST]: [
-    '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // usdc
-    '0xdac17f958d2ee523a2206206994597c13d831ec7', // usdt
-    '0x6b175474e89094c44da98b954eedeac495271d0f', // dai
-  ],
   [SupportedChainId.MAINNET]: [
     '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // usdc
     '0xdac17f958d2ee523a2206206994597c13d831ec7', // usdt

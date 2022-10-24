@@ -4,8 +4,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { useRate, useSingleTimeout } from '../../../hooks';
+import { useSwap } from '../../../hooks/swap/useSwap';
 import { useActiveWeb3React } from '../../../packages';
-import { fetchSwap, Token, useAppDispatch, useAppSelector, useSwapCallback, useUsdStablecoins } from '../../../store';
+import { fetchSwap, Token, useAppDispatch, useAppSelector, useUsdStablecoins } from '../../../store';
 import { Field, SupportedChainId } from '../../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../../utils';
 import { AuxButton, MainButton, MainButtonType, SlippageButtonsGroup } from '../../buttons';
@@ -81,10 +82,9 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
-  const { INPUT, OUTPUT, toTokenAmount, lastQuoteUpdateTimestamp } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT, lastQuoteUpdateTimestamp } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
-    toTokenAmount: state.swap.swapInfo?.toTokenAmount,
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
   }));
 
@@ -97,6 +97,8 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
 
   const { startTimeout, abortTimeout } = useSingleTimeout(() => setShouldRefresh(true), 5000);
   const { defaultStablecoin } = useUsdStablecoins();
+
+  const { executeSwap, updateTx, toTokenAmount } = useSwap();
 
   const updateSwap = () => {
     if (!INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
@@ -131,6 +133,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     if (isOpen) {
       startTimeout();
       updateSwap();
+      updateTx();
     } else {
       abortTimeout();
       setLoadingSwap(true);
@@ -152,31 +155,43 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     setShouldRefresh(true);
   }, [slippage, txFeeCalculation?.gasPriceInfo.price, txFeeCalculation?.gasLimit]);
 
-  const swapCallback = useSwapCallback({
-    from: swapInfo?.tx?.from,
-    to: swapInfo?.tx?.to,
-    data: swapInfo?.tx?.data,
-    value: swapInfo?.tx?.value,
-    // gasLimit: txFeeCalculation?.gasLimit,
-    ...(txFeeCalculation.gasPriceSettingsMode === 'basic'
-      ? { gasPrice: txFeeCalculation.gasPriceInfo.price }
-      : {
-          maxFeePerGas: txFeeCalculation.customGasPrice.maxFee,
-          maxPriorityFeePerGas: txFeeCalculation.customGasPrice.maxPriorityFee,
-        }),
-  });
+  // const swapCallback = useSwapCallback({
+  //   from: swapInfo?.tx?.from,
+  //   to: swapInfo?.tx?.to,
+  //   data: swapInfo?.tx?.data,
+  //   value: swapInfo?.tx?.value,
+  //   // gasLimit: txFeeCalculation?.gasLimit,
+  //   ...(txFeeCalculation.gasPriceSettingsMode === 'basic'
+  //     ? { gasPrice: txFeeCalculation.gasPriceInfo.price }
+  //     : {
+  //         maxFeePerGas: txFeeCalculation.customGasPrice.maxFee,
+  //         maxPriorityFeePerGas: txFeeCalculation.customGasPrice.maxPriorityFee,
+  //       }),
+  // });
+
+  // const handleSendTx = useCallback(() => {
+  //   if (loadingSwap) return;
+  //   try {
+  //     swapCallback();
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, [swapCallback]);
 
   const handleSendTx = useCallback(() => {
     if (loadingSwap) return;
     try {
-      swapCallback();
+      executeSwap();
+      //swapCallback();
     } catch (error) {
       console.error(error);
     }
-  }, [swapCallback]);
+  }, [executeSwap]);
 
   const onRefreshClick = () => {
     updateSwap();
+    updateTx();
+    setLoadingSwap(true);
   };
 
   const inputUsdcPrice =

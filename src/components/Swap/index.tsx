@@ -3,10 +3,12 @@ import './index.css';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Box } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../../constants';
 import { useAlertMessage, useGasPriceOptions, useInterval } from '../../hooks';
+import { useUpdate } from '../../hooks';
+import { useApprove, useUpdateSpender } from '../../hooks/approve/useApprove';
+import { useApproveStatus } from '../../hooks/approve/useApproveStatus';
 import { useActiveWeb3React } from '../../packages';
 import {
   applyDefaultSettings,
@@ -15,9 +17,7 @@ import {
   setExplorer,
   setGasPriceInfo,
   useAppDispatch,
-  useApproval,
   useAppSelector,
-  useCalculateApprovalCost,
   useTokens,
   useUpdateQuote,
 } from '../../store';
@@ -44,11 +44,9 @@ export type SwapProps = {
 };
 
 function Swap({ width }: SwapProps) {
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { account, chainId } = useActiveWeb3React();
   const { gasOptions, blockNum } = useGasPriceOptions();
-  const { status, approve } = useApproval();
   useTokens();
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const {
@@ -58,13 +56,15 @@ function Swap({ width }: SwapProps) {
     tokensList,
     quoteError,
     swapError,
-    approveTransactionInfo,
+    loadingQuote,
     referrerOptions,
     inputToken,
     outputToken,
     txFeeCalculation,
     lastQuoteUpdateTimestamp,
+    selectedMethod,
   } = useAppSelector((state) => ({
+    loadingQuote: state.swap.loadingQuote,
     quoteError: state.swap.quoteError,
     swapError: state.swap.swapError,
     INPUT: state.swap.INPUT,
@@ -73,14 +73,17 @@ function Swap({ width }: SwapProps) {
     protocols: state.swap.quoteInfo?.protocols,
     tokensList: state.tokens.tokens,
     // lastTxHash: state.transactions.lastTxHash,
-    approveTransactionInfo: state.approve.approveTransactionInfo,
     referrerOptions: state.swap.referrerOptions,
     inputToken: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     outputToken: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
     txFeeCalculation: state.swap.txFeeCalculation,
+    selectedMethod: state.swap.selectedMethod,
   }));
-  const { approvalTxFee, estimateGasLimit: estimateApprovalCost } = useCalculateApprovalCost();
+
+  const update = useUpdate();
+  const { approve, updateAllowance } = useApprove();
+  const status = useApproveStatus();
 
   const [isConfirmOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -91,8 +94,9 @@ function Swap({ width }: SwapProps) {
     field: Field.INPUT,
     open: false,
   });
-  const { errorMessage, setErrorMessage, shouldOpenModal, clearMessage } = useAlertMessage();
+  const { errorMessage, shouldOpenModal, clearMessage } = useAlertMessage();
   const updateQuote = useUpdateQuote();
+  useUpdateSpender();
 
   const widgetWidth = useMemo(() => {
     if (width && width < 400) {
@@ -117,23 +121,24 @@ function Swap({ width }: SwapProps) {
     }
   }, [chainId]);
 
+  useEffect(() => {
+    updateAllowance();
+  }, [INPUT, selectedMethod, account, chainId]);
+
   const hasEnoughBalanceByAddress = (paymentCost: BigNumberish, tokenAddress: string): boolean => {
     const balance = tokensList[tokenAddress]?.userBalance || '0';
     return BigNumber.from(paymentCost).lte(balance);
   };
 
-  useEffect(() => {
-    estimateApprovalCost();
-  }, [approveTransactionInfo.data]);
-
   const handleApproveClick = () => {
-    if (!hasEnoughBalanceByAddress(approvalTxFee, Tokens.NATIVE_TOKEN_ADDRESS)) {
-      setErrorMessage({
-        text: t('Insufficient balance to pay for gas'),
-        title: t('Alert'),
-      });
-      return;
-    }
+    // TODO add gasPrice check
+    // if (!hasEnoughBalanceByAddress(approvalTxFee, Tokens.NATIVE_TOKEN_ADDRESS)) {
+    //   setErrorMessage({
+    //     text: t('Insufficient balance to pay for gas'),
+    //     title: t('Alert'),
+    //   });
+    //   return;
+    // }
     approve();
   };
 
@@ -150,24 +155,37 @@ function Swap({ width }: SwapProps) {
     if (!Number(typedValue)) return <MainButton type={MainButtonType.EnterAmount} />;
     if ((quoteError || swapError) && account) return <MainButton type={MainButtonType.Error} />;
     if (status === ApproveStatus.APPROVAL_NEEDED)
-      return <MainButton type={MainButtonType.Approve} onClick={handleApproveClick} />;
-    if (!hasEnoughBalanceByAddress(typedValue, INPUT)) return <MainButton type={MainButtonType.InsufficientBalance} />;
+      return (
+        <MainButton
+          type={MainButtonType.Approve}
+          onClick={handleApproveClick}
+          disabled={loadingQuote !== 'succeeded'}
+        />
+      );
     if (!hasEnoughNativeTokenBalanceToSwap())
       return <MainButton type={MainButtonType.InsufficientNativeTokenBalance} />;
-    return <MainButton type={MainButtonType.Swap} onClick={() => setConfirmModalOpen(true)} />;
+    if (!hasEnoughBalanceByAddress(typedValue, INPUT)) return <MainButton type={MainButtonType.InsufficientBalance} />;
+    return (
+      <MainButton
+        type={MainButtonType.Swap}
+        onClick={() => setConfirmModalOpen(true)}
+        disabled={loadingQuote !== 'succeeded'}
+      />
+    );
   };
 
   // because we can manually update the quote, we need to check
   // that current update is really occurring after the specified delay
   useInterval(() => {
     const time = performance.now();
-    if (time - lastQuoteUpdateTimestamp >= REFRESH_QUOTE_DELAY_MS) {
-      updateQuote();
-    }
+    if (time - lastQuoteUpdateTimestamp < REFRESH_QUOTE_DELAY_MS || loadingQuote === 'pending') return;
+    updateQuote();
+    update && update();
   }, 1000);
 
   useEffect(() => {
     updateQuote();
+    update && update();
   }, [inputToken?.address, outputToken?.address, typedValue, referrerOptions, txFeeCalculation?.gasPriceInfo?.price]);
 
   const routeSteps = totalRouteSteps(protocols);

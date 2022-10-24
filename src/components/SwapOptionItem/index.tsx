@@ -25,6 +25,7 @@ const SwapOptionItem = ({ quoteLabel, txCostLabel, onClick, optionName, isBestQu
         borderRadius: '8px 12px 12px 12px',
         padding: '17px 12px 12px',
         color: 'widget.text-primary',
+        cursor: 'pointer',
       }}>
       {isBestQuote && (
         <Box
@@ -39,7 +40,7 @@ const SwapOptionItem = ({ quoteLabel, txCostLabel, onClick, optionName, isBestQu
             backgroundColor: 'widget.bg-07',
           }}>
           <Typography variant="rxs12" color="widget.text-primary-02">
-            <Trans>Best quote</Trans>
+            <Trans>Selected</Trans>
           </Typography>
         </Box>
       )}
@@ -48,7 +49,6 @@ const SwapOptionItem = ({ quoteLabel, txCostLabel, onClick, optionName, isBestQu
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          cursor: 'pointer',
         }}>
         <Typography variant="rm16">{optionName}</Typography>
         {quoteLabel ? (

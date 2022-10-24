@@ -57,7 +57,7 @@ export enum SupportedChainId {
   AVALANCHE = 43114,
   FANTOM = 250,
   GNOSIS = 100,
-  LOCALHOST = 1337,
+  // LOCALHOST = 1337,
 }
 
 export enum Field {
