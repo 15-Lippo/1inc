@@ -56,38 +56,35 @@ export const fetchLiquiditySources = createAsyncThunk(
   }
 );
 
-export const fetchTokens = createAsyncThunk(
-  'tokens/getTokensInfo',
-  async (chainId: number | undefined, { rejectWithValue }) => {
-    try {
-      const existingTokens =
+export const fetchTokens = createAsyncThunk('tokens/getTokensInfo', async (chainId: number, { rejectWithValue }) => {
+  try {
+    const existingTokens =
+      // @ts-ignore
+      JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
+
+    const JSONApiResponse = await InfoApi(chainId).chainTokensControllerGetTokensRaw();
+    const response = await JSONApiResponse.raw.json();
+
+    const sortable = Object.entries({ ...response.tokens, ...existingTokens[chainId] }).sort(([, a], [, b]) => {
+      // @ts-ignore
+      const fa = a.name,
         // @ts-ignore
-        JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
+        fb = b.name;
 
-      const JSONApiResponse = await InfoApi(chainId).chainTokensControllerGetTokensRaw();
-      const response = await JSONApiResponse.raw.json();
+      if (Tokens.MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
+      if (Tokens.MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
 
-      const sortable = await Object.entries({ ...response.tokens, ...existingTokens }).sort(([, a], [, b]) => {
-        // @ts-ignore
-        const fa = a.name,
-          // @ts-ignore
-          fb = b.name;
+      // compare ignoring case:
+      if (fa.localeCompare(fb) > 0) return 1;
+      if (fa.localeCompare(fb) < 0) return -1;
+      return 0;
+    });
 
-        if (Tokens.MAIN_TOKENS.includes(fa.toUpperCase())) return -1;
-        if (Tokens.MAIN_TOKENS.includes(fb.toUpperCase())) return 1;
-
-        // compare ignoring case:
-        if (fa.localeCompare(fb) > 0) return 1;
-        if (fa.localeCompare(fb) < 0) return -1;
-        return 0;
-      });
-
-      return sortable.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+    return sortable.reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+  } catch (error) {
+    return rejectWithValue(error);
   }
-);
+});
 
 export const fetchPresets = createAsyncThunk(
   'tokens/getPresetsInfo',

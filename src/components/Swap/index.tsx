@@ -44,7 +44,7 @@ export type SwapProps = {
 function Swap({ width }: SwapProps) {
   const dispatch = useAppDispatch();
   const { account, chainId } = useWeb3React();
-  const { gasOptions, blockNum } = useGasPriceOptions();
+  const { gasOptions } = useGasPriceOptions();
   useTokens();
   const {
     INPUT,
