@@ -1,5 +1,3 @@
-import './index.css';
-
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Box } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
@@ -196,7 +194,7 @@ function Swap({ width }: SwapProps) {
           display: 'none',
         },
         position: 'relative',
-        height: '537px',
+        height: '620px',
         width: widgetWidth,
         '& ::-webkit-scrollbar': {
           width: '8px',

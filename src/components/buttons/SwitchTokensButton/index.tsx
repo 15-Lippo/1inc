@@ -9,7 +9,7 @@ import { SwitchTokensIcon } from '../../icons';
 const StyledIconButton: StyledComponent<any> = styled(IconButton)<IconButtonProps>(() => ({
   padding: 0,
   position: 'absolute',
-  top: '36%',
+  top: '31%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   filter: 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08))',
