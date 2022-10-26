@@ -1,13 +1,13 @@
 import { TransactionRequest } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
 
-import { useActiveWeb3React } from '../../../packages';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenInfo, updateAllTokenBalances } from '../tokens';
 import { setIsWaitingTx, setLastTxHash, setTxErrorMessage } from '../transactions';
 
 export function useSwapCallback(swapTxInfo: TransactionRequest) {
   const dispatch = useAppDispatch();
-  const { library, account, chainId } = useActiveWeb3React();
+  const { provider, account, chainId } = useWeb3React();
   const { INPUT, OUTPUT, spender } = useAppSelector((state) => ({
     INPUT: state.swap.INPUT,
     OUTPUT: state.swap.OUTPUT,
@@ -15,18 +15,18 @@ export function useSwapCallback(swapTxInfo: TransactionRequest) {
   }));
 
   const swapCallback = async () => {
-    if (!chainId || !INPUT || !OUTPUT || !account || !library) return;
+    if (!chainId || !INPUT || !OUTPUT || !account || !provider) return;
 
     try {
       dispatch(setTxErrorMessage(''));
       dispatch(setIsWaitingTx(true));
-      const signer = library.getSigner(account);
+      const signer = provider.getSigner(account);
       const tx = await signer.sendTransaction(swapTxInfo);
 
       await tx.wait();
       if (tx.hash) {
         const updatedBalance = await getTokenInfo(
-          library,
+          provider,
           chainId,
           [INPUT, OUTPUT, '0x0000000000000000000000000000000000000000'],
           spender.address,

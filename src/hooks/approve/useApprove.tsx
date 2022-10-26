@@ -1,9 +1,9 @@
 import { TransactionRequest } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
 import { useCallback, useEffect } from 'react';
 
 import { ProtocolName } from '../../constants/protocolNames';
 import { ZERO_ADDRESS } from '../../constants/tokens';
-import { useActiveWeb3React } from '../../packages';
 import { fetchOneInchApproveTx } from '../../services';
 import {
   fetchApproveSpender,
@@ -19,7 +19,7 @@ import { useUpdateAllowance } from './useUpdateAllowance';
 // this allows balances to work, should be removed at the end
 export function useUpdateSpender() {
   const dispatch = useAppDispatch();
-  const { chainId } = useActiveWeb3React();
+  const { chainId } = useWeb3React();
   const spender = useAppSelector((state) => state.approve.spender);
 
   useEffect(() => {
@@ -61,13 +61,13 @@ async function createApproveTx({ selectedMethod, to, chainId, from }: GetApprove
 
 export const useApprove = () => {
   const dispatch = useAppDispatch();
-  const { library, account, chainId } = useActiveWeb3React();
+  const { provider, account, chainId } = useWeb3React();
   const INPUT = useAppSelector((state) => state.tokens.tokens[state.swap.INPUT]);
   const selectedMethod = useAppSelector((state) => state.swap.selectedMethod);
   const updateAllowance = useUpdateAllowance(selectedMethod);
 
   const approve = useCallback(async () => {
-    if (!library || !account || !chainId || !INPUT?.address) return;
+    if (!provider || !account || !chainId || !INPUT?.address) return;
 
     try {
       dispatch(setTxErrorMessage(''));
@@ -76,11 +76,11 @@ export const useApprove = () => {
       const txReq = await createApproveTx({ selectedMethod, to: INPUT.address, chainId, from: account });
 
       console.log('Sending approve tx: ', txReq);
-      const signer = library.getSigner(account).connectUnchecked();
+      const signer = provider.getSigner(account).connectUnchecked();
       const tx = await signer.sendTransaction(txReq);
       await tx.wait();
 
-      const updatedNativeTokenInfo = await getTokenInfo(library, chainId, [ZERO_ADDRESS], txReq.to || '', account);
+      const updatedNativeTokenInfo = await getTokenInfo(provider, chainId, [ZERO_ADDRESS], txReq.to || '', account);
       updatedNativeTokenInfo && dispatch(updateTokenInfo(updatedNativeTokenInfo));
       updateAllowance();
     } catch ({ message }) {
@@ -88,7 +88,7 @@ export const useApprove = () => {
       console.error('Attempt to send transaction failed:', message);
       return { error: message };
     }
-  }, [library, account, chainId, INPUT?.address, selectedMethod, updateAllowance]);
+  }, [provider, account, chainId, INPUT?.address, selectedMethod, updateAllowance]);
 
   return { approve, updateAllowance };
 };

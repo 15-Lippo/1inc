@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber';
+import { useWeb3React } from '@web3-react/core';
 import { useMemo } from 'react';
 
 import { NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
-import { useActiveWeb3React } from '../../packages';
 import { ApproveStatus, useAppSelector } from '../../store';
 import { Field } from '../../types';
 
 export const useApproveStatus = (): ApproveStatus => {
-  const { account } = useActiveWeb3React();
+  const { account } = useWeb3React();
   const { typedValue, allowance, inputAddress, selectedMethod } = useAppSelector((state) => ({
     typedValue: state.swap.typedValue,
     inputAddress: state.swap[Field.INPUT],

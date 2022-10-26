@@ -1,5 +1,6 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Box } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../../constants';
@@ -7,7 +8,6 @@ import { useAlertMessage, useGasPriceOptions, useInterval } from '../../hooks';
 import { useUpdate } from '../../hooks';
 import { useApprove, useUpdateSpender } from '../../hooks/approve/useApprove';
 import { useApproveStatus } from '../../hooks/approve/useApproveStatus';
-import { useActiveWeb3React } from '../../packages';
 import {
   applyDefaultSettings,
   ApproveStatus,
@@ -43,7 +43,7 @@ export type SwapProps = {
 
 function Swap({ width }: SwapProps) {
   const dispatch = useAppDispatch();
-  const { account, chainId } = useActiveWeb3React();
+  const { account, chainId } = useWeb3React();
   const { gasOptions, blockNum } = useGasPriceOptions();
   useTokens();
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);

@@ -1,14 +1,14 @@
 import { parseUnits } from '@ethersproject/units';
+import { useWeb3React } from '@web3-react/core';
 
 import { SwapApi } from '../../../../api';
-import { useActiveWeb3React } from '../../../../packages';
 import { Field } from '../../../../types';
 import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Token, updatePriceTokenInUsd } from '../tokensSlice';
 import { useUsdStablecoins } from './useUsdStablecoins';
 
 export const useTokenPricesInUsd = (usdStablecoinAddresses: string[], defaultStablecoin: Token | undefined) => {
-  const { chainId } = useActiveWeb3React();
+  const { chainId } = useWeb3React();
   const dispatch = useAppDispatch();
   const tokens = useAppSelector((state) => state.tokens.tokens);
 

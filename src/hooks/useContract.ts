@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts';
+import { useWeb3React } from '@web3-react/core';
 import { useMemo } from 'react';
 
-import { useActiveWeb3React } from '../packages';
 import { getContract } from '../utils';
 
 export function useContract<T extends Contract = Contract>(
@@ -9,15 +9,15 @@ export function useContract<T extends Contract = Contract>(
   abi: any,
   signer = true
 ): T | null {
-  const { library, account, chainId } = useActiveWeb3React();
+  const { provider, account, chainId } = useWeb3React();
 
   return useMemo(() => {
-    if (!address || !library || !chainId) return null;
+    if (!address || !provider || !chainId) return null;
     try {
-      return getContract(address, abi, library, signer && account ? account : undefined);
+      return getContract(address, abi, provider, signer && account ? account : undefined);
     } catch (error) {
       console.error('Failed to get contract', error);
       return null;
     }
-  }, [address, library, chainId, signer, account]) as T;
+  }, [address, provider, chainId, signer, account]) as T;
 }

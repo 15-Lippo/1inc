@@ -9,7 +9,7 @@ import {
   polygonApi,
 } from '@yozh-io/1inch-widget-api-client';
 
-import { DefaultRpcJsonEndpoint, NetworkConfig, SupportedChainId } from '../types';
+import { NetworkConfig, SupportedChainId } from '../types';
 import { toHex } from '../utils';
 
 /**
@@ -132,23 +132,11 @@ export const networkConfigs: Record<string, NetworkConfig> = {
   },
 };
 
-export const RPC_URLS: DefaultRpcJsonEndpoint = {
-  // [SupportedChainId.LOCALHOST]: 'http://127.0.0.1:8545',
-  [SupportedChainId.MAINNET]: 'https://rpc.ankr.com/eth',
-  [SupportedChainId.OPTIMISM]: 'https://mainnet.optimism.io/',
-  [SupportedChainId.BINANCE]: 'https://bsc-dataseed1.ninicoin.io',
-  [SupportedChainId.GNOSIS]: 'https://rpc.gnosischain.com',
-  [SupportedChainId.POLYGON]: 'https://polygon-rpc.com/',
-  [SupportedChainId.FANTOM]: 'https://rpc.ftm.tools',
-  [SupportedChainId.ARBITRUM_ONE]: 'https://arb1.arbitrum.io/rpc',
-  [SupportedChainId.AVALANCHE]: 'https://api.avax.network/ext/bc/C/rpc',
-};
-
 /**
  * Returns networkConfigs depends on chainId
  * number | undefined -> returns networkConfigs | undefined
  */
-export function getNetworkConfig(chainId: number | undefined): NetworkConfig | undefined {
+export function getNetworkConfig(chainId: number | undefined): any {
   if (chainId) {
     return networkConfigs[chainId] ?? undefined;
   }

@@ -1,11 +1,11 @@
 import { Box, Divider, Stack, useTheme } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Tokens } from '../../../constants';
 import { useLocalStorage } from '../../../hooks';
-import { useActiveWeb3React } from '../../../packages';
 import { selectCurrency, Token, useAppDispatch, useAppSelector, useUpdateUsdcPricesForBalances } from '../../../store';
 import { Field } from '../../../types';
 import { AddToken } from '../../buttons';
@@ -23,7 +23,7 @@ interface SelectTokenModalProps {
 
 const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectTokenModalProps) => {
   const theme = useTheme();
-  const { account, chainId } = useActiveWeb3React();
+  const { account, chainId } = useWeb3React();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { tokensList, tokenOnField, inputBalance, tokens } = useAppSelector((state) => ({

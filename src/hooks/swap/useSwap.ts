@@ -31,7 +31,7 @@ export const useSwap = () => {
     const swapInfo = await txBuilder(params);
     const tx = swapInfo.tx;
     if (!tx.gasLimit) {
-      tx.gasLimit = await estimateGas(tx, params.library, params.chainId);
+      tx.gasLimit = await estimateGas(tx, params.provider, params.chainId);
     }
     setSwapInfo(swapInfo);
   }, [txBuilder, params]);
@@ -48,13 +48,13 @@ export const useSwap = () => {
     try {
       dispatch(setTxErrorMessage(''));
       dispatch(setIsWaitingTx(true));
-      const signer = params.library.getSigner(params.fromAddress);
+      const signer = params.provider.getSigner(params.fromAddress);
       const tx = await signer.sendTransaction(txReq);
 
       await tx.wait();
       if (tx.hash) {
         const updatedBalance = await getTokenInfo(
-          params.library,
+          params.provider,
           params.chainId,
           [params.fromTokenAddress, params.toTokenAddress, '0x0000000000000000000000000000000000000000'],
           '0x0000000000000000000000000000000000000000',

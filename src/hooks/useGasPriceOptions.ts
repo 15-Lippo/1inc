@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { formatUnits } from '@ethersproject/units';
+import { useWeb3React } from '@web3-react/core';
 import { useEffect, useState } from 'react';
 
-import { useActiveWeb3React } from '../packages';
 import { SupportedGasOptions } from '../types';
 import { formatGweiFixed, parseGwei } from '../utils';
 
@@ -16,7 +16,7 @@ export type GasOption = {
 };
 
 export const useGasPriceOptions = () => {
-  const { library } = useActiveWeb3React();
+  const { provider } = useWeb3React();
   const [blockNum, setBlockNum] = useState<number>();
 
   const zeroGwei = '-- / -- - 0.00 Gwei';
@@ -56,14 +56,14 @@ export const useGasPriceOptions = () => {
     },
   });
 
-  if (library)
-    library.on('block', async (block: number) => {
+  if (provider)
+    provider.on('block', async (block: number) => {
       return setBlockNum(block);
     });
 
   const getGasOptions = async () => {
-    if (library) {
-      const feeData = await library.getFeeData();
+    if (provider) {
+      const feeData = await provider.getFeeData();
       if (feeData && feeData.gasPrice) {
         const gasPriceGwei = formatGweiFixed(feeData.gasPrice);
 

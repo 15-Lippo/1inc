@@ -7,9 +7,9 @@ import { PropsWithChildren } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import { Provider } from 'react-redux';
 
-import { DEFAULT_LOCALE, RPC_URLS, SUPPORTED_LOCALES, SupportedLocale } from '../../constants';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, SupportedLocale } from '../../constants';
+import { Provider as Web3ReactProvider } from '../../hooks/web3/index';
 import { defaultTheme } from '../../mui/theme';
-import { ActiveWeb3Provider, useActiveProvider } from '../../packages';
 import { setDefaultSettings, store } from '../../store';
 import { DefaultRpcJsonEndpoint, DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '../../types';
 import { validateDefaultTokensOptions, validateDefaultValue, validateReferrerOptions } from '../../utils';
@@ -39,7 +39,6 @@ export default function Widget({
   locale,
   children,
 }: PropsWithChildren<WidgetProps>) {
-  const web3Provider = useActiveProvider();
   const { i18n } = useTranslation();
 
   const changeLanguage = (lng: SupportedLocale) => {
@@ -84,9 +83,9 @@ export default function Widget({
         <CssBaseline />
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
-            <ActiveWeb3Provider provider={provider || web3Provider} jsonRpcEndpoint={jsonRpcEndpoint || RPC_URLS}>
+            <Web3ReactProvider provider={provider} jsonRpcMap={jsonRpcEndpoint}>
               {children}
-            </ActiveWeb3Provider>
+            </Web3ReactProvider>
           </Provider>
         </I18nextProvider>
       </ThemeProvider>
