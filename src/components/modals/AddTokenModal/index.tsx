@@ -11,6 +11,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -42,7 +43,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { provider } = useWeb3React();
+  const { provider, chainId } = useWeb3React();
   const { lastImportedTokenInfo } = useAppSelector((state) => state.tokens);
   const { tokens } = useAppSelector((state) => state.tokens);
 
@@ -58,10 +59,10 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
   const findTokenData = async () => {
     setSearchLoading(true);
 
-    const existingTokens = Object.values(
-      JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens) as string) ?? {}
-    );
-    const filteredData = [...existingTokens, ...Object.values(tokens)].filter((item: any) => {
+    const existingTokens = JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens) as string) ?? {};
+    const filtered = chainId && !_.isEmpty(existingTokens) ? existingTokens[chainId] ?? {} : {};
+
+    const filteredData = [...Object.values(filtered), ...Object.values(tokens)].filter((item: any) => {
       return searchInput.toLowerCase() === item.address.toLowerCase();
     });
     if (filteredData.length) {
@@ -145,10 +146,16 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
     // button for import is no needed in the main token list
     if (tokenToImport.token.button) delete tokenToImport.token.button;
     // @ts-ignore
-    const existingTokens = JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
+    const existingTokens = JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens) as string) ?? {};
+    const filtered = chainId && !_.isEmpty(existingTokens) ? existingTokens[chainId] ?? {} : {};
+
+    // @ts-ignore
     localStorage.setItem(
       LocalStorageKeys.imported_tokens,
-      JSON.stringify({ ...existingTokens, [tokenToImport.token.address]: tokenToImport.token })
+      JSON.stringify({
+        ...existingTokens,
+        [chainId as number]: { ...filtered, [tokenToImport.token.address]: tokenToImport.token },
+      })
     );
 
     dispatch(addTokenToAllTokens(tokenToImport.token));

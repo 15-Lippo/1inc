@@ -11,10 +11,10 @@ import {
   svgIconClasses,
   Typography,
 } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { LocalStorageKeys } from '../../../constants';
 import {
   setCustomGasPrice,
   setGasPriceInfo,
@@ -24,6 +24,7 @@ import {
 } from '../../../store';
 import { SupportedGasOptions } from '../../../types';
 import { formatGweiFixed } from '../../../utils';
+import { countOfCustomTokens } from '../../../utils';
 import { SlippageButtonsGroup } from '../../buttons';
 import GasPriceOptions from '../../GasPriceOptions';
 import { CustomTokensIcon, GasStation, SlippageWaves } from '../../icons';
@@ -39,16 +40,10 @@ interface SettingsModalProps {
 
 const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: SettingsModalProps) => {
   const dispatch = useAppDispatch();
+  const { chainId } = useWeb3React();
   const { t } = useTranslation();
   const { slippage, txFeeCalculation } = useAppSelector((state) => state.swap);
   const [isOpenCustomTokens, setOpenCustomTokens] = useState<boolean>(false);
-
-  const countOfCustomTokens = () => {
-    const existingTokens =
-      // @ts-ignore
-      JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens)) ?? [];
-    return Object.entries(existingTokens).length;
-  };
 
   const gasPriceGweiCustom =
     Number(txFeeCalculation.customGasPrice.maxFee) && formatGweiFixed(txFeeCalculation.customGasPrice.maxFee);
@@ -218,7 +213,7 @@ const SettingsModal = ({ gasOptions, isOpen, goBack, onOpenAddCustomToken }: Set
                   }
                 />
                 <Typography id="count-of-custom-tokens" color="widget.text-secondary" variant="rsm14">
-                  {countOfCustomTokens()}
+                  {countOfCustomTokens(chainId)}
                 </Typography>
                 <ArrowForwardIosRounded sx={{ ml: '13px', color: 'widget.icon-02', id: 'arrow', fontSize: 16 }} />
               </ListItemIcon>

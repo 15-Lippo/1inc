@@ -1,5 +1,6 @@
 import { Box, useTheme } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +21,7 @@ interface CustomTokensModalProps {
 const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomTokensModalProps) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const [customTokens, setCustomTokens] = useState({});
   const [searchValue, setSearchValue] = useState<string>('');
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
@@ -36,8 +37,10 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
 
   useEffect(() => {
     const existingTokens = JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens) as string) ?? {};
-    setCustomTokens(existingTokens);
-  }, [allTokens.length]);
+    const filtered = chainId && !_.isEmpty(existingTokens) ? existingTokens[chainId] ?? {} : {};
+
+    setCustomTokens(filtered);
+  }, [allTokens.length, chainId]);
 
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -50,13 +53,18 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
     });
     setFilteredResults(filteredData);
   };
-
   const onRemoveCustomToken = (address: string) => {
+    const existingTokens = JSON.parse(localStorage.getItem(LocalStorageKeys.imported_tokens) as string) ?? {};
     // remove token from the local storage:
-    // @ts-ignore
     delete customTokens[address];
-    localStorage.setItem(LocalStorageKeys.imported_tokens, JSON.stringify({ ...customTokens }));
 
+    localStorage.setItem(
+      LocalStorageKeys.imported_tokens,
+      JSON.stringify({
+        ...existingTokens,
+        [chainId as number]: { ...customTokens },
+      })
+    );
     // remove token from  main token list
     dispatch(removeTokenFromAllTokens(address));
 
