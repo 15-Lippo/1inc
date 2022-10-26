@@ -1,12 +1,12 @@
 import { FormControl, MenuItem, MenuItemProps, Select, SelectChangeEvent, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
-import React, { useEffect, useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { getNetworkConfig } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages';
+import useSwitchChain from '../../../hooks/useSwitchChain';
 import { NetworkListBtnType, SupportedChainId } from '../../../types';
-import { switchNetwork } from '../../../utils';
 import {
   ArbitrumLogo,
   AvalancheLogo,
@@ -79,8 +79,9 @@ const StyledMenuItem: StyledComponent<any> = styled(MenuItem)<MenuItemProps>(({ 
 }));
 
 const SwitchNetworkButton = () => {
-  const { chainId, connector, account } = useActiveWeb3React();
+  const { chainId } = useWeb3React();
   const theme = useTheme();
+  const switchChain = useSwitchChain();
   const [network, setNetwork] = useState<string>();
 
   useEffect(() => {
@@ -94,20 +95,17 @@ const SwitchNetworkButton = () => {
     if (!onSupportedChain) setNetwork('');
   }, [chainId]);
 
-  // useEffect(() => {
-  //   const chainChanged = (chainId: string) => setNetwork(parseInt(chainId, 16).toString());
-  //   ethereum.on('chainChanged', chainChanged);
-  //   return () => ethereum.removeListener('chainChanged', chainChanged);
-  // }, []);
-
-  const changeNetwork = async (event: SelectChangeEvent) => {
-    try {
+  const changeNetwork = useCallback(
+    async (event: SelectChangeEvent) => {
       const v = JSON.parse(event.target.value);
-      await switchNetwork(connector, Number(v.label), account);
-    } catch (err) {
-      console.error('Error in changeNetwork:', err);
-    }
-  };
+      try {
+        await switchChain(Number(v.label));
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [switchChain]
+  );
 
   const background = {
     [SupportedChainId.MAINNET]: theme.palette['gradientEth'],

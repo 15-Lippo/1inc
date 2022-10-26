@@ -1,9 +1,9 @@
 import { Stack, Typography } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import { Trans } from 'react-i18next';
 
 import { networkConfigs } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages';
 import { cleanLastTxHash, useAppDispatch, useAppSelector } from '../../../store';
 import { SupportedChainId } from '../../../types';
 import { MainButton, MainButtonType } from '../../buttons';
@@ -11,7 +11,7 @@ import { SentArray } from '../../icons';
 import { Modal, ModalHeaderType } from '../Modal';
 
 const TxSentModal = () => {
-  const { chainId } = useActiveWeb3React();
+  const { chainId } = useWeb3React();
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT, txHash } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],

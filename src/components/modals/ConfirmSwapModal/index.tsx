@@ -1,11 +1,11 @@
 import { formatUnits } from '@ethersproject/units';
 import { Avatar, Box, Stack, Typography, useTheme } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { useRate, useSingleTimeout } from '../../../hooks';
 import { useSwap } from '../../../hooks/swap/useSwap';
-import { useActiveWeb3React } from '../../../packages';
 import { fetchSwap, Token, useAppDispatch, useAppSelector, useUsdStablecoins } from '../../../store';
 import { Field, SupportedChainId } from '../../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../../utils';
@@ -81,7 +81,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   const { t } = useTranslation();
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const { account, chainId } = useActiveWeb3React();
+  const { account, chainId } = useWeb3React();
   const { INPUT, OUTPUT, lastQuoteUpdateTimestamp } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],

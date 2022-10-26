@@ -1,7 +1,7 @@
+import { useWeb3React } from '@web3-react/core';
 import { useCallback } from 'react';
 
 import { ProtocolName } from '../../constants/protocolNames';
-import { useActiveWeb3React } from '../../packages';
 import { getOneInchAllowance, getUniswapAllowance } from '../../services';
 import { AllowanceParams } from '../../services/types';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -24,12 +24,12 @@ function getAllowanceUpdater(method: string) {
 }
 
 export const useUpdateAllowance = (selectedMethod: string) => {
-  const { library, chainId, account } = useActiveWeb3React();
+  const { provider, chainId, account } = useWeb3React();
   const dispatch = useAppDispatch();
   const tokenAddress = useAppSelector((state) => state.swap[Field.INPUT]);
 
   return useCallback(() => {
-    if (!library || !chainId || !account || !tokenAddress) {
+    if (!provider || !chainId || !account || !tokenAddress) {
       return;
     }
     const updateAllowance = getAllowanceUpdater(selectedMethod);
@@ -37,7 +37,7 @@ export const useUpdateAllowance = (selectedMethod: string) => {
       updateSingleAllowance(async () => {
         try {
           return await updateAllowance({
-            library,
+            provider,
             tokenAddress,
             chainId,
             account,
@@ -48,5 +48,5 @@ export const useUpdateAllowance = (selectedMethod: string) => {
         }
       })
     );
-  }, [library, chainId, account, tokenAddress, selectedMethod]);
+  }, [provider, chainId, account, tokenAddress, selectedMethod]);
 };

@@ -12,11 +12,11 @@ import {
   listItemButtonClasses,
   ListItemText,
 } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { Tokens } from '../../constants';
-import { useActiveWeb3React } from '../../packages';
 import { Token, useAppSelector } from '../../store';
 import { SupportedChainId } from '../../types';
 import { CloseButton, LinkButton, PinButton } from '../buttons';
@@ -43,7 +43,7 @@ const VirtualizedTokenList = ({
   onRemoveCustomToken,
   pinnedTokens,
 }: VirtualizedTokenListProps) => {
-  const { chainId } = useActiveWeb3React();
+  const { chainId } = useWeb3React();
   const { explorer } = useAppSelector((state) => state.user);
   const { usdToken } = useAppSelector((state) => ({
     usdToken: state.tokens.tokens[Tokens.DOLLAR_TIED_TOKENS[chainId as SupportedChainId][0]],

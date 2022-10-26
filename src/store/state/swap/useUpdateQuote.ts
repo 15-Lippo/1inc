@@ -1,11 +1,12 @@
-import { useActiveWeb3React } from '../../../packages';
+import { useWeb3React } from '@web3-react/core';
+
 import { Field, SupportedChainId } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useUpdateUsdcPriceForSelectedTokens } from '../tokens';
 import { fetchQuote } from './swapSlice';
 
 export const useUpdateQuote = () => {
-  const { chainId } = useActiveWeb3React();
+  const { chainId } = useWeb3React();
   const dispatch = useAppDispatch();
   const { INPUT, OUTPUT, typedValue, referrerOptions, txFeeCalculation } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},

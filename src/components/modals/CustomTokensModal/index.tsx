@@ -1,9 +1,9 @@
 import { Box, useTheme } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LocalStorageKeys, Tokens } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages';
 import { removeTokenFromAllTokens, selectCurrency, Token, useAppDispatch, useAppSelector } from '../../../store';
 import { Field } from '../../../types';
 import { AddToken } from '../../buttons';
@@ -20,7 +20,7 @@ interface CustomTokensModalProps {
 const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomTokensModalProps) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const { account } = useActiveWeb3React();
+  const { account } = useWeb3React();
   const [customTokens, setCustomTokens] = useState({});
   const [searchValue, setSearchValue] = useState<string>('');
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);

@@ -1,9 +1,9 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { SxProps } from '@mui/system';
+import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useActiveWeb3React } from '../../../packages';
 import {
   BackButton,
   CloseButton,
@@ -54,7 +54,7 @@ export const Modal = ({
   sx,
 }: BaseModalProps) => {
   const { t } = useTranslation();
-  const { account } = useActiveWeb3React();
+  const { account } = useWeb3React();
 
   const textModalType = {
     [ModalHeaderType.Main]: t('Swap'),

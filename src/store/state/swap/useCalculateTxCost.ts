@@ -1,16 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { TransactionRequest } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
 import { useCallback, useEffect, useState } from 'react';
 
 import { networkConfigs } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages';
 import { calculateGasMargin, calculateTxFee } from '../../../utils';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setGasLimit, setTxFee } from './swapSlice';
 
 export const useCalculateTxCost = () => {
   const dispatch = useAppDispatch();
-  const { account, library, chainId } = useActiveWeb3React();
+  const { account, provider, chainId } = useWeb3React();
   const swapInfo = useAppSelector((state) => state.swap.swapInfo);
   const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const slippage = useAppSelector((state) => state.swap.slippage);
@@ -18,7 +18,7 @@ export const useCalculateTxCost = () => {
 
   useEffect(() => {
     if (!chainId) return;
-    setGasLimitFromProvider(networkConfigs[chainId].minGasLimit);
+    setGasLimitFromProvider(networkConfigs[chainId]?.minGasLimit || '160000');
   }, [chainId]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export const useCalculateTxCost = () => {
   }, [gasLimitFromProvider]);
 
   const estimateGasLimit = useCallback(async () => {
-    if (!account || !swapInfo?.tx?.data || !library) return;
+    if (!account || !swapInfo?.tx?.data || !provider) return;
 
     const tx: TransactionRequest = {
       to: swapInfo?.tx?.to,
@@ -36,7 +36,7 @@ export const useCalculateTxCost = () => {
     };
 
     try {
-      const gasLimit = await library.estimateGas(tx);
+      const gasLimit = await provider.estimateGas(tx);
 
       // gasLimit should be between 100000 and 11500000
       let gasMargin;

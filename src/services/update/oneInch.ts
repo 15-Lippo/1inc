@@ -4,7 +4,7 @@ import { TxInfo } from '../../store/state/swap/swapSlice';
 import { estimateGas, fetchOneInchQuote, fetchOneInchSwap, getDefaultGasLimit } from '../';
 import { UpdateOneInchParams } from '../types';
 
-export const getOneInchTx = async (params: UpdateOneInchParams, library: any): Promise<TxInfo> => {
+export const getOneInchTx = async (params: UpdateOneInchParams, provider: any): Promise<TxInfo> => {
   const quote: ethereumApi.QuoteResponseDto = await fetchOneInchQuote({
     chainId: params.chainId,
     quoteInfo: { ...params },
@@ -34,7 +34,7 @@ export const getOneInchTx = async (params: UpdateOneInchParams, library: any): P
       data: swap.tx.data,
       ...(!Number(swap.tx.value) ? {} : { value: swap.tx.value }),
     },
-    library,
+    provider,
     params.chainId
   );
 

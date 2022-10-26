@@ -1,12 +1,12 @@
+import { useWeb3React } from '@web3-react/core';
 import { useEffect, useMemo } from 'react';
 
-import { useActiveWeb3React } from '../../../packages';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getTokenBalances } from './balances';
 import { fetchTokens, updateAllTokenBalances } from './tokensSlice';
 
 export const useTokens = () => {
-  const { library, account, chainId } = useActiveWeb3React();
+  const { provider, account, chainId } = useWeb3React();
   const dispatch = useAppDispatch();
   const { tokens, spender } = useAppSelector((state) => ({
     tokens: state.tokens.tokens,
@@ -27,7 +27,7 @@ export const useTokens = () => {
   useEffect(() => {
     if (!addresses.length || !chainId || !spender.address) return;
     const getBalances = async () => {
-      const result = await getTokenBalances(library, chainId, addresses, spender.address, account);
+      const result = await getTokenBalances(provider, chainId, addresses, spender.address, account);
       dispatch(updateAllTokenBalances(result));
     };
 

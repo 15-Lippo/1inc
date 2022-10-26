@@ -8,7 +8,7 @@ export interface UpdateQuoteParams {
   gasPrice?: any;
   referrerAddress?: string;
   fee?: string;
-  library: JsonRpcProvider;
+  provider: JsonRpcProvider;
   fromTokenAddress: string;
   fromTokenDecimals: number;
   toTokenAddress: string;
@@ -29,7 +29,7 @@ export interface OneInchApproveTxParams {
 
 export interface AllowanceParams {
   tokenAddress: string;
-  library: JsonRpcProvider;
+  provider: JsonRpcProvider;
   account: string;
   chainId: number;
 }

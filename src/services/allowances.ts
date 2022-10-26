@@ -11,7 +11,7 @@ const getAllowance = async (params: AllowanceParamsWithSpender) => {
   if (params.tokenAddress === NATIVE_TOKEN_ADDRESS) {
     return MaxUint256.toString();
   }
-  const erc20Contract = getContract(params.tokenAddress, ERC20ABI, params.library);
+  const erc20Contract = getContract(params.tokenAddress, ERC20ABI, params.provider);
   return (await erc20Contract.allowance(params.account, params.spender)).toString();
 };
 

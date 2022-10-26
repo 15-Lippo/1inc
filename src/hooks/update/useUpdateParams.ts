@@ -1,6 +1,6 @@
+import { useWeb3React } from '@web3-react/core';
 import { useMemo } from 'react';
 
-import { useActiveWeb3React } from '../../packages';
 import { UpdateQuoteParams } from '../../services/types';
 import { useAppSelector } from '../../store';
 import { Field } from '../../types';
@@ -11,12 +11,12 @@ export const useUpdateParams = (): UpdateQuoteParams | undefined => {
   const slippage = useAppSelector((state) => state.swap.slippage);
   const amount = useAppSelector((state) => state.swap.typedValue);
 
-  const { account, chainId, library } = useActiveWeb3React();
+  const { account, chainId, provider } = useWeb3React();
 
   const referrerOptionsByChainId = useAppSelector((state) => state.swap.referrerOptions[Number(chainId)]);
 
   return useMemo(() => {
-    if (!chainId || !library || !fromToken || !toToken || !amount) {
+    if (!chainId || !provider || !fromToken || !toToken || !amount) {
       return undefined;
     }
 
@@ -40,9 +40,9 @@ export const useUpdateParams = (): UpdateQuoteParams | undefined => {
       amount,
       fromAddress: account,
       chainId,
-      library,
+      provider,
       referrerAddress,
       fee,
     };
-  }, [fromToken?.address, toToken?.address, slippage, amount, referrerOptionsByChainId, account, chainId, library]);
+  }, [fromToken?.address, toToken?.address, slippage, amount, referrerOptionsByChainId, account, chainId, provider]);
 };

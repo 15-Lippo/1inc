@@ -1,7 +1,5 @@
 import { BigNumberish } from '@ethersproject/bignumber';
 
-import { Web3ConnectorType } from './packages';
-
 export type ReferrerOptions = {
   [chainId in SupportedChainId]?: {
     referrerAddress: string;
@@ -44,7 +42,7 @@ export type NetworkListBtnType = {
 
 export type ConnectionMethod = {
   name: string;
-  connector: Web3ConnectorType;
+  connector: any;
   logo: () => void;
 };
 
@@ -57,7 +55,6 @@ export enum SupportedChainId {
   AVALANCHE = 43114,
   FANTOM = 250,
   GNOSIS = 100,
-  // LOCALHOST = 1337,
 }
 
 export enum Field {

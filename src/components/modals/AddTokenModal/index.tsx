@@ -10,12 +10,12 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import ERC20ABI from '../../../abi/ERC20ABI';
 import { LocalStorageKeys } from '../../../constants';
-import { useActiveWeb3React } from '../../../packages';
 import {
   addTokenToAllTokens,
   fetchCoinInfoById,
@@ -42,7 +42,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { library } = useActiveWeb3React();
+  const { provider } = useWeb3React();
   const { lastImportedTokenInfo } = useAppSelector((state) => state.tokens);
   const { tokens } = useAppSelector((state) => state.tokens);
 
@@ -71,9 +71,9 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
     } else {
       const isValidAddress = isAddress(searchInput);
 
-      if (isValidAddress && library) {
+      if (isValidAddress && provider) {
         try {
-          const erc20Contract = await getContract(searchInput, ERC20ABI, library);
+          const erc20Contract = await getContract(searchInput, ERC20ABI, provider);
           const coinName = await erc20Contract.name();
 
           await dispatch(fetchCoinInfoById(coinName));
