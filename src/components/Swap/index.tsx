@@ -46,7 +46,6 @@ function Swap({ width }: SwapProps) {
   const { account, chainId } = useWeb3React();
   const { gasOptions, blockNum } = useGasPriceOptions();
   useTokens();
-  const gasPriceInfo = useAppSelector((state) => state.swap.txFeeCalculation?.gasPriceInfo);
   const {
     INPUT,
     typedValue,
@@ -94,6 +93,7 @@ function Swap({ width }: SwapProps) {
   });
   const { errorMessage, shouldOpenModal, clearMessage } = useAlertMessage();
   const updateQuote = useUpdateQuote();
+  const gasOptionLabel = SupportedGasOptions[txFeeCalculation.gasPriceInfo.label] ?? SupportedGasOptions.High;
   useUpdateSpender();
 
   const widgetWidth = useMemo(() => {
@@ -105,11 +105,8 @@ function Swap({ width }: SwapProps) {
   }, [width]);
 
   useEffect(() => {
-    // Set default high gas price option:
-    if (gasPriceInfo?.price === '0' || !gasPriceInfo?.price) {
-      dispatch(setGasPriceInfo(gasOptions[SupportedGasOptions.High]));
-    }
-  }, [gasOptions, blockNum, chainId]);
+    dispatch(setGasPriceInfo(gasOptions[gasOptionLabel]));
+  }, [gasOptions[SupportedGasOptions.High]?.price]);
 
   useEffect(() => {
     if (chainId) {
