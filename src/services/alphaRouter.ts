@@ -13,7 +13,7 @@ export const getUniswapV3Route = async (params: UpdateUniswapParams): Promise<Sw
 
   const currencyAmount = CurrencyAmount.fromRawAmount(inputCurrency, JSBI.BigInt(params.amount));
 
-  const router: AlphaRouter = new AlphaRouter({ chainId: params.chainId, provider: params.library });
+  const router: AlphaRouter = new AlphaRouter({ chainId: params.chainId, provider: params.provider });
 
   const swapConfig = params.fromAddress
     ? {

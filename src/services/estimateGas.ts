@@ -3,9 +3,9 @@ import { Provider, TransactionRequest } from '@ethersproject/providers';
 import { networkConfigs } from '../constants';
 import { calculateGasMargin } from '../utils';
 
-export const estimateGas = async (tx: TransactionRequest, library: Provider, chainId: number): Promise<string> => {
+export const estimateGas = async (tx: TransactionRequest, provider: Provider, chainId: number): Promise<string> => {
   try {
-    return calculateGasMargin(await library.estimateGas(tx)).toString();
+    return calculateGasMargin(await provider.estimateGas(tx)).toString();
   } catch (e: any) {
     console.error('ESTIMATE GAS LIMIT FAILED! Tx:', tx);
     console.error(e);
