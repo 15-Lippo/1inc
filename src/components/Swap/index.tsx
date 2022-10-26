@@ -1,5 +1,3 @@
-import './index.css';
-
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Box } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';

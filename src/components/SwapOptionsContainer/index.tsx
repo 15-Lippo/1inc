@@ -19,7 +19,6 @@ const SwapOptionsContainer = () => {
   const selectedMethod = useAppSelector((state) => state.swap.selectedMethod);
   const typedValue = useAppSelector((state) => state.swap.typedValue);
   const oneInchQuoteInfo = useAppSelector((state) => state.swap.swapData[ProtocolName.ONE_INCH]);
-  const uniswapQuoteInfo = useAppSelector((state) => state.swap.swapData[ProtocolName.UNISWAP_V3]);
   const gasPrice = useAppSelector((state) => state.swap.txFeeCalculation.gasPriceInfo.price);
 
   const createQuoteInfoLabel = (toTokenAmount?: string, decimals?: number) => {
@@ -58,13 +57,6 @@ const SwapOptionsContainer = () => {
     gasPrice
   );
 
-  const uniswapLabels = createSwapOptionItemLabels(
-    uniswapQuoteInfo?.toTokenAmount,
-    toToken?.decimals,
-    uniswapQuoteInfo?.estimatedGas,
-    gasPrice
-  );
-
   const createSwapOptionClickHandler = (protocolName: string) => {
     return () => {
       if (protocolName !== selectedMethod) {
@@ -84,15 +76,7 @@ const SwapOptionsContainer = () => {
           txCostLabel={oneInchItemLabels.txCost}
         />
       </Grid>
-      <Grid item>
-        <SwapOptionItem
-          optionName={ProtocolName.UNISWAP_V3}
-          onClick={createSwapOptionClickHandler(ProtocolName.UNISWAP_V3)}
-          isBestQuote={ProtocolName.UNISWAP_V3 === selectedMethod}
-          quoteLabel={uniswapLabels.quote}
-          txCostLabel={uniswapLabels.txCost}
-        />
-      </Grid>
+      {/*  Add here more options */}
     </Grid>
   );
 };

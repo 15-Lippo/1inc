@@ -40,7 +40,7 @@ const SwapOptionItem = ({ quoteLabel, txCostLabel, onClick, optionName, isBestQu
             backgroundColor: 'widget.bg-07',
           }}>
           <Typography variant="rxs12" color="widget.text-primary-02">
-            <Trans>Selected</Trans>
+            <Trans>Best quote</Trans>
           </Typography>
         </Box>
       )}

@@ -1,10 +1,6 @@
-import { Interface } from '@ethersproject/abi';
 import { TransactionRequest } from '@ethersproject/providers';
-import { MaxUint256 } from '@uniswap/sdk-core';
 import { useCallback, useEffect } from 'react';
 
-import ERC20ABI from '../../abi/ERC20ABI';
-import { V3_SWAP_ROUTER_ADDRESS } from '../../constants';
 import { ProtocolName } from '../../constants/protocolNames';
 import { ZERO_ADDRESS } from '../../constants/tokens';
 import { useActiveWeb3React } from '../../packages';
@@ -46,14 +42,7 @@ async function createApproveTx({ selectedMethod, to, chainId, from }: GetApprove
         tokenAddress: to,
         chainId,
       }),
-    [ProtocolName.UNISWAP_V3]: async () => {
-      const ierc20 = new Interface(ERC20ABI);
-      return {
-        data: ierc20.encodeFunctionData('approve', [V3_SWAP_ROUTER_ADDRESS, MaxUint256.toString()]),
-        value: '0',
-        to,
-      };
-    },
+    // SET MORE PROTOCOLS HERE
   };
 
   const txCreator = approveTxCreators[selectedMethod];

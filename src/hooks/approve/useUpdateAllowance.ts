@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { ProtocolName } from '../../constants/protocolNames';
 import { useActiveWeb3React } from '../../packages';
-import { getOneInchAllowance, getUniswapAllowance } from '../../services';
+import { getOneInchAllowance } from '../../services';
 import { AllowanceParams } from '../../services/types';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { updateSingleAllowance } from '../../store/state/approve/approveSlice';
@@ -10,7 +10,6 @@ import { Field } from '../../types';
 
 const allowanceUpdaters: { [protocolName: string]: (params: AllowanceParams) => Promise<string> } = {
   [ProtocolName.ONE_INCH]: getOneInchAllowance,
-  [ProtocolName.UNISWAP_V3]: getUniswapAllowance,
 };
 
 function getAllowanceUpdater(method: string) {

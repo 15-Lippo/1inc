@@ -18,9 +18,6 @@ export interface UpdateQuoteParams {
 // eslint-disable-next-line
 export interface UpdateOneInchParams extends UpdateQuoteParams {}
 
-// eslint-disable-next-line
-export interface UpdateUniswapParams extends UpdateQuoteParams {}
-
 export interface OneInchApproveTxParams {
   tokenAddress: string;
   amount?: string;
