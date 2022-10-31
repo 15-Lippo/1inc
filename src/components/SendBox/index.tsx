@@ -30,7 +30,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
       inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
       loadingQuote: state.swap.loadingQuote,
       explorer: state.user.explorer,
-      txFee: state.swap.txFeeCalculation.txFee,
+      txFee: state.swap.txFees[state.swap.selectedMethod],
       lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
     }));
   const { defaultStablecoin } = useUsdStablecoins();

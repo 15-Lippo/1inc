@@ -7,7 +7,6 @@ import { NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
 import { useAppDispatch, useAppSelector, useUsdStablecoins } from '../../store';
 import { selectSwapMethod } from '../../store/state/swap/swapSlice';
 import { Field } from '../../types';
-import { calculateTxFee } from '../../utils';
 import SwapOptionItem from '../SwapOptionItem';
 
 const SwapOptionsContainer = () => {
@@ -20,6 +19,7 @@ const SwapOptionsContainer = () => {
   const typedValue = useAppSelector((state) => state.swap.typedValue);
   const oneInchQuoteInfo = useAppSelector((state) => state.swap.swapData[ProtocolName.ONE_INCH]);
   const gasPrice = useAppSelector((state) => state.swap.txFeeCalculation.gasPriceInfo.price);
+  const oneInchTxFee = useAppSelector((state) => state.swap.txFees[ProtocolName.ONE_INCH]);
 
   const createQuoteInfoLabel = (toTokenAmount?: string, decimals?: number) => {
     if (!toTokenAmount || !decimals) return '';
@@ -36,16 +36,11 @@ const SwapOptionsContainer = () => {
     return `${txCostInNativeToken.toFixed(4)} Ξ (~$${txCostInUsd.toFixed(2)})`;
   };
 
-  const createSwapOptionItemLabels = (
-    toTokenAmount?: string,
-    toTokenDecimals?: number,
-    gasPrice?: string,
-    gasLimit?: string
-  ) => {
-    if (!Number(typedValue) || loadingQuote !== 'succeeded' || !gasPrice || !gasLimit) return { txCost: '', quote: '' };
+  const createSwapOptionItemLabels = (toTokenAmount?: string, toTokenDecimals?: number, txFee?: string) => {
+    if (!Number(typedValue) || loadingQuote !== 'succeeded' || !gasPrice) return { txCost: '', quote: '' };
 
     return {
-      txCost: createTxCostLabel(calculateTxFee(gasLimit, gasPrice)),
+      txCost: createTxCostLabel(txFee),
       quote: createQuoteInfoLabel(toTokenAmount, toTokenDecimals),
     };
   };
@@ -53,8 +48,7 @@ const SwapOptionsContainer = () => {
   const oneInchItemLabels = createSwapOptionItemLabels(
     oneInchQuoteInfo?.toTokenAmount,
     toToken?.decimals,
-    oneInchQuoteInfo?.estimatedGas,
-    gasPrice
+    oneInchTxFee
   );
 
   const createSwapOptionClickHandler = (protocolName: string) => {

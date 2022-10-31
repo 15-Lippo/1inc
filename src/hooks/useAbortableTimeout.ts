@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export const useSingleTimeout = (callback: any, delay: number) => {
+export const useAbortableTimeout = (callback: any, delay: number) => {
   const timoutRef = useRef<NodeJS.Timeout>();
 
   const startTimeout = () => {

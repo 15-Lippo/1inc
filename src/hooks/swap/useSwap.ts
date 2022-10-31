@@ -72,6 +72,7 @@ export const useSwap = () => {
 
   return {
     toTokenAmount: swapInfo?.toTokenAmount || '',
+    tx: swapInfo?.tx,
     executeSwap,
     updateTx,
   };

@@ -17,7 +17,7 @@ import {
   useAppDispatch,
   useAppSelector,
   useTokens,
-  useUpdateQuote,
+  useUpdateUsdcPriceForSelectedTokens,
 } from '../../store';
 import { Field, SupportedGasOptions } from '../../types';
 import { totalRouteSteps } from '../../utils';
@@ -60,6 +60,7 @@ function Swap({ width }: SwapProps) {
     txFeeCalculation,
     lastQuoteUpdateTimestamp,
     selectedMethod,
+    txFee,
   } = useAppSelector((state) => ({
     loadingQuote: state.swap.loadingQuote,
     quoteError: state.swap.quoteError,
@@ -67,7 +68,7 @@ function Swap({ width }: SwapProps) {
     INPUT: state.swap.INPUT,
     // OUTPUT: state.swap.OUTPUT,
     typedValue: state.swap.typedValue,
-    protocols: state.swap.quoteInfo?.protocols,
+    protocols: state.swap.swapData[state.swap.selectedMethod]?.route,
     tokensList: state.tokens.tokens,
     // lastTxHash: state.transactions.lastTxHash,
     referrerOptions: state.swap.referrerOptions,
@@ -76,6 +77,7 @@ function Swap({ width }: SwapProps) {
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
     txFeeCalculation: state.swap.txFeeCalculation,
     selectedMethod: state.swap.selectedMethod,
+    txFee: state.swap.txFees[state.swap.selectedMethod],
   }));
 
   const update = useUpdate();
@@ -92,9 +94,10 @@ function Swap({ width }: SwapProps) {
     open: false,
   });
   const { errorMessage, shouldOpenModal, clearMessage } = useAlertMessage();
-  const updateQuote = useUpdateQuote();
   const gasOptionLabel = SupportedGasOptions[txFeeCalculation.gasPriceInfo.label] ?? SupportedGasOptions.High;
   useUpdateSpender();
+
+  const updateUsdcPriceForSelectedTokens = useUpdateUsdcPriceForSelectedTokens();
 
   const widgetWidth = useMemo(() => {
     if (width && width < 400) {
@@ -137,8 +140,9 @@ function Swap({ width }: SwapProps) {
     approve();
   };
 
-  const hasEnoughNativeTokenBalanceToSwap = () => {
-    let paymentCost = BigNumber.from(txFeeCalculation?.txFee);
+  const hasEnoughNativeTokenBalanceToSwap = (): boolean => {
+    if (!Number(txFee)) return true;
+    let paymentCost = BigNumber.from(txFee);
     if (INPUT === Tokens.NATIVE_TOKEN_ADDRESS) {
       paymentCost = paymentCost.add(typedValue);
     }
@@ -173,15 +177,17 @@ function Swap({ width }: SwapProps) {
   // that current update is really occurring after the specified delay
   useInterval(() => {
     const time = performance.now();
-    if (time - lastQuoteUpdateTimestamp < REFRESH_QUOTE_DELAY_MS || loadingQuote === 'pending') return;
-    updateQuote();
-    update && update();
+    if (time - lastQuoteUpdateTimestamp < REFRESH_QUOTE_DELAY_MS || loadingQuote === 'pending' || isConfirmOpen) return;
+    update();
   }, 1000);
 
   useEffect(() => {
-    updateQuote();
-    update && update();
+    update();
   }, [inputToken?.address, outputToken?.address, typedValue, referrerOptions, txFeeCalculation?.gasPriceInfo?.price]);
+
+  useEffect(() => {
+    updateUsdcPriceForSelectedTokens();
+  }, [lastQuoteUpdateTimestamp]);
 
   const routeSteps = totalRouteSteps(protocols);
 
@@ -239,7 +245,6 @@ function Swap({ width }: SwapProps) {
         isOpen={isSettingsOpen}
         goBack={() => setSettingsOpen(false)}
       />
-
       <SettingsModal
         onOpenAddCustomToken={() => setAddTokenOpen(true)}
         gasOptions={gasOptions}

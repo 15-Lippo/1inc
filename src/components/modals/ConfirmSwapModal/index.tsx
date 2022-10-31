@@ -1,13 +1,12 @@
 import { formatUnits } from '@ethersproject/units';
 import { Avatar, Box, Stack, Typography, useTheme } from '@mui/material';
-import { useWeb3React } from '@web3-react/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { useRate, useSingleTimeout } from '../../../hooks';
+import { useAbortableTimeout, useRate } from '../../../hooks';
 import { useSwap } from '../../../hooks/swap/useSwap';
-import { fetchSwap, Token, useAppDispatch, useAppSelector, useUsdStablecoins } from '../../../store';
-import { Field, SupportedChainId } from '../../../types';
+import { Token, useAppSelector, useUsdStablecoins } from '../../../store';
+import { Field } from '../../../types';
 import { formatGweiFixed, formatUsdFixed } from '../../../utils';
 import { AuxButton, MainButton, MainButtonType, SlippageButtonsGroup } from '../../buttons';
 import GasPriceOptions from '../../GasPriceOptions';
@@ -80,103 +79,45 @@ const SwapTokenBox = ({ field, token, amount, usdcPrice }: SwapTokenBoxProps) =>
 const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const dispatch = useAppDispatch();
-  const { account, chainId } = useWeb3React();
-  const { INPUT, OUTPUT, lastQuoteUpdateTimestamp } = useAppSelector((state) => ({
+  const { INPUT, OUTPUT } = useAppSelector((state) => ({
     INPUT: state.tokens.tokens[state.swap.INPUT],
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
   }));
 
-  const { typedValue, swapInfo, slippage, txFeeCalculation, referrerOptions } = useAppSelector((state) => state.swap);
+  const { typedValue, slippage, txFeeCalculation } = useAppSelector((state) => state.swap);
 
   const [slippageModalOpen, setSlippageModalOpen] = useState<boolean>(false);
   const [gasPriceModalOpen, setGasPriceModalOpen] = useState<boolean>(false);
   const [loadingSwap, setLoadingSwap] = useState<boolean>(false);
   const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
 
-  const { startTimeout, abortTimeout } = useSingleTimeout(() => setShouldRefresh(true), 5000);
+  const { startTimeout, abortTimeout } = useAbortableTimeout(() => setShouldRefresh(true), 5000);
   const { defaultStablecoin } = useUsdStablecoins();
 
-  const { executeSwap, updateTx, toTokenAmount } = useSwap();
-
-  const updateSwap = () => {
-    if (!INPUT?.address || !OUTPUT?.address || !Number(typedValue) || !account) return;
-    setLoadingSwap(true);
-
-    const referrerOptionsByChainId = referrerOptions[chainId as SupportedChainId];
-    dispatch(
-      fetchSwap({
-        swapInfo: {
-          fromTokenAddress: INPUT.address,
-          toTokenAddress: OUTPUT.address,
-          amount: typedValue.toString(),
-          fromAddress: String(account),
-          slippage,
-          disableEstimate: true,
-          gasPrice: Number(txFeeCalculation?.customGasPrice?.maxFee)
-            ? txFeeCalculation?.customGasPrice?.maxFee
-            : txFeeCalculation?.gasPriceInfo?.price,
-          // TODO https://github.com/yozh-io/1inch-widget/issues/236
-          // gasLimit: txFeeCalculation?.gasLimit,
-          referrerAddress: referrerOptionsByChainId?.referrerAddress,
-          fee: referrerOptionsByChainId?.fee,
-        },
-        chainId,
-      })
-    );
-  };
+  const { executeSwap, updateTx, toTokenAmount, tx } = useSwap();
 
   const price = useRate((typedValue || '0').toString(), toTokenAmount || '0');
 
   useEffect(() => {
     if (isOpen) {
       startTimeout();
-      updateSwap();
       updateTx();
+      setLoadingSwap(true);
     } else {
       abortTimeout();
-      setLoadingSwap(true);
     }
   }, [isOpen]);
-
-  useEffect(() => {
-    if (!INPUT?.userBalance) return;
-    !isOpen && updateSwap();
-  }, [lastQuoteUpdateTimestamp]);
 
   useEffect(() => {
     setShouldRefresh(false);
     setLoadingSwap(false);
     startTimeout();
-  }, [swapInfo]);
+  }, [tx]);
 
   useEffect(() => {
     setShouldRefresh(true);
   }, [slippage, txFeeCalculation?.gasPriceInfo.price, txFeeCalculation?.gasLimit]);
-
-  // const swapCallback = useSwapCallback({
-  //   from: swapInfo?.tx?.from,
-  //   to: swapInfo?.tx?.to,
-  //   data: swapInfo?.tx?.data,
-  //   value: swapInfo?.tx?.value,
-  //   // gasLimit: txFeeCalculation?.gasLimit,
-  //   ...(txFeeCalculation.gasPriceSettingsMode === 'basic'
-  //     ? { gasPrice: txFeeCalculation.gasPriceInfo.price }
-  //     : {
-  //         maxFeePerGas: txFeeCalculation.customGasPrice.maxFee,
-  //         maxPriorityFeePerGas: txFeeCalculation.customGasPrice.maxPriorityFee,
-  //       }),
-  // });
-
-  // const handleSendTx = useCallback(() => {
-  //   if (loadingSwap) return;
-  //   try {
-  //     swapCallback();
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }, [swapCallback]);
 
   const handleSendTx = useCallback(() => {
     if (loadingSwap) return;
@@ -189,7 +130,6 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   }, [executeSwap]);
 
   const onRefreshClick = () => {
-    updateSwap();
     updateTx();
     setLoadingSwap(true);
   };
@@ -204,6 +144,8 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
       ? txFeeCalculation.gasPriceInfo.price
       : txFeeCalculation.customGasPrice.maxFee
   );
+
+  const shouldDisableMainButton = loadingSwap || !toTokenAmount;
 
   return isOpen ? (
     <React.Fragment>
@@ -319,11 +261,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
             </Stack>
           </Stack>
           {!shouldRefresh ? (
-            <MainButton
-              type={MainButtonType.Confirm}
-              onClick={handleSendTx}
-              disabled={!(account && typedValue && swapInfo?.tx?.data)}
-            />
+            <MainButton type={MainButtonType.Confirm} onClick={handleSendTx} disabled={shouldDisableMainButton} />
           ) : (
             <Stack direction="column" spacing={1}>
               <RefreshRateWarningMsg
@@ -334,7 +272,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
               <MainButton
                 type={MainButtonType.Refresh}
                 onClick={onRefreshClick}
-                disabled={!(account && typedValue && swapInfo?.tx?.data)}
+                disabled={shouldDisableMainButton}
                 rateExpired={shouldRefresh}
               />
             </Stack>

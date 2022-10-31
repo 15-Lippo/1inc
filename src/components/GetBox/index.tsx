@@ -1,8 +1,8 @@
 import { Box, Link } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Trans } from 'react-i18next';
 
-import { useAppSelector, useCalculateTxCost } from '../../store';
+import { useAppSelector } from '../../store';
 import { Field } from '../../types';
 import { SelectTokenButton } from '../buttons';
 import SwapOptionsContainer from '../SwapOptionsContainer';
@@ -12,14 +12,8 @@ interface GetBoxProps {
 }
 
 const GetBox = ({ onSelectToken }: GetBoxProps) => {
-  const { estimateGasLimit } = useCalculateTxCost();
-  const swapInfo = useAppSelector((state) => state.swap.swapInfo);
   const OUTPUT = useAppSelector((state) => state.swap.OUTPUT);
   const explorer = useAppSelector((state) => state.user.explorer);
-
-  useEffect(() => {
-    if (swapInfo && swapInfo?.tx?.data) estimateGasLimit();
-  }, [swapInfo?.tx?.data]);
 
   return (
     <Box
