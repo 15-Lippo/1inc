@@ -1,12 +1,4 @@
-import {
-  selectCurrency,
-  setSlippage,
-  setTxFee,
-  swapInitialState,
-  swapReducer,
-  switchCurrencies,
-  typeInput,
-} from '../store';
+import { selectCurrency, setSlippage, swapInitialState, swapReducer, switchCurrencies, typeInput } from '../store';
 import { Field } from '../types';
 
 export const initialState = swapInitialState;
@@ -130,16 +122,6 @@ describe('swapSlice', () => {
       INPUT: '0x1111',
       typedValue: '',
       independentField: 'OUTPUT',
-    });
-  });
-  it('set tx fee', () => {
-    const fee = '1000';
-    expect(swapReducer(initialState, setTxFee(fee))).toEqual({
-      ...initialState,
-      txFeeCalculation: {
-        ...initialState.txFeeCalculation,
-        txFee: fee,
-      },
     });
   });
 });

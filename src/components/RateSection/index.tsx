@@ -22,10 +22,9 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
     INPUT: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     OUTPUT: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
     inputAmount: state.swap.typedValue || '0',
-    outputAmount: state.swap.quoteInfo?.toTokenAmount || '0',
+    outputAmount: state.swap.swapData[state.swap.selectedMethod]?.toTokenAmount || '0',
     loadingQuote: state.swap.loadingQuote,
-    lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
-    protocols: state.swap.quoteInfo?.protocols,
+    protocols: state.swap.swapData[state.swap.selectedMethod]?.route,
     tokens: state.tokens.tokens,
   }));
   const [loading, setLoading] = useState<boolean>(true);

@@ -1,5 +1,5 @@
 export { calculateGasMargin } from './calculateGasMargin';
-export { calculateTxCost, calculateTxFee } from './calculateTxCost';
+export { calculateRoughFees, calculateTxCost, calculateTxFee } from './calculateTxCost';
 export { getContract } from './contract';
 export { formatGweiFixed, formatUsdFixed, parseGwei } from './conversion';
 export { countOfCustomTokens } from './customTokens';

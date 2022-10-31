@@ -9,7 +9,8 @@ export const getUniswapQuote = async (params: UpdateUniswapParams): Promise<Quot
 
   return {
     toTokenAmount: parseUnits(route.quote.toExact(), params.toTokenDecimals).toString(),
-    route: JSON.stringify(route.route),
     estimatedGas: route.estimatedGasUsed.toString(),
+    route: undefined,
+    // TODO add route
   };
 };

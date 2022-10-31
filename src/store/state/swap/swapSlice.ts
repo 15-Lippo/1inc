@@ -11,6 +11,7 @@ import { QuoteUpdater } from '../../../hooks/update/types';
 import { QuoteInfo } from '../../../services/update';
 import { DefaultTokenOptions, Field, ReferrerOptions, SupportedGasOptions } from '../../../types';
 import { getSwapApiData } from '../../../utils';
+import { calculateRoughFees } from '../../../utils/';
 
 interface FetchQuoteParams {
   quoteInfo: ethereumApi.ExchangeControllerGetQuoteRequest;
@@ -88,8 +89,6 @@ export interface SwapState {
     };
     readonly gasPriceSettingsMode: 'basic' | 'advanced';
     readonly gasLimit?: string;
-    readonly maxFeePerGas?: string;
-    readonly txFee?: string;
   };
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
@@ -100,6 +99,7 @@ export interface SwapState {
   readonly lastQuoteCallId: number;
   readonly swapData: { [protocolName: string]: QuoteInfo };
   readonly selectedMethod: string;
+  readonly txFees: { [protocolName: string]: string };
 }
 
 export const initialState: SwapState = {
@@ -122,53 +122,6 @@ export const initialState: SwapState = {
   },
   defaultTypedValue: '',
   recipient: null,
-  quoteInfo: {
-    fromToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toTokenAmount: '',
-    fromTokenAmount: '',
-    protocols: [],
-    estimatedGas: 0,
-  },
-  swapInfo: {
-    fromToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toToken: {
-      symbol: '',
-      name: '',
-      address: '',
-      decimals: 0,
-      logoURI: '',
-    },
-    toTokenAmount: '',
-    fromTokenAmount: '',
-    protocols: [],
-    tx: {
-      from: '',
-      to: '',
-      data: '',
-      value: '',
-      gasPrice: '',
-      gas: '',
-    },
-  },
   txFeeCalculation: {
     gasPriceInfo: {
       id: SupportedGasOptions.High,
@@ -187,8 +140,6 @@ export const initialState: SwapState = {
     },
     gasPriceSettingsMode: 'basic',
     gasLimit: '',
-    maxFeePerGas: '',
-    txFee: '',
   },
   loading: 'idle',
   loadingQuote: 'idle',
@@ -199,6 +150,7 @@ export const initialState: SwapState = {
   lastQuoteCallId: -1,
   swapData: {},
   selectedMethod: ProtocolName.ONE_INCH,
+  txFees: {},
 };
 
 const swapSlice = createSlice({
@@ -266,16 +218,11 @@ const swapSlice = createSlice({
         state.typedValue = state.defaultTypedValue[chainId]?.toString() || '';
       }
     },
-    setGasLimit(state, { payload: gasLimit }) {
-      return {
-        ...state,
-        txFeeCalculation: { ...state.txFeeCalculation, gasLimit },
-      };
-    },
     setGasPriceInfo(state, { payload: gasPriceInfo }) {
       return {
         ...state,
         txFeeCalculation: { ...state.txFeeCalculation, gasPriceInfo },
+        txFees: calculateRoughFees(state.swapData, gasPriceInfo.price),
       };
     },
     setCustomGasPrice(state, { payload: customGasPrice }) {
@@ -283,23 +230,12 @@ const swapSlice = createSlice({
         ...state,
         txFeeCalculation: { ...state.txFeeCalculation, customGasPrice },
       };
+      // TODO question: should recalculate fees too?
     },
     setGasPriceSettingsMode(state, { payload: mode }) {
       return {
         ...state,
         txFeeCalculation: { ...state.txFeeCalculation, gasPriceSettingsMode: mode },
-      };
-    },
-    setMaxFeePerGas(state, { payload: maxFeePerGas }) {
-      return {
-        ...state,
-        txFeeCalculation: { ...state.txFeeCalculation, maxFeePerGas },
-      };
-    },
-    setTxFee(state, { payload: txFee }) {
-      return {
-        ...state,
-        txFeeCalculation: { ...state.txFeeCalculation, txFee },
       };
     },
     selectSwapMethod(state, { payload: selectedMethod }) {
@@ -311,38 +247,6 @@ const swapSlice = createSlice({
     },
   },
   extraReducers: (user) => {
-    user.addCase(fetchQuote.rejected, (state, action) => {
-      if (state.loadingQuote === 'pending') {
-        state.quoteError = action.error;
-      }
-    });
-    user.addCase(fetchQuote.fulfilled, (state, action) => {
-      if (action.payload?.statusCode && action.payload?.statusCode !== 200) {
-        state.quoteError = action.payload.description;
-      } else {
-        state.quoteError = null;
-        state.quoteInfo = action.payload;
-      }
-    });
-    user.addCase(fetchSwap.pending, (state) => {
-      state.loadingSwapInfo = 'pending';
-    });
-    user.addCase(fetchSwap.rejected, (state, action) => {
-      if (state.loadingSwapInfo === 'pending') {
-        state.loadingSwapInfo = 'idle';
-        state.swapError = action.error;
-      }
-    });
-    user.addCase(fetchSwap.fulfilled, (state, action) => {
-      if (action.payload?.statusCode && action.payload?.statusCode !== 200) {
-        state.loadingSwapInfo = 'failed';
-        state.swapError = action.payload.description;
-      } else {
-        state.loadingSwapInfo = 'succeeded';
-        state.swapError = null;
-        state.swapInfo = action.payload;
-      }
-    });
     user.addCase(updateQuote.pending, (state, action) => {
       state.loadingQuote = 'pending';
       state.lastQuoteCallId = action.meta.arg.updateId;
@@ -356,6 +260,7 @@ const swapSlice = createSlice({
       state.swapData = action.payload;
       state.lastQuoteUpdateTimestamp = performance.now();
       state.loadingQuote = 'succeeded';
+      state.txFees = calculateRoughFees(action.payload, state.txFeeCalculation.gasPriceInfo.price);
       console.log('UPDATE QUOTE FULFILLED');
     });
     user.addCase(updateQuote.rejected, (state, action) => {
@@ -374,9 +279,6 @@ export const {
   selectCurrency,
   switchCurrencies,
   setSlippage,
-  setGasLimit,
-  setMaxFeePerGas,
-  setTxFee,
   setGasPriceInfo,
   setCustomGasPrice,
   setGasPriceSettingsMode,

@@ -7,7 +7,6 @@ import { NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
 import { useAppDispatch, useAppSelector, useUsdStablecoins } from '../../store';
 import { selectSwapMethod } from '../../store/state/swap/swapSlice';
 import { Field } from '../../types';
-import { calculateTxFee } from '../../utils';
 import SwapOptionItem from '../SwapOptionItem';
 
 const SwapOptionsContainer = () => {
@@ -18,9 +17,9 @@ const SwapOptionsContainer = () => {
   const toToken = useAppSelector((state) => state.tokens.tokens[state.swap[Field.OUTPUT]]);
   const selectedMethod = useAppSelector((state) => state.swap.selectedMethod);
   const typedValue = useAppSelector((state) => state.swap.typedValue);
-  const oneInchQuoteInfo = useAppSelector((state) => state.swap.swapData[ProtocolName.ONE_INCH]);
-  const uniswapQuoteInfo = useAppSelector((state) => state.swap.swapData[ProtocolName.UNISWAP_V3]);
+  const quoteInfo = useAppSelector((state) => state.swap.swapData);
   const gasPrice = useAppSelector((state) => state.swap.txFeeCalculation.gasPriceInfo.price);
+  const fees = useAppSelector((state) => state.swap.txFees);
 
   const createQuoteInfoLabel = (toTokenAmount?: string, decimals?: number) => {
     if (!toTokenAmount || !decimals) return '';
@@ -37,32 +36,25 @@ const SwapOptionsContainer = () => {
     return `${txCostInNativeToken.toFixed(4)} Ξ (~$${txCostInUsd.toFixed(2)})`;
   };
 
-  const createSwapOptionItemLabels = (
-    toTokenAmount?: string,
-    toTokenDecimals?: number,
-    gasPrice?: string,
-    gasLimit?: string
-  ) => {
-    if (!Number(typedValue) || loadingQuote !== 'succeeded' || !gasPrice || !gasLimit) return { txCost: '', quote: '' };
+  const createSwapOptionItemLabels = (toTokenAmount?: string, toTokenDecimals?: number, txFee?: string) => {
+    if (!Number(typedValue) || loadingQuote !== 'succeeded' || !gasPrice) return { txCost: '', quote: '' };
 
     return {
-      txCost: createTxCostLabel(calculateTxFee(gasLimit, gasPrice)),
+      txCost: createTxCostLabel(txFee),
       quote: createQuoteInfoLabel(toTokenAmount, toTokenDecimals),
     };
   };
 
   const oneInchItemLabels = createSwapOptionItemLabels(
-    oneInchQuoteInfo?.toTokenAmount,
+    quoteInfo[ProtocolName.ONE_INCH]?.toTokenAmount,
     toToken?.decimals,
-    oneInchQuoteInfo?.estimatedGas,
-    gasPrice
+    fees[ProtocolName.ONE_INCH] || ''
   );
 
   const uniswapLabels = createSwapOptionItemLabels(
-    uniswapQuoteInfo?.toTokenAmount,
+    quoteInfo[ProtocolName.UNISWAP_V3]?.toTokenAmount,
     toToken?.decimals,
-    uniswapQuoteInfo?.estimatedGas,
-    gasPrice
+    fees[ProtocolName.UNISWAP_V3]
   );
 
   const createSwapOptionClickHandler = (protocolName: string) => {
