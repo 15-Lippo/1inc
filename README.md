@@ -9,31 +9,30 @@ List of supported networks:
 enum SupportedChainId {
     MAINNET = 1,
     ARBITRUM_ONE = 42161,
-    OPTIMISM = 10,
     POLYGON = 137,
     BINANCE = 56,
     AVALANCHE = 43114,
     FANTOM = 250,
-    GNOSIS = 100,
-    LOCALHOST = 1337
 }
 ```
+Networks GNOSIS (100) and OPTIMISM (10) coming soon.
+
 Set default values for each chainId:
 ```ts
 const defaultInputTokenAddress = {
     [SupportedChainId.MAINNET]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    [SupportedChainId.OPTIMISM]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
+    [SupportedChainId.FANTOM]: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
     ...
   }
   const defaultTypedValue = {
     [SupportedChainId.MAINNET]: '2000',
-    [SupportedChainId.OPTIMISM]: '2000',
+    [SupportedChainId.FANTOM]: '2000',
     ...
   }
 
   const defaultOutputTokenAddress = {
     [SupportedChainId.MAINNET]: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    [SupportedChainId.OPTIMISM]: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    [SupportedChainId.FANTOM]: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     ...
   }
 
@@ -42,7 +41,7 @@ const defaultInputTokenAddress = {
       referrerAddress: '0xF4da87003DE84337400DB65A2DE41586E3557831',
       fee: '3',
     },
-    [SupportedChainId.OPTIMISM]: {
+    [SupportedChainId.FANTOM]: {
       referrerAddress: '0xF4da87003DE84337400DB65A2DE41586E3557831',
       fee: '5',
     },
@@ -51,7 +50,7 @@ const defaultInputTokenAddress = {
 
   const defaultJsonRpcEndpoint = {
     [SupportedChainId.MAINNET]: 'https://eth-mainnet.alchemyapi.io/v2/...',
-    [SupportedChainId.OPTIMISM]: 'https://opt-mainnet.g.alchemy.com/v2/...',
+    [SupportedChainId.FANTOM]: 'https://rpc.ftm.tools',
     ...
   }
 ```
