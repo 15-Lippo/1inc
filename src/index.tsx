@@ -19,9 +19,7 @@ function SwapWidget() {
     <Widget
       defaultTypedValue={{
         1: parseUnits('2', 6).toString(),
-        10: parseUnits('2', 6).toString(),
         56: parseUnits('2', 18).toString(),
-        100: parseUnits('2', 6).toString(),
         137: parseUnits('2', 6).toString(),
         250: parseUnits('2', 6).toString(),
         42161: parseUnits('2', 6).toString(),
@@ -29,9 +27,7 @@ function SwapWidget() {
       }}
       defaultInputTokenAddress={{
         1: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        10: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
         56: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
-        100: '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83',
         137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
         250: '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
         42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
@@ -39,9 +35,7 @@ function SwapWidget() {
       }}
       defaultOutputTokenAddress={{
         1: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-        10: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         56: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-        100: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         137: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         250: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
         42161: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',

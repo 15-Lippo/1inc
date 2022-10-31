@@ -33,14 +33,14 @@ export const FAVORITE_TOKENS = {
     '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
     '0x111111111117dc0aa78b770fa6a738034120c302',
   ],
-  [SupportedChainId.OPTIMISM]: [
-    NATIVE_TOKEN_ADDRESS,
-    '0x8700daec35af8ff88c16bdf0418774cb3d7599b4',
-    '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
-    '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58',
-    '0x68f180fcce6836688e9084f035309e29bf0a2095',
-    '0x350a791bfc2c21f9ed5d10980dad2e2638ffa7f6',
-  ],
+  // [SupportedChainId.OPTIMISM]: [
+  //   NATIVE_TOKEN_ADDRESS,
+  //   '0x8700daec35af8ff88c16bdf0418774cb3d7599b4',
+  //   '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
+  //   '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58',
+  //   '0x68f180fcce6836688e9084f035309e29bf0a2095',
+  //   '0x350a791bfc2c21f9ed5d10980dad2e2638ffa7f6',
+  // ],
   [SupportedChainId.BINANCE]: [
     NATIVE_TOKEN_ADDRESS,
     '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
@@ -50,14 +50,14 @@ export const FAVORITE_TOKENS = {
     '0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c',
     '0x111111111117dc0aa78b770fa6a738034120c302',
   ],
-  [SupportedChainId.GNOSIS]: [
-    NATIVE_TOKEN_ADDRESS,
-    '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d',
-    '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1',
-    '0x4ecaba5870353805a9f068101a40e0f32ed605c6',
-    '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
-    '0x7f7440c5098462f833e123b44b8a03e1d9785bab',
-  ],
+  // [SupportedChainId.GNOSIS]: [
+  //   NATIVE_TOKEN_ADDRESS,
+  //   '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d',
+  //   '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1',
+  //   '0x4ecaba5870353805a9f068101a40e0f32ed605c6',
+  //   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
+  //   '0x7f7440c5098462f833e123b44b8a03e1d9785bab',
+  // ],
   [SupportedChainId.POLYGON]: [
     NATIVE_TOKEN_ADDRESS,
     '0x71b821aa52a49f32eed535fca6eb5aa130085978',
@@ -98,13 +98,13 @@ export const DOLLAR_TIED_TOKENS = {
     '0xdac17f958d2ee523a2206206994597c13d831ec7', // usdt
     '0x6b175474e89094c44da98b954eedeac495271d0f', // dai
   ],
-  [SupportedChainId.OPTIMISM]: [
-    '0x7f5c764cbc14f9669b88837ca1490cca17c31607', // USDC
-  ],
+  // [SupportedChainId.OPTIMISM]: [
+  //   '0x7f5c764cbc14f9669b88837ca1490cca17c31607', // USDC
+  // ],
   [SupportedChainId.BINANCE]: [
     '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', // USDC
   ],
-  [SupportedChainId.GNOSIS]: ['0xddafbb505ad214d7b80b1f830fccc89b60fb7a83'], // USD//C
+  // [SupportedChainId.GNOSIS]: ['0xddafbb505ad214d7b80b1f830fccc89b60fb7a83'], // USD//C
   [SupportedChainId.POLYGON]: [
     '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
   ],

@@ -49,12 +49,12 @@ export type ConnectionMethod = {
 export enum SupportedChainId {
   MAINNET = 1,
   ARBITRUM_ONE = 42161,
-  OPTIMISM = 10,
+  // OPTIMISM = 10,
   POLYGON = 137,
   BINANCE = 56,
   AVALANCHE = 43114,
   FANTOM = 250,
-  GNOSIS = 100,
+  // GNOSIS = 100,
 }
 
 export enum Field {

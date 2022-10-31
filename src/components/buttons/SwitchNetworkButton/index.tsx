@@ -13,8 +13,8 @@ import {
   BinanceSmartChainLogo,
   EthereumLogo,
   FantomLogo,
-  GnosisLogo,
-  OptimismLogo,
+  // GnosisLogo,
+  // OptimismLogo,
   PolygonLogo,
   SelectDownArrowButton,
 } from '../../icons';
@@ -35,21 +35,21 @@ const networkListBtn: Record<string, NetworkListBtnType> = {
     name: 'Polygon',
     logo: PolygonLogo,
   },
-  [SupportedChainId[SupportedChainId.OPTIMISM]]: {
-    label: SupportedChainId.OPTIMISM,
-    name: 'Optimism',
-    logo: OptimismLogo,
-  },
+  // [SupportedChainId[SupportedChainId.OPTIMISM]]: {
+  //   label: SupportedChainId.OPTIMISM,
+  //   name: 'Optimism',
+  //   logo: OptimismLogo,
+  // },
   [SupportedChainId[SupportedChainId.ARBITRUM_ONE]]: {
     label: SupportedChainId.ARBITRUM_ONE,
     name: 'Arbitrum',
     logo: ArbitrumLogo,
   },
-  [SupportedChainId[SupportedChainId.GNOSIS]]: {
-    label: SupportedChainId.GNOSIS,
-    name: 'Gnosis',
-    logo: GnosisLogo,
-  },
+  // [SupportedChainId[SupportedChainId.GNOSIS]]: {
+  //   label: SupportedChainId.GNOSIS,
+  //   name: 'Gnosis',
+  //   logo: GnosisLogo,
+  // },
   [SupportedChainId[SupportedChainId.AVALANCHE]]: {
     label: SupportedChainId.AVALANCHE,
     name: 'Avalanche',
@@ -110,12 +110,12 @@ const SwitchNetworkButton = () => {
   const background = {
     [SupportedChainId.MAINNET]: theme.palette['gradientEth'],
     [SupportedChainId.ARBITRUM_ONE]: theme.palette['gradientArbitrum'],
-    [SupportedChainId.OPTIMISM]: theme.palette['gradientOptimism'],
+    // [SupportedChainId.OPTIMISM]: theme.palette['gradientOptimism'],
     [SupportedChainId.POLYGON]: theme.palette['gradientPolygon'],
     [SupportedChainId.BINANCE]: theme.palette['gradientBnb'],
     [SupportedChainId.AVALANCHE]: theme.palette['gradientAvalanche'],
     [SupportedChainId.FANTOM]: theme.palette['gradientFantom'],
-    [SupportedChainId.GNOSIS]: theme.palette['gradientGnosis'],
+    // [SupportedChainId.GNOSIS]: theme.palette['gradientGnosis'],
   };
 
   return (
