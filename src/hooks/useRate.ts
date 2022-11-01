@@ -2,6 +2,7 @@ import { formatUnits } from '@ethersproject/units';
 import { useMemo } from 'react';
 
 import { useAppSelector } from '../store';
+import { bigFloatToFixed } from '../utils';
 
 export const useRate = (inputAmount: string, outputAmount: string) => {
   const { INPUT, OUTPUT } = useAppSelector((state) => ({
@@ -28,8 +29,8 @@ export const useRate = (inputAmount: string, outputAmount: string) => {
     }
 
     return {
-      input: (outputAmountNumber / inputAmountNumber).toFixed(4),
-      output: (inputAmountNumber / outputAmountNumber).toFixed(4),
+      input: bigFloatToFixed(String(outputAmountNumber / inputAmountNumber), 6),
+      output: bigFloatToFixed(String(inputAmountNumber / outputAmountNumber), 6),
     };
   }, [inputAmount, outputAmount, INPUT, OUTPUT]);
 };

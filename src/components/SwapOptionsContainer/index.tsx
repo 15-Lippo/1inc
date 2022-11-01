@@ -7,6 +7,7 @@ import { NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
 import { useAppDispatch, useAppSelector, useUsdStablecoins } from '../../store';
 import { selectSwapMethod } from '../../store/state/swap/swapSlice';
 import { Field } from '../../types';
+import { bigFloatToFixed } from '../../utils';
 import SwapOptionItem from '../SwapOptionItem';
 
 const SwapOptionsContainer = () => {
@@ -33,7 +34,7 @@ const SwapOptionsContainer = () => {
     const txCostInNativeToken = parseFloat(formatUnits(txFee, nativeToken.decimals));
     const nativeTokenPriceInUsd = parseFloat(formatUnits(nativeToken.priceInUsd, defaultStablecoin.decimals));
     const txCostInUsd = txCostInNativeToken * nativeTokenPriceInUsd;
-    return `${txCostInNativeToken.toFixed(4)} Ξ (~$${txCostInUsd.toFixed(2)})`;
+    return `${txCostInNativeToken.toFixed(4)} Ξ (~$${bigFloatToFixed(txCostInUsd.toString(), 4)})`;
   };
 
   const createSwapOptionItemLabels = (toTokenAmount?: string, toTokenDecimals?: number, txFee?: string) => {

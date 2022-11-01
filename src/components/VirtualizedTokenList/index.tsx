@@ -19,6 +19,7 @@ import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { Tokens } from '../../constants';
 import { Token, useAppSelector } from '../../store';
 import { SupportedChainId } from '../../types';
+import { bigFloatToFixed } from '../../utils';
 import { CloseButton, LinkButton, PinButton } from '../buttons';
 import { NoLogoURI, NoTokenFoundIcon } from '../icons';
 
@@ -114,7 +115,7 @@ const VirtualizedTokenList = ({
             }}
             primary={name}
             secondary={`${
-              Number(userBalance) ? `${parseFloat(formatUnits(userBalance || '0x00', decimals)).toFixed(4)}` : ''
+              Number(userBalance) ? `${bigFloatToFixed(formatUnits(userBalance || '0x00', decimals), 4)}` : ''
             } ${symbol}`}
           />
           <ListItemText
@@ -132,7 +133,7 @@ const VirtualizedTokenList = ({
               button?.label || onRemoveCustomToken
                 ? ''
                 : Number(userBalance)
-                ? `$${balanceInUsd && commify(parseFloat(balanceInUsd).toFixed(2))}`
+                ? `$${balanceInUsd && commify(bigFloatToFixed(balanceInUsd, 4))}`
                 : '0'
             }
           />

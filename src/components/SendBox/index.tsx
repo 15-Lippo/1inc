@@ -10,6 +10,7 @@ import { Tokens } from '../../constants';
 import { useApproveStatus } from '../../hooks/approve/useApproveStatus';
 import { ApproveStatus, typeInput, useAppDispatch, useAppSelector, useUsdStablecoins } from '../../store';
 import { Field } from '../../types';
+import { bigFloatToFixed } from '../../utils';
 import { AuxButton, SelectTokenButton } from '../buttons';
 import { InputAmount } from '../fields';
 import { LockerIcon } from '../icons';
@@ -41,18 +42,19 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
     if (_.isEmpty(INPUT)) return;
     if (account && !INPUT?.userBalance) return;
     if (!Number(INPUT?.userBalance)) return '0';
-    return parseFloat(formatUnits(INPUT.userBalance || '0', INPUT.decimals)).toFixed(6);
+    return bigFloatToFixed(formatUnits(INPUT.userBalance || '0', INPUT.decimals), 6);
   }, [account, INPUT?.address, INPUT?.userBalance]);
 
   const valueInUsd = useMemo(
     () =>
       inputTokenPriceInUsd && typedValue && !_.isEmpty(INPUT) && defaultStablecoin?.decimals
-        ? parseFloat(
+        ? bigFloatToFixed(
             formatUnits(
               BigNumber.from(typedValue).mul(BigNumber.from(inputTokenPriceInUsd)),
               INPUT.decimals + defaultStablecoin.decimals
-            )
-          ).toFixed(2)
+            ),
+            4
+          )
         : '',
     [INPUT, inputTokenPriceInUsd, lastQuoteUpdateTimestamp]
   );
