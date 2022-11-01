@@ -1,3 +1,4 @@
+export { bigFloatToFixed } from './bigFloatToFixed';
 export { calculateGasMargin } from './calculateGasMargin';
 export { calculateRoughFees, calculateTxCost, calculateTxFee } from './calculateTxCost';
 export { getContract } from './contract';
