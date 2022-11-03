@@ -83,6 +83,7 @@ export const useApprove = () => {
       const updatedNativeTokenInfo = await getTokenInfo(provider, chainId, [ZERO_ADDRESS], txReq.to || '', account);
       updatedNativeTokenInfo && dispatch(updateTokenInfo(updatedNativeTokenInfo));
       updateAllowance();
+      dispatch(setIsWaitingTx(false));
     } catch ({ message }) {
       dispatch(setTxErrorMessage(message));
       console.error('Attempt to send transaction failed:', message);
