@@ -103,7 +103,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     if (isOpen) {
       startTimeout();
       updateTx();
-      setLoadingSwap(true);
+      // setLoadingSwap(true);
     } else {
       abortTimeout();
     }

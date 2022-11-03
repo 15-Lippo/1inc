@@ -1,6 +1,5 @@
 import { formatUnits, parseUnits } from '@ethersproject/units';
-import { StandardTextFieldProps, TextField } from '@mui/material';
-import { outlinedInputClasses } from '@mui/material';
+import { outlinedInputClasses, StandardTextFieldProps, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import _ from 'lodash';
@@ -56,11 +55,16 @@ const InputAmount = ({ inputId }: SendProps) => {
 
   const handleChange = ({ target }: any) => {
     const { value, id } = target;
-    const test = Constants.INPUT_REGEX.test(value);
 
-    if (test) {
-      setAmount(value);
-      if (INPUT) debouncedTypedValueSetter(value, id, INPUT.decimals);
+    // separator should be a dot and the string must not start with a separator
+    let v = value.replaceAll(',', '.');
+    if (v.match(/^\.[0-9]*/g)) v = '0' + v;
+
+    const validated = v.match(Constants.INPUT_REGEX);
+    if (validated) {
+      setAmount(v);
+      if (!Number(v)) return;
+      if (INPUT.decimals) debouncedTypedValueSetter(v, id, INPUT.decimals);
     }
   };
 
