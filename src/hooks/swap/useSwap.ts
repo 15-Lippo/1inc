@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { ZERO_ADDRESS } from '../../constants/tokens';
 import { estimateGas } from '../../services';
 import {
   ApproveStatus,
@@ -10,6 +11,8 @@ import {
   updateAllTokenBalances,
   useAppDispatch,
 } from '../../store';
+import { getTxStatus, TxStatusType } from '../../utils';
+import { ITxStatus } from '../../utils/txStatus';
 import { useApproveStatus } from '../approve/useApproveStatus';
 import { SwapInfo } from '../update/types';
 import { useUpdateParams } from '../update/useUpdateParams';
@@ -52,16 +55,32 @@ export const useSwap = () => {
       const tx = await signer.sendTransaction(txReq);
 
       await tx.wait();
+
       if (tx.hash) {
-        const updatedBalance = await getTokenInfo(
-          params.provider,
-          params.chainId,
-          [params.fromTokenAddress, params.toTokenAddress, '0x0000000000000000000000000000000000000000'],
-          '0x0000000000000000000000000000000000000000',
-          params.fromAddress
-        );
-        dispatch(setLastTxHash(tx.hash));
-        dispatch(updateAllTokenBalances(updatedBalance));
+        await getTxStatus(tx.hash, params.provider, (txStatus: ITxStatus) => {
+          const typeToStatus = {
+            [TxStatusType.SUCCESSFUL]: async () => {
+              const updatedBalance = await getTokenInfo(
+                params.provider,
+                params.chainId,
+                [params.fromTokenAddress, params.toTokenAddress, ZERO_ADDRESS],
+                ZERO_ADDRESS,
+                params.fromAddress
+              );
+              dispatch(setLastTxHash(tx.hash));
+              dispatch(setIsWaitingTx(false));
+              dispatch(updateAllTokenBalances(updatedBalance));
+            },
+            [TxStatusType.REVERTED]: async () => {
+              dispatch(setTxErrorMessage(txStatus.error));
+              dispatch(setIsWaitingTx(false));
+            },
+            [TxStatusType.PENDING]: async () => {
+              console.log('PENDING');
+            },
+          };
+          typeToStatus[txStatus.status]();
+        });
       }
     } catch ({ message }) {
       dispatch(setTxErrorMessage(message));

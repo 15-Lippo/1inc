@@ -3,7 +3,7 @@ import { Grid } from '@mui/material';
 import React from 'react';
 
 import { ProtocolName } from '../../constants/protocolNames';
-import { NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
+import { INCH_NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
 import { useAppDispatch, useAppSelector, useUsdStablecoins } from '../../store';
 import { selectSwapMethod } from '../../store/state/swap/swapSlice';
 import { Field } from '../../types';
@@ -13,7 +13,7 @@ import SwapOptionItem from '../SwapOptionItem';
 const SwapOptionsContainer = () => {
   const { defaultStablecoin } = useUsdStablecoins();
   const dispatch = useAppDispatch();
-  const nativeToken = useAppSelector((state) => state.tokens.tokens[NATIVE_TOKEN_ADDRESS]);
+  const nativeToken = useAppSelector((state) => state.tokens.tokens[INCH_NATIVE_TOKEN_ADDRESS]);
   const loadingQuote = useAppSelector((state) => state.swap.loadingQuote);
   const toToken = useAppSelector((state) => state.tokens.tokens[state.swap[Field.OUTPUT]]);
   const selectedMethod = useAppSelector((state) => state.swap.selectedMethod);

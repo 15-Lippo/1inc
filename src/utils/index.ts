@@ -9,5 +9,6 @@ export { default as JsonRpcConnector } from './JsonRpcConnector';
 export { roundPercentInRoutes } from './roundPercentInRoutes';
 export { toHex } from './toHex';
 export { totalRouteSteps } from './totalRouteSteps';
+export { getTxStatus, TxStatusType } from './txStatus';
 export { validateDefaultTokensOptions, validateDefaultValue, validateReferrerOptions } from './validateDefaults';
 export { WalletConnectPopup } from './WalletConnect';

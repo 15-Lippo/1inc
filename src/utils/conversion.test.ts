@@ -16,8 +16,8 @@ describe('formatGweiFixed', () => {
 });
 
 describe('formatUsdFixed', () => {
-  it('should return "1234.57" when arguments are "1234567890" and 6', () => {
-    expect(formatUsdFixed(value, usdCoinDecimals)).toEqual('1234.57');
+  it('should return "1234.5678" when arguments are "1234567890" and 6', () => {
+    expect(formatUsdFixed(value, usdCoinDecimals)).toEqual('1234.5678');
   });
 
   it('should return incorrectly converted result', () => {

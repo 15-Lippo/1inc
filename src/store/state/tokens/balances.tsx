@@ -2,6 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 
 import TokenHelper from '../../../abi/TokenHelperABI';
 import { networkConfigs } from '../../../constants';
+import { ZERO_ADDRESS } from '../../../constants/tokens';
 import { SupportedChainId } from '../../../types';
 import { getContract } from '../../../utils';
 
@@ -75,7 +76,7 @@ export async function getTokenBalances(
   const arrayLength = 200;
 
   // Add native currency
-  addresses.push('0x0000000000000000000000000000000000000000');
+  addresses.push(ZERO_ADDRESS);
 
   // multicall is limited by block size. if the request contains more than 600 addresses for the Ether network, the transaction will fail
   // that's why a big array should be divided into smaller arrays

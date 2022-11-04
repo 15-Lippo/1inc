@@ -102,8 +102,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   useEffect(() => {
     if (isOpen) {
       startTimeout();
-      updateTx();
-      // setLoadingSwap(true);
+      updateTx().then(() => setLoadingSwap(false));
     } else {
       abortTimeout();
     }
@@ -130,7 +129,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
   }, [executeSwap]);
 
   const onRefreshClick = () => {
-    updateTx();
+    updateTx().then(() => setLoadingSwap(false));
     setLoadingSwap(true);
   };
 

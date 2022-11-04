@@ -1,10 +1,10 @@
 import { Field, SupportedChainId } from '../types';
 
-export const NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+export const INCH_NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const DEFAULT_TOKENS = {
-  [Field.INPUT]: NATIVE_TOKEN_ADDRESS,
+  [Field.INPUT]: INCH_NATIVE_TOKEN_ADDRESS,
   [Field.OUTPUT]: '0x111111111117dc0aa78b770fa6a738034120c302',
 };
 
@@ -26,7 +26,7 @@ export const MAIN_TOKENS = [
 
 export const FAVORITE_TOKENS = {
   [SupportedChainId.MAINNET]: [
-    NATIVE_TOKEN_ADDRESS,
+    INCH_NATIVE_TOKEN_ADDRESS,
     '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
     '0x6b175474e89094c44da98b954eedeac495271d0f',
     '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -34,7 +34,7 @@ export const FAVORITE_TOKENS = {
     '0x111111111117dc0aa78b770fa6a738034120c302',
   ],
   // [SupportedChainId.OPTIMISM]: [
-  //   NATIVE_TOKEN_ADDRESS,
+  //   INCH_NATIVE_TOKEN_ADDRESS,
   //   '0x8700daec35af8ff88c16bdf0418774cb3d7599b4',
   //   '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1',
   //   '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58',
@@ -42,7 +42,7 @@ export const FAVORITE_TOKENS = {
   //   '0x350a791bfc2c21f9ed5d10980dad2e2638ffa7f6',
   // ],
   [SupportedChainId.BINANCE]: [
-    NATIVE_TOKEN_ADDRESS,
+    INCH_NATIVE_TOKEN_ADDRESS,
     '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
     '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
     '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3',
@@ -51,7 +51,7 @@ export const FAVORITE_TOKENS = {
     '0x111111111117dc0aa78b770fa6a738034120c302',
   ],
   // [SupportedChainId.GNOSIS]: [
-  //   NATIVE_TOKEN_ADDRESS,
+  //   INCH_NATIVE_TOKEN_ADDRESS,
   //   '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d',
   //   '0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1',
   //   '0x4ecaba5870353805a9f068101a40e0f32ed605c6',
@@ -59,14 +59,14 @@ export const FAVORITE_TOKENS = {
   //   '0x7f7440c5098462f833e123b44b8a03e1d9785bab',
   // ],
   [SupportedChainId.POLYGON]: [
-    NATIVE_TOKEN_ADDRESS,
+    INCH_NATIVE_TOKEN_ADDRESS,
     '0x71b821aa52a49f32eed535fca6eb5aa130085978',
     '0xd6df932a45c0f255f85145f286ea0b292b21c90b',
     '0x033d942a6b495c4071083f4cde1f17e986fe856c',
     '0x6ab6d61428fde76768d7b45d8bfeec19c6ef91a8',
   ],
   [SupportedChainId.FANTOM]: [
-    NATIVE_TOKEN_ADDRESS,
+    INCH_NATIVE_TOKEN_ADDRESS,
     '0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83',
     '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
     '0x321162cd933e2be498cd2267a90534a804051b11',
@@ -74,7 +74,7 @@ export const FAVORITE_TOKENS = {
     '0x04068da6c83afcfa0e13ba15a6696662335d5b75',
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
-    NATIVE_TOKEN_ADDRESS,
+    INCH_NATIVE_TOKEN_ADDRESS,
     '0x0e15258734300290a651fdbae8deb039a8e7a2fa',
     '0x040d1edc9569d4bab2d15287dc5a4f10f56a56b8',
     '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
@@ -82,7 +82,7 @@ export const FAVORITE_TOKENS = {
     '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f',
   ],
   [SupportedChainId.AVALANCHE]: [
-    NATIVE_TOKEN_ADDRESS,
+    INCH_NATIVE_TOKEN_ADDRESS,
     '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
     '0x49d5c2bdffac6ce2bfdb6640f4f80f226bc10bab',
     '0x50b7545627a5162f82a992c33b87adc75187b218',
