@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
 import { useMemo } from 'react';
 
-import { NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
+import { INCH_NATIVE_TOKEN_ADDRESS } from '../../constants/tokens';
 import { ApproveStatus, useAppSelector } from '../../store';
 import { Field } from '../../types';
 
@@ -18,7 +18,7 @@ export const useApproveStatus = (): ApproveStatus => {
   return useMemo(() => {
     if (!inputAddress || !account || !typedValue || !selectedMethod) return ApproveStatus.UNKNOWN;
     // IF IS NATIVE
-    if (inputAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS) {
+    if (inputAddress.toLowerCase() === INCH_NATIVE_TOKEN_ADDRESS) {
       return ApproveStatus.NO_APPROVAL_NEEDED;
     }
 

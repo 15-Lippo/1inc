@@ -66,11 +66,9 @@ function Swap({ width }: SwapProps) {
     quoteError: state.swap.quoteError,
     swapError: state.swap.swapError,
     INPUT: state.swap.INPUT,
-    // OUTPUT: state.swap.OUTPUT,
     typedValue: state.swap.typedValue,
     protocols: state.swap.swapData[state.swap.selectedMethod]?.route,
     tokensList: state.tokens.tokens,
-    // lastTxHash: state.transactions.lastTxHash,
     referrerOptions: state.swap.referrerOptions,
     inputToken: state.tokens.tokens[state.swap[Field.INPUT]] || {},
     outputToken: state.tokens.tokens[state.swap[Field.OUTPUT]] || {},
@@ -79,6 +77,7 @@ function Swap({ width }: SwapProps) {
     selectedMethod: state.swap.selectedMethod,
     txFee: state.swap.txFees[state.swap.selectedMethod],
   }));
+  const { isWaitingTx } = useAppSelector((state) => state.transactions);
 
   const update = useUpdate();
   const { approve, updateAllowance } = useApprove();
@@ -130,7 +129,7 @@ function Swap({ width }: SwapProps) {
 
   const handleApproveClick = () => {
     // TODO add gasPrice check
-    // if (!hasEnoughBalanceByAddress(approvalTxFee, Tokens.NATIVE_TOKEN_ADDRESS)) {
+    // if (!hasEnoughBalanceByAddress(approvalTxFee, Tokens.INCH_NATIVE_TOKEN_ADDRESS)) {
     //   setErrorMessage({
     //     text: t('Insufficient balance to pay for gas'),
     //     title: t('Alert'),
@@ -143,10 +142,10 @@ function Swap({ width }: SwapProps) {
   const hasEnoughNativeTokenBalanceToSwap = (): boolean => {
     if (!Number(txFee)) return true;
     let paymentCost = BigNumber.from(txFee);
-    if (INPUT === Tokens.NATIVE_TOKEN_ADDRESS) {
+    if (INPUT === Tokens.INCH_NATIVE_TOKEN_ADDRESS) {
       paymentCost = paymentCost.add(typedValue);
     }
-    return hasEnoughBalanceByAddress(paymentCost, Tokens.NATIVE_TOKEN_ADDRESS);
+    return hasEnoughBalanceByAddress(paymentCost, Tokens.INCH_NATIVE_TOKEN_ADDRESS);
   };
 
   const mainButtonByType = () => {
@@ -158,7 +157,7 @@ function Swap({ width }: SwapProps) {
         <MainButton
           type={MainButtonType.Approve}
           onClick={handleApproveClick}
-          disabled={loadingQuote !== 'succeeded'}
+          disabled={loadingQuote !== 'succeeded' || isWaitingTx}
         />
       );
     if (!hasEnoughNativeTokenBalanceToSwap())
@@ -167,7 +166,10 @@ function Swap({ width }: SwapProps) {
     return (
       <MainButton
         type={MainButtonType.Swap}
-        onClick={() => setConfirmModalOpen(true)}
+        onClick={() => {
+          dispatch(cleanLastTxHash());
+          setConfirmModalOpen(true);
+        }}
         disabled={loadingQuote !== 'succeeded'}
       />
     );

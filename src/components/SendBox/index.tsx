@@ -65,7 +65,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
       return;
     }
     let maxAmount = BigNumber.from(bal);
-    if (INPUT.address === Tokens.NATIVE_TOKEN_ADDRESS) {
+    if (INPUT.address === Tokens.INCH_NATIVE_TOKEN_ADDRESS) {
       maxAmount = maxAmount.sub(txFee as string); // txFee is validated 3 lines above
     }
     dispatch(

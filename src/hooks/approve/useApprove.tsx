@@ -18,6 +18,8 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../store';
+import { getTxStatus, TxStatusType } from '../../utils';
+import { ITxStatus } from '../../utils/txStatus';
 import { useUpdateAllowance } from './useUpdateAllowance';
 
 // this allows balances to work, should be removed at the end
@@ -91,10 +93,31 @@ export const useApprove = () => {
       const tx = await signer.sendTransaction(txReq);
       await tx.wait();
 
-      const updatedNativeTokenInfo = await getTokenInfo(provider, chainId, [ZERO_ADDRESS], txReq.to || '', account);
-      updatedNativeTokenInfo && dispatch(updateTokenInfo(updatedNativeTokenInfo));
-      updateAllowance();
-      dispatch(setIsWaitingTx(false));
+      if (tx.hash) {
+        dispatch(setIsWaitingTx(false));
+        await getTxStatus(tx.hash, provider, (txStatus: ITxStatus) => {
+          const typeToStatus = {
+            [TxStatusType.SUCCESSFUL]: async () => {
+              const updatedNativeTokenInfo = await getTokenInfo(
+                provider,
+                chainId,
+                [ZERO_ADDRESS],
+                txReq.to || '',
+                account
+              );
+              updatedNativeTokenInfo && dispatch(updateTokenInfo(updatedNativeTokenInfo));
+              updateAllowance();
+            },
+            [TxStatusType.REVERTED]: async () => {
+              return { error: txStatus.error };
+            },
+            [TxStatusType.PENDING]: async () => {
+              console.log('PENDING');
+            },
+          };
+          typeToStatus[txStatus.status]();
+        });
+      }
     } catch ({ message }) {
       dispatch(setTxErrorMessage(message));
       console.error('Attempt to send transaction failed:', message);

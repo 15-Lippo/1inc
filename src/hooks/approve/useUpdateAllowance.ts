@@ -29,9 +29,7 @@ export const useUpdateAllowance = (selectedMethod: string) => {
   const tokenAddress = useAppSelector((state) => state.swap[Field.INPUT]);
 
   return useCallback(() => {
-    if (!provider || !chainId || !account || !tokenAddress) {
-      return;
-    }
+    if (!provider || !chainId || !account || !tokenAddress) return;
     const updateAllowance = getAllowanceUpdater(selectedMethod);
     dispatch(
       updateSingleAllowance(async () => {

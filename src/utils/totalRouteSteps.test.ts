@@ -1,3 +1,4 @@
+import { INCH_NATIVE_TOKEN_ADDRESS } from '../constants/tokens';
 import { totalRouteSteps } from './totalRouteSteps';
 
 const protocols = [
@@ -6,7 +7,7 @@ const protocols = [
       {
         name: 'DXSWAP',
         part: 100,
-        fromTokenAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+        fromTokenAddress: INCH_NATIVE_TOKEN_ADDRESS,
         toTokenAddress: '0x6b175474e89094c44da98b954eedeac495271d0f',
       },
     ],

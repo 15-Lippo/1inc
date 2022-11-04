@@ -3,6 +3,7 @@ import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { CoinsApi, InfoApi } from '../../../api';
 import { LocalStorageKeys, Tokens } from '../../../constants';
+import { INCH_NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from '../../../constants/tokens';
 
 export interface Token {
   symbol: string;
@@ -153,10 +154,10 @@ const tokensSlice = createSlice({
     updateAllTokenBalances(state, action) {
       const { tokens } = state;
       for (const address in action.payload) {
-        if (address.toLowerCase() === '0x0000000000000000000000000000000000000000') {
-          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userBalance = action.payload[address].balance;
-          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].userAllowance = action.payload[address].allowance;
-          tokens['0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'].priceInUsd = action.payload[address].priceInUsd;
+        if (address.toLowerCase() === ZERO_ADDRESS) {
+          tokens[INCH_NATIVE_TOKEN_ADDRESS].userBalance = action.payload[address].balance;
+          tokens[INCH_NATIVE_TOKEN_ADDRESS].userAllowance = action.payload[address].allowance;
+          tokens[INCH_NATIVE_TOKEN_ADDRESS].priceInUsd = action.payload[address].priceInUsd;
           continue;
         }
 
@@ -184,14 +185,12 @@ const tokensSlice = createSlice({
     updateTokenInfo(state, action) {
       const { tokens } = state;
 
-      const native = '0x0000000000000000000000000000000000000000';
-      const inchNative = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
       const tokenAddress = Object.keys(action.payload)[0];
 
-      if (tokenAddress === native) {
-        tokens[inchNative].userBalance = action.payload[native].balance;
-        tokens[inchNative].userAllowance = action.payload[native].allowance;
-        tokens[inchNative].priceInUsd = action.payload[native].priceInUsd;
+      if (tokenAddress === ZERO_ADDRESS) {
+        tokens[INCH_NATIVE_TOKEN_ADDRESS].userBalance = action.payload[ZERO_ADDRESS].balance;
+        tokens[INCH_NATIVE_TOKEN_ADDRESS].userAllowance = action.payload[ZERO_ADDRESS].allowance;
+        tokens[INCH_NATIVE_TOKEN_ADDRESS].priceInUsd = action.payload[ZERO_ADDRESS].priceInUsd;
       } else {
         tokens[tokenAddress].userBalance = action.payload[tokenAddress].balance;
         tokens[tokenAddress].userAllowance = action.payload[tokenAddress].allowance;
