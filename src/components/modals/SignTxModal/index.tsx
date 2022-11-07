@@ -39,6 +39,11 @@ const SignTxModal = () => {
         variant="rm16"
         sx={{
           color: 'widget.text-primary',
+          '&:first-letter': {
+            textTransform: 'capitalize',
+          },
+          wordWrap: 'break-word',
+          overflow: 'overlay',
         }}>
         {message}
       </Typography>
