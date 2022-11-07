@@ -38,7 +38,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
 
   const status = useApproveStatus();
 
-  const userBalance = useMemo(() => {
+  const tokenInBalance = useMemo(() => {
     if (_.isEmpty(INPUT)) return;
     if (account && !INPUT?.userBalance) return;
     if (!Number(INPUT?.userBalance)) return '0';
@@ -103,7 +103,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
           <Trans>You sell</Trans>
         </Link>
         {account &&
-          (userBalance ? (
+          (tokenInBalance ? (
             <Box sx={{ display: 'flex', columnGap: '4px' }}>
               <Typography
                 variant="rxs12"
@@ -111,7 +111,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
                   color: 'widget.text-secondary',
                   lineHeight: '19px',
                 }}>
-                <Trans>Balance</Trans>: {userBalance}
+                <Trans>Balance</Trans>: {tokenInBalance}
               </Typography>
               <AuxButton onClick={onMaxClick} text={t('Max')} sx={{ lineHeight: '19px' }} />
             </Box>
