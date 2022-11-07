@@ -120,7 +120,7 @@ export const MainButton = ({ type, disabled, onClick, rateExpired, explorerName,
     [MainButtonType.Loading]: '',
     [MainButtonType.Explorer]: t('View on', { explorerName }),
     [MainButtonType.Import]: t(`Import`),
-    [MainButtonType.Error]: quoteError?.message || swapError?.message,
+    [MainButtonType.Error]: quoteError?.message || swapError?.message || quoteError,
   };
 
   return (

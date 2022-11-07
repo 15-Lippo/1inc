@@ -82,10 +82,10 @@ export const useSwap = () => {
           typeToStatus[txStatus.status]();
         });
       }
-    } catch ({ message }) {
-      dispatch(setTxErrorMessage(message));
-      console.error('Attempt to send transaction failed:', message);
-      return { error: message };
+    } catch (error) {
+      dispatch(setTxErrorMessage(error.message));
+      console.error('Attempt to send transaction failed:', error);
+      return { error };
     }
   }, [swapInfo, params, approveStatus]);
 
