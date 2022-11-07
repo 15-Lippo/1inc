@@ -185,7 +185,13 @@ function Swap({ width }: SwapProps) {
 
   useEffect(() => {
     update();
-  }, [inputToken?.address, outputToken?.address, typedValue, referrerOptions, txFeeCalculation?.gasPriceInfo?.price]);
+  }, [inputToken?.address, outputToken?.address, typedValue, referrerOptions]);
+
+  useEffect(() => {
+    if (isSettingsOpen) {
+      update();
+    }
+  }, [txFeeCalculation?.gasPriceInfo?.price]);
 
   useEffect(() => {
     updateUsdcPriceForSelectedTokens();

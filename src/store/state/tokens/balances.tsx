@@ -11,7 +11,6 @@ export interface IUserTokenInfo {
     balance: string;
     allowance: string;
     pinned: boolean;
-    priceInUsd?: string;
   };
 }
 
@@ -42,7 +41,6 @@ export async function getTokenInfo(
         balance: tokenInfo ? tokenInfo[i].balance.toString() : '',
         allowance: tokenInfo ? tokenInfo[i].allowance.toString() : '',
         pinned: favoriteTokens[chainId].includes(addresses[i]),
-        priceInUsd: '',
       };
     }
     return result;

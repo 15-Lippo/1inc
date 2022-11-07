@@ -28,7 +28,7 @@ const SendBox = ({ onSelectToken }: SendBoxProps) => {
     useAppSelector((state) => ({
       INPUT: state.tokens.tokens[state.swap.INPUT],
       typedValue: state.swap.typedValue,
-      inputTokenPriceInUsd: state.tokens.tokens[state.swap.INPUT]?.priceInUsd,
+      inputTokenPriceInUsd: state.tokens.usdPrices[state.swap.INPUT],
       loadingQuote: state.swap.loadingQuote,
       explorer: state.user.explorer,
       txFee: state.swap.txFees[state.swap.selectedMethod],

@@ -14,6 +14,7 @@ const SwapOptionsContainer = () => {
   const { defaultStablecoin } = useUsdStablecoins();
   const dispatch = useAppDispatch();
   const nativeToken = useAppSelector((state) => state.tokens.tokens[INCH_NATIVE_TOKEN_ADDRESS]);
+  const nativeTokenUsdPrice = useAppSelector((state) => state.tokens.usdPrices[INCH_NATIVE_TOKEN_ADDRESS]);
   const loadingQuote = useAppSelector((state) => state.swap.loadingQuote);
   const toToken = useAppSelector((state) => state.tokens.tokens[state.swap[Field.OUTPUT]]);
   const selectedMethod = useAppSelector((state) => state.swap.selectedMethod);
@@ -28,11 +29,11 @@ const SwapOptionsContainer = () => {
   };
 
   const createTxCostLabel = (txFee?: string) => {
-    if (!txFee || !defaultStablecoin || !nativeToken?.priceInUsd) {
+    if (!txFee || !defaultStablecoin || !nativeTokenUsdPrice) {
       return '';
     }
     const txCostInNativeToken = parseFloat(formatUnits(txFee, nativeToken.decimals));
-    const nativeTokenPriceInUsd = parseFloat(formatUnits(nativeToken.priceInUsd, defaultStablecoin.decimals));
+    const nativeTokenPriceInUsd = parseFloat(formatUnits(nativeTokenUsdPrice, defaultStablecoin.decimals));
     const txCostInUsd = txCostInNativeToken * nativeTokenPriceInUsd;
     return `${txCostInNativeToken.toFixed(4)} Ξ (~$${bigFloatToFixed(txCostInUsd.toString(), 4)})`;
   };

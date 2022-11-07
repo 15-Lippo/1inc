@@ -32,6 +32,7 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
     INPUT_ADDRESS: state.swap.INPUT,
     OUTPUT_ADDRESS: state.swap.OUTPUT,
   }));
+  const usdPrices = useAppSelector((state) => state.tokens.usdPrices);
 
   const tokensList = Object.values(customTokens) as Token[];
 
@@ -108,6 +109,7 @@ const CustomTokensModal = ({ isOpen, goBack, onOpenAddCustomToken }: CustomToken
         onRemoveCustomToken={onRemoveCustomToken}
         tokensList={!searchValue ? tokensList : filteredResults}
         pinnedTokens={[]}
+        usdPrices={usdPrices}
       />
       <Box
         sx={{

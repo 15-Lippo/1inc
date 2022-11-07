@@ -88,7 +88,6 @@ export interface SwapState {
       timeLabel: string;
     };
     readonly gasPriceSettingsMode: 'basic' | 'advanced';
-    readonly gasLimit?: string;
   };
   readonly loading?: 'idle' | 'pending' | 'succeeded' | 'failed';
   readonly loadingQuote?: 'idle' | 'pending' | 'succeeded' | 'failed';
@@ -139,7 +138,6 @@ export const initialState: SwapState = {
       timeLabel: '',
     },
     gasPriceSettingsMode: 'basic',
-    gasLimit: '',
   },
   loading: 'idle',
   loadingQuote: 'idle',

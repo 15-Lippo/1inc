@@ -1,6 +1,2 @@
-export {
-  useTokenPricesInUsd,
-  useUpdateUsdcPriceForSelectedTokens,
-  useUpdateUsdcPricesForBalances,
-} from './useTokenPricesInUsd';
+export { useUpdateUsdcPriceForSelectedTokens, useUpdateUsdcPricesForBalances } from './useTokenPricesInUsd';
 export { useUsdStablecoins } from './useUsdStablecoins';

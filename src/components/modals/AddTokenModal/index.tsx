@@ -46,6 +46,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
   const { provider, chainId } = useWeb3React();
   const { lastImportedTokenInfo } = useAppSelector((state) => state.tokens);
   const { tokens } = useAppSelector((state) => state.tokens);
+  const usdPrices = useAppSelector((state) => state.tokens.usdPrices);
 
   const [tokenToImport, setTokenToImport] = useState({
     open: false,
@@ -192,6 +193,7 @@ const AddTokenModal = ({ isOpen, goBack, field }: AddTokenModalProps) => {
           loading={searchLoading}
           tokensList={searchToken?.address ? [searchToken] : []}
           pinnedTokens={[]}
+          usdPrices={usdPrices}
         />
       </Modal>
       <Modal headerType={ModalHeaderType.Import} isOpen={tokenToImport.open} goBack={closeImportConfirmationModal}>

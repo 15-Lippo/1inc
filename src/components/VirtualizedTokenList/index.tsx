@@ -32,11 +32,13 @@ interface VirtualizedTokenListProps {
   onUnpinToken?: (val: string) => void;
   onRemoveCustomToken?: (val: string) => void;
   pinnedTokens: string[];
+  usdPrices: { [address: string]: string };
 }
 
 const VirtualizedTokenList = ({
   loading,
   tokensList,
+  usdPrices,
   selectedValue,
   onChoose,
   onPinToken,
@@ -53,7 +55,8 @@ const VirtualizedTokenList = ({
   const pinnedTokensSet = new Set<string>(pinnedTokens);
 
   function renderRow({ index, style }: ListChildComponentProps) {
-    const { symbol, name, logoURI, userBalance, address, decimals, priceInUsd, button } = tokensList[index];
+    const { symbol, name, logoURI, userBalance, address, decimals, button } = tokensList[index];
+    const priceInUsd = usdPrices[address] || '';
 
     const openExplorer = () => {
       window.open(`${explorer.link}/token/${address}`, '_blank');
