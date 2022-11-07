@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core';
 import { nativeOnChain } from '@uniswap/smart-order-router';
 
-import { NATIVE_TOKEN_ADDRESS } from '../constants/tokens';
+import { INCH_NATIVE_TOKEN_ADDRESS } from '../constants/tokens';
 
 export const createCurrency = async (
   tokenAddress: string,
@@ -10,7 +10,7 @@ export const createCurrency = async (
   symbol?: string,
   name?: string
 ): Promise<Currency> => {
-  if (tokenAddress.toLowerCase() === NATIVE_TOKEN_ADDRESS) {
+  if (tokenAddress.toLowerCase() === INCH_NATIVE_TOKEN_ADDRESS) {
     return nativeOnChain(chainId);
   }
   return new Token(chainId, tokenAddress, decimals, symbol, name);
