@@ -13,7 +13,6 @@ export interface Token {
   logoURI: string;
   userBalance?: string;
   userAllowance?: string;
-  priceInUsd?: string;
   button?: any;
 }
 
@@ -109,6 +108,7 @@ export interface TokensState {
   tokenInfoFetched: boolean;
   liquiditySourcesInfo?: ethereumApi.ProtocolsResponseDto;
   presetsInfo?: void;
+  usdPrices: { [tokenAddress: string]: string };
 }
 
 export const initialState: TokensState = {
@@ -121,6 +121,7 @@ export const initialState: TokensState = {
   tokenInfoFetched: false,
   liquiditySourcesInfo: { protocols: [] },
   presetsInfo: undefined,
+  usdPrices: {},
 };
 
 const tokensSlice = createSlice({
@@ -157,14 +158,12 @@ const tokensSlice = createSlice({
         if (address.toLowerCase() === ZERO_ADDRESS) {
           tokens[INCH_NATIVE_TOKEN_ADDRESS].userBalance = action.payload[address].balance;
           tokens[INCH_NATIVE_TOKEN_ADDRESS].userAllowance = action.payload[address].allowance;
-          tokens[INCH_NATIVE_TOKEN_ADDRESS].priceInUsd = action.payload[address].priceInUsd;
           continue;
         }
 
         if (address in tokens) {
           tokens[address].userBalance = action.payload[address].balance;
           tokens[address].userAllowance = action.payload[address].allowance;
-          tokens[address].priceInUsd = action.payload[address].priceInUsd;
         }
       }
       // Sort all tokens by balances:
@@ -190,25 +189,28 @@ const tokensSlice = createSlice({
       if (tokenAddress === ZERO_ADDRESS) {
         tokens[INCH_NATIVE_TOKEN_ADDRESS].userBalance = action.payload[ZERO_ADDRESS].balance;
         tokens[INCH_NATIVE_TOKEN_ADDRESS].userAllowance = action.payload[ZERO_ADDRESS].allowance;
-        tokens[INCH_NATIVE_TOKEN_ADDRESS].priceInUsd = action.payload[ZERO_ADDRESS].priceInUsd;
       } else {
         tokens[tokenAddress].userBalance = action.payload[tokenAddress].balance;
         tokens[tokenAddress].userAllowance = action.payload[tokenAddress].allowance;
-        tokens[tokenAddress].priceInUsd = action.payload[tokenAddress].priceInUsd;
       }
     },
-    updatePriceTokenInUsd(state, { payload }: { payload: { key: string; priceInUsd?: string }[] }) {
-      const updatedTokens = { ...state.tokens };
+    updatePriceTokenInUsd(state, { payload }: { payload: { key: string; priceInUsd: string }[] }) {
+      const newPrices = { ...state.usdPrices };
       payload.forEach(({ key, priceInUsd }) => {
-        updatedTokens[key] = {
-          ...state.tokens[key],
-          priceInUsd,
-        };
+        newPrices[key] = priceInUsd;
       });
-      return {
-        ...state,
-        tokens: updatedTokens,
-      };
+      state.usdPrices = newPrices;
+      // const updatedTokens = { ...state.tokens };
+      // payload.forEach(({ key, priceInUsd }) => {
+      //   updatedTokens[key] = {
+      //     ...state.tokens[key],
+      //     priceInUsd,
+      //   };
+      // });
+      // return {
+      //   ...state,
+      //   tokens: updatedTokens,
+      // };
     },
   },
   extraReducers: (tokens) => {

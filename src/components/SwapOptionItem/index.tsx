@@ -25,7 +25,6 @@ const SwapOptionItem = ({ quoteLabel, txCostLabel, onClick, optionName, isBestQu
         borderRadius: '8px 12px 12px 12px',
         padding: '17px 12px 12px',
         color: 'widget.text-primary',
-        cursor: 'pointer',
       }}>
       {isBestQuote && (
         <Box

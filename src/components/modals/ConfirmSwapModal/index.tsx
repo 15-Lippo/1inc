@@ -84,6 +84,8 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     OUTPUT: state.tokens.tokens[state.swap.OUTPUT],
     lastQuoteUpdateTimestamp: state.swap.lastQuoteUpdateTimestamp,
   }));
+  const inputUsdPrice = useAppSelector((state) => state.tokens.usdPrices[INPUT?.address]);
+  const outputUsdPrice = useAppSelector((state) => state.tokens.usdPrices[OUTPUT?.address]);
 
   const { typedValue, slippage, txFeeCalculation } = useAppSelector((state) => state.swap);
 
@@ -116,7 +118,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
 
   useEffect(() => {
     setShouldRefresh(true);
-  }, [slippage, txFeeCalculation?.gasPriceInfo.price, txFeeCalculation?.gasLimit]);
+  }, [slippage, txFeeCalculation?.gasPriceInfo.price]);
 
   const handleSendTx = useCallback(() => {
     if (loadingSwap) return;
@@ -133,10 +135,10 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
     setLoadingSwap(true);
   };
 
-  const inputUsdcPrice =
-    INPUT?.priceInUsd && defaultStablecoin && formatUsdFixed(INPUT?.priceInUsd, defaultStablecoin.decimals);
-  const outputUsdcPrice =
-    OUTPUT?.priceInUsd && defaultStablecoin && formatUsdFixed(OUTPUT?.priceInUsd, defaultStablecoin.decimals);
+  const inputUsdcPriceToDisplay =
+    inputUsdPrice && defaultStablecoin && formatUsdFixed(inputUsdPrice, defaultStablecoin.decimals);
+  const outputUsdcPriceToDisplay =
+    outputUsdPrice && defaultStablecoin && formatUsdFixed(outputUsdPrice, defaultStablecoin.decimals);
 
   const gasPrice = formatGweiFixed(
     txFeeCalculation.gasPriceSettingsMode === 'basic'
@@ -161,7 +163,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
               field={Field.INPUT}
               token={INPUT}
               amount={formatUnits(typedValue || '0x00', INPUT.decimals)}
-              usdcPrice={inputUsdcPrice}
+              usdcPrice={inputUsdcPriceToDisplay}
             />
             <SwitchTokensIcon
               style={{
@@ -179,7 +181,7 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                   ? parseFloat(formatUnits(toTokenAmount, OUTPUT.decimals)).toFixed(6)
                   : ''
               }
-              usdcPrice={outputUsdcPrice}
+              usdcPrice={outputUsdcPriceToDisplay}
             />
             <Stack>
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: '9px' }}>
@@ -187,9 +189,9 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                   1 {INPUT && INPUT.symbol} <Trans>price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  {inputUsdcPrice ? (
+                  {inputUsdcPriceToDisplay ? (
                     <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
-                      ~${inputUsdcPrice}
+                      ~${inputUsdcPriceToDisplay}
                     </Typography>
                   ) : (
                     <SkeletonText width="60px" height="14px" />
@@ -209,9 +211,9 @@ const ConfirmSwapModal = ({ isOpen, goBack, gasOptions }: ConfirmSwapModalProps)
                   1 {OUTPUT && OUTPUT.symbol} <Trans>price</Trans>
                 </Typography>
                 <Box sx={{ display: 'flex', columnGap: '4px' }}>
-                  {outputUsdcPrice ? (
+                  {outputUsdcPriceToDisplay ? (
                     <Typography variant="rxs12" lineHeight="14px" color="widget.text-secondary">
-                      ~${outputUsdcPrice}
+                      ~${outputUsdcPriceToDisplay}
                     </Typography>
                   ) : (
                     <SkeletonText width="50px" height="14px" />

@@ -27,11 +27,12 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { tokensList, tokenOnField, inputBalance, tokens } = useAppSelector((state) => ({
-    tokensList: Object.values(state.tokens.tokens),
+    tokensList: Object.values(state.tokens.tokens) as Token[],
     tokenOnField: state.swap[field],
     inputBalance: state.tokens.tokens[state.swap[field]]?.userBalance || '0',
-    tokens: state.tokens.tokens,
+    tokens: state.tokens.tokens as { [key: string]: Token },
   }));
+  const usdPrices = useAppSelector((state) => state.tokens.usdPrices);
   const [favoriteTokens, setFavoriteTokens] = useLocalStorage('favorite-tokens', Tokens.FAVORITE_TOKENS);
   const [data, setData] = useState<Token[]>([]);
   const [filteredResults, setFilteredResults] = useState<Token[]>([]);
@@ -131,6 +132,7 @@ const SelectTokenModal = ({ isOpen, onClose, field, onOpenCustomToken }: SelectT
             onUnpinToken={onUnpinToken}
             selectedValue={tokenOnField}
             pinnedTokens={favoriteTokens[chainId]}
+            usdPrices={usdPrices}
           />
         </React.Fragment>
       )}

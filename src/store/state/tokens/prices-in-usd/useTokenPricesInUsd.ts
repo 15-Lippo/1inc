@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks';
 import { Token, updatePriceTokenInUsd } from '../tokensSlice';
 import { useUsdStablecoins } from './useUsdStablecoins';
 
-export const useTokenPricesInUsd = (usdStablecoinAddresses: string[], defaultStablecoin: Token | undefined) => {
+const useTokenPricesInUsd = (usdStablecoinAddresses: string[], defaultStablecoin: Token | undefined) => {
   const { chainId } = useWeb3React();
   const dispatch = useAppDispatch();
   const tokens = useAppSelector((state) => state.tokens.tokens);
