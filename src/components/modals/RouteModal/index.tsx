@@ -1,10 +1,11 @@
 import { Avatar, Box, Typography } from '@mui/material';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useAppSelector } from '../../../store';
 import { roundPercentInRoutes } from '../../../utils';
-import { NoLogoURI, RouteModalDivider, RouteStepArrow } from '../../icons';
+import { NoLogoURI, RouteModalDivider, RouteStepArrow, WarningTriangleIcon } from '../../icons';
 import { Modal, ModalHeaderType } from '../Modal';
 
 interface RouteModalProps {
@@ -15,10 +16,13 @@ interface RouteModalProps {
 }
 
 const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalProps) => {
-  const { tokens, INPUT, OUTPUT } = useAppSelector((state) => ({
+  const { t } = useTranslation();
+  const { tokens, INPUT, OUTPUT, quoteError, swapError } = useAppSelector((state) => ({
     tokens: state.tokens.tokens,
     INPUT: state.swap.INPUT,
     OUTPUT: state.swap.OUTPUT,
+    quoteError: state.swap.quoteError,
+    swapError: state.swap.swapError,
   }));
 
   function renderRoutes() {
@@ -33,7 +37,7 @@ const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalPr
           alignItems: 'center',
           columnGap: '10px',
         }}>
-        {protocols?.length && totalRouteSteps ? (
+        {!quoteError && !swapError && protocols?.length && totalRouteSteps ? (
           protocols.flatMap((path: any, pathIndex: number) => {
             const percent = (path.length * 100) / totalRouteSteps;
             return (
@@ -122,9 +126,21 @@ const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalPr
             );
           })
         ) : (
-          <Typography variant="mlg18" color="widget.text-primary">
-            No routes
-          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              border: '1px solid',
+              borderColor: 'widget.input-border-warn',
+              borderRadius: '12px',
+              padding: '5px 10px',
+            }}>
+            <WarningTriangleIcon />
+            <Typography variant="rm16" color="widget.text-warn">
+              {t('No liquidity for swap')}
+            </Typography>
+          </Box>
         )}
       </Box>
     );

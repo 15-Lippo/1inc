@@ -255,6 +255,7 @@ const swapSlice = createSlice({
         console.log(`QUOTE REQUEST WITH ID ${action.meta.arg.updateId} WAS INVALIDATED`);
         return;
       }
+      state.quoteError = null;
       state.swapData = action.payload;
       state.lastQuoteUpdateTimestamp = performance.now();
       state.loadingQuote = 'succeeded';

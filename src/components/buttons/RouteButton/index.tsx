@@ -5,7 +5,7 @@ import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 import React from 'react';
 import { Trans } from 'react-i18next';
 
-import { Token } from '../../../store';
+import { Token, useAppSelector } from '../../../store';
 import { RouteArrow, RouteIcon } from '../../icons';
 
 const StyledRouteButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -13,6 +13,7 @@ const StyledRouteButton: StyledComponent<any> = styled(Button)<ButtonProps>(({ t
   display: 'flex',
   alignItems: 'center',
   columnGap: '5px',
+  minWidth: 'fit-content',
   height: '19px',
   padding: 0,
   background: 'none',
@@ -64,13 +65,17 @@ const ChainSteps = ({ protocols, inputTokenSymbol, tokens }: ChainStepsProps) =>
 };
 
 const RouteButton = ({ tokens, inputTokenSymbol, protocols, onClick, totalRouteSteps }: RouteButtonProps) => {
+  const { quoteError, swapError } = useAppSelector((state) => state.swap);
+
   return (
     <StyledRouteButton sx={{ typography: 'rxs12' }} onClick={onClick} endIcon={<RouteIcon />}>
-      {protocols?.length > 1 ? (
-        <Trans i18nKey="steps in the route" values={{ steps: totalRouteSteps }} />
-      ) : (
-        <ChainSteps protocols={protocols} inputTokenSymbol={inputTokenSymbol} tokens={tokens} />
-      )}
+      {!quoteError &&
+        !swapError &&
+        (protocols?.length > 1 ? (
+          <Trans i18nKey="steps in the route" values={{ steps: totalRouteSteps }} />
+        ) : (
+          <ChainSteps protocols={protocols} inputTokenSymbol={inputTokenSymbol} tokens={tokens} />
+        ))}
     </StyledRouteButton>
   );
 };

@@ -21,3 +21,4 @@ export { default as TxFailedIcon } from './TxFailedIcon';
 export { default as WalletConnectIcon } from './WalletConnectIcon';
 export { default as WalletIcon } from './WalletIcon';
 export { default as WarningIcon } from './WarningIcon';
+export { default as WarningTriangleIcon } from './WarningTriangleIcon';

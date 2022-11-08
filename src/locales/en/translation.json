@@ -38,6 +38,7 @@
   "Max fee can't be lower than Max priority fee": "Max fee can't be lower than Max priority fee",
   "Max price can't be lower than base fee": "Max price can't be lower than base fee",
   "Medium": "Medium",
+  "No liquidity for swap": "No liquidity for swap",
   "Nothing found": "Nothing found",
   "Please, sign transaction in your wallet": "Please, sign transaction in your wallet",
   "Rate": "Rate",

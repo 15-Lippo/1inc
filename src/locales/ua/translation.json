@@ -38,6 +38,7 @@
   "Max fee can't be lower than Max priority fee": "Максимальна комісія не може бути нижчою за Максимальну комісію за пріоритет",
   "Max price can't be lower than base fee": "Максимальна ціна не може бути нижчою за базову комісію",
   "Medium": "Середня",
+  "No liquidity for swap": "Немає ліквідності для обміну",
   "Nothing found": "Нічого не знайдено",
   "Please, sign transaction in your wallet": "Будь ласка, підпишіть транзакцію у своєму гаманці",
   "Rate": "Курс",

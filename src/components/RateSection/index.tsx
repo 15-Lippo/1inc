@@ -106,11 +106,7 @@ const RateSection = ({ openRoute, totalRouteSteps }: RateSectionProps) => {
         <Typography variant="rxs12">
           <Trans>Route</Trans>
         </Typography>
-        {!protocols?.length ||
-        _.isEmpty(tokens) ||
-        !totalRouteSteps ||
-        !INPUT.symbol ||
-        loadingQuote !== 'succeeded' ? (
+        {_.isEmpty(tokens) || !INPUT.symbol ? (
           <SkeletonText width="80px" height="19px" />
         ) : (
           <RouteButton
