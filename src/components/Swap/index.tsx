@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../../constants';
+import { ZERO_ADDRESS } from '../../constants/tokens';
 import { useAlertMessage, useGasPriceOptions, useInterval } from '../../hooks';
 import { useUpdate } from '../../hooks';
 import { useApprove, useUpdateSpender } from '../../hooks/approve/useApprove';
@@ -12,8 +13,10 @@ import {
   applyDefaultSettings,
   ApproveStatus,
   cleanLastTxHash,
+  getTokenInfo,
   setExplorer,
   setGasPriceInfo,
+  updateAllTokenBalances,
   useAppDispatch,
   useAppSelector,
   useTokens,
@@ -43,7 +46,7 @@ export type SwapProps = {
 
 function Swap({ width }: SwapProps) {
   const dispatch = useAppDispatch();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId, provider } = useWeb3React();
   const { gasOptions } = useGasPriceOptions();
   useTokens();
   const {
@@ -182,6 +185,19 @@ function Swap({ width }: SwapProps) {
     if (time - lastQuoteUpdateTimestamp < REFRESH_QUOTE_DELAY_MS || loadingQuote === 'pending' || isConfirmOpen) return;
     update();
   }, 1000);
+
+  useInterval(async () => {
+    if (chainId && account) {
+      const updatedBalance = await getTokenInfo(
+        provider,
+        chainId,
+        [inputToken?.address, outputToken?.address, ZERO_ADDRESS],
+        ZERO_ADDRESS,
+        account
+      );
+      dispatch(updateAllTokenBalances(updatedBalance));
+    }
+  }, 5000);
 
   useEffect(() => {
     update();

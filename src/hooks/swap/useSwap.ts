@@ -1,16 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ZERO_ADDRESS } from '../../constants/tokens';
 import { estimateGas } from '../../services';
-import {
-  ApproveStatus,
-  getTokenInfo,
-  setIsWaitingTx,
-  setLastTxHash,
-  setTxErrorMessage,
-  updateAllTokenBalances,
-  useAppDispatch,
-} from '../../store';
+import { ApproveStatus, setIsWaitingTx, setLastTxHash, setTxErrorMessage, useAppDispatch } from '../../store';
 import { getTxStatus, TxStatusType } from '../../utils';
 import { ITxStatus } from '../../utils/txStatus';
 import { useApproveStatus } from '../approve/useApproveStatus';
@@ -60,16 +51,18 @@ export const useSwap = () => {
         await getTxStatus(tx.hash, params.provider, (txStatus: ITxStatus) => {
           const typeToStatus = {
             [TxStatusType.SUCCESSFUL]: async () => {
-              const updatedBalance = await getTokenInfo(
-                params.provider,
-                params.chainId,
-                [params.fromTokenAddress, params.toTokenAddress, ZERO_ADDRESS],
-                ZERO_ADDRESS,
-                params.fromAddress
-              );
+              // Balances are updated with useInterval hook in Swap component each 5 sec
+
+              // const updatedBalance = await getTokenInfo(
+              //   params.provider,
+              //   params.chainId,
+              //   [params.fromTokenAddress, params.toTokenAddress, ZERO_ADDRESS],
+              //   ZERO_ADDRESS,
+              //   params.fromAddress
+              // );
               dispatch(setLastTxHash(tx.hash));
               dispatch(setIsWaitingTx(false));
-              dispatch(updateAllTokenBalances(updatedBalance));
+              // dispatch(updateAllTokenBalances(updatedBalance));
             },
             [TxStatusType.REVERTED]: async () => {
               dispatch(setTxErrorMessage(txStatus.error));

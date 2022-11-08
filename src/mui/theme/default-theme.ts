@@ -35,7 +35,7 @@ const defaultPalette: PaletteOptions = {
     'bg-05': `${DEEP_BLUE}29`,
     'bg-05-hover': `${DEEP_BLUE}66`,
     'bg-07': GREEN,
-    'bg-main-btn': 'linear-gradient(270deg, rgba(3, 97, 206, 0.49) 0%, #2F8AF5 51.04%, #0FBEE4 100%)',
+    'bg-main-btn': 'linear-gradient(269.27deg, #2F8AF5 .52%, #0361CE 48.96%, #0FBEE4 100%)',
     'bg-main-btn-hovered':
       'linear-gradient(270deg, rgba(47, 138, 245, 0.2704) 0%, rgba(3, 97, 206, 0.442) 52.08%, rgba(15, 190, 228, 0.442) 100%)',
     'bg-alert-warn': '#FF9C0833',
