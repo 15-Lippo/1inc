@@ -11,12 +11,10 @@ import { createRoot } from 'react-dom/client';
 
 import Swap from './components/Swap';
 import Widget from './components/Widget';
-import { nereusTheme } from './mui/theme';
 
 function SwapWidget() {
   return (
     <Widget
-      theme={nereusTheme}
       defaultTypedValue={{
         1: parseUnits('1', 18).toString(),
         56: parseUnits('1', 18).toString(),
