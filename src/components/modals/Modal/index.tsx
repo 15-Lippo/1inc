@@ -122,8 +122,9 @@ export const Modal = ({
             sx={{
               position: 'relative',
               display: 'flex',
+              justifyContent: 'center',
               alignItems: 'center',
-              height: '2.5em',
+              minHeight: '2.5em',
               m:
                 headerType === ModalHeaderType.SelectToken ||
                 headerType === ModalHeaderType.AddToken ||
@@ -132,26 +133,32 @@ export const Modal = ({
                   : '0 0 20px',
             }}>
             {goBack && (
-              <Box sx={{ position: 'absolute', top: -11 }}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: -7,
+                  left: headerType === ModalHeaderType.Route ? 19 : 0,
+                }}>
                 <BackButton onClick={goBack} />
               </Box>
             )}
             <Typography
               sx={{
                 typography: 'mxlg20',
-                width: '100%',
+                width: headerType === ModalHeaderType.AdvancedSettings ? '60%' : '100%',
+                lineHeight: 'normal',
                 textAlign: 'center',
                 color: 'widget.text-primary',
               }}>
               {textModalType[headerType]}
             </Typography>
             {closeModal && (
-              <Box sx={{ position: 'absolute', right: -8, top: -9 }}>
+              <Box sx={{ position: 'absolute', right: -8, top: -5 }}>
                 <CloseButton onClick={closeModal} />
               </Box>
             )}
             {onReset && (
-              <Box sx={{ position: 'absolute', right: 0, top: 2 }}>
+              <Box sx={{ position: 'absolute', right: 0, top: 4 }}>
                 <ResetSettingsButton onClick={onReset} />
               </Box>
             )}

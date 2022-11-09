@@ -160,7 +160,7 @@ function Swap({ width }: SwapProps) {
         <MainButton
           type={MainButtonType.Approve}
           onClick={handleApproveClick}
-          disabled={loadingQuote !== 'succeeded' || isWaitingTx}
+          disabled={loadingQuote !== 'succeeded' || isWaitingTx || !hasEnoughNativeTokenBalanceToSwap()}
         />
       );
     if (!hasEnoughNativeTokenBalanceToSwap())
