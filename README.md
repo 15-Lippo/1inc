@@ -68,7 +68,6 @@ export default function App() {
         defaultInputTokenAddress={defaultInputTokenAddress}
         theme={nereusTheme}
         locale="ua"
-        provider={provider}
         defaultTypedValue={defaultTypedValue}
     />
 )};
@@ -82,8 +81,6 @@ Recommended Parameters
 |         Prop          | Type                                     | Value                                                                                                                                         | Default                          |
 |:---------------------:|:-----------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
 | **`jsonRpcEndpoint`** | <pre>{<br>  [chainId in SupportedChainId]: string; <br>}</pre> | In order for a software application to interact with the blockchain, it must connect to node.                           | <pre>{<br>  1: 'https://cloudflare-eth.com',<br>  10: 'https://mainnet.optimism.io/',<br>  56: 'https://bsc-dataseed1.ninicoin.io',<br>  100: 'https://rpc.gnosischain.com',<br>  137: 'https://polygon-rpc.com/',<br>  250: 'https://rpc.ftm.tools',<br>  42161: 'https://arb1.arbitrum.io/rpc',<br>  43114: 'https://api.avax.network/ext/bc/C/rpc',<br>}</pre> |
-| **`provider`**        | `Eip1193Provider or JsonRpcProvider`     | If you don't have a web3 provider yet, the widget has built-in wallet connection functionality that supports MetaMask wallets, making it super simple for you to integrate web3 in your app! |  `Web3Provider` MetaMask |
-
 
 ALL OPTIONS ARE NOT REQUIRED
 
