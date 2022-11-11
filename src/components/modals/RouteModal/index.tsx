@@ -1,7 +1,7 @@
 import { Avatar, Box, Typography } from '@mui/material';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 import { useAppSelector } from '../../../store';
 import { roundPercentInRoutes } from '../../../utils';
@@ -16,7 +16,6 @@ interface RouteModalProps {
 }
 
 const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalProps) => {
-  const { t } = useTranslation();
   const { tokens, INPUT, OUTPUT, quoteError, swapError } = useAppSelector((state) => ({
     tokens: state.tokens.tokens,
     INPUT: state.swap.INPUT,
@@ -138,7 +137,7 @@ const RouteModal = ({ protocols, isOpen, goBack, totalRouteSteps }: RouteModalPr
             }}>
             <WarningTriangleIcon />
             <Typography variant="rm16" color="widget.text-warn">
-              {t('No liquidity for swap')}
+              <Trans>No liquidity for swap</Trans>
             </Typography>
           </Box>
         )}

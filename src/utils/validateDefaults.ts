@@ -1,9 +1,15 @@
 import _ from 'lodash';
 
-import { ALL_SUPPORTED_CHAIN_IDS } from '../constants';
 import { DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions } from '../types';
 
 const addressRegex = /^0x[a-fA-F0-9]{40}$/;
+
+import { SupportedChainId } from '../types';
+
+/**
+ * Array of all the supported chain IDs
+ */
+export const ALL_SUPPORTED_CHAIN_IDS = new Set(Object.values(SupportedChainId).filter((id) => typeof id === 'number'));
 
 export const validateSupportedChains = (chainIds: string[]): { hasNotSupported: boolean; notSupported: string[] } => {
   const notSupported = chainIds.filter((chainId: string) => !ALL_SUPPORTED_CHAIN_IDS.has(parseFloat(chainId)));

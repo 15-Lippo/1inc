@@ -12,11 +12,6 @@ import {
 import { NetworkConfig, SupportedChainId } from '../types';
 import { toHex } from '../utils';
 
-/**
- * Array of all the supported chain IDs
- */
-export const ALL_SUPPORTED_CHAIN_IDS = new Set(Object.values(SupportedChainId).filter((id) => typeof id === 'number'));
-
 export const networkConfigs: Record<string, NetworkConfig> = {
   [SupportedChainId.MAINNET]: {
     chainName: 'Ethereum Mainnet',

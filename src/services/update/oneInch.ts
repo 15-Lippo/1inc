@@ -1,12 +1,17 @@
+import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { ethereumApi } from '@yozh-io/1inch-widget-api-client';
 
 import { TxInfo } from '../../store/state/swap/swapSlice';
 import { estimateGas, fetchOneInchQuote, fetchOneInchSwap, getDefaultGasLimit } from '../';
 import { UpdateOneInchParams } from '../types';
 
-export const getOneInchTx = async (params: UpdateOneInchParams, provider: any): Promise<TxInfo> => {
+export const getOneInchTx = async (
+  params: UpdateOneInchParams,
+  provider: Web3Provider | JsonRpcProvider
+): Promise<TxInfo> => {
   const quote: ethereumApi.QuoteResponseDto = await fetchOneInchQuote({
     chainId: params.chainId,
+    // @ts-ignore
     quoteInfo: { ...params },
   });
 
@@ -20,6 +25,7 @@ export const getOneInchTx = async (params: UpdateOneInchParams, provider: any): 
 
   const swap: ethereumApi.SwapResponseDto = await fetchOneInchSwap({
     chainId: params.chainId,
+    // @ts-ignore
     swapInfo: { ...params, fromAddress: String(params.fromAddress), disableEstimate: true },
   });
 
@@ -55,6 +61,7 @@ export interface QuoteInfo {
 export const getOneInchQuote = async (params: UpdateOneInchParams): Promise<QuoteInfo> => {
   const quote: ethereumApi.QuoteResponseDto = await fetchOneInchQuote({
     chainId: params.chainId,
+    // @ts-ignore
     quoteInfo: { ...params },
   });
 

@@ -2,7 +2,8 @@ import { formatUnits, parseUnits } from '@ethersproject/units';
 import { Dispatch, Middleware } from '@reduxjs/toolkit';
 
 import { Field } from '../types';
-import { AppState, selectCurrency, switchCurrencies, typeInput } from '.';
+import { selectCurrency, switchCurrencies, typeInput } from './state';
+import { AppState } from './store';
 
 const updateDecimalsForTypedValue = (state: AppState, dispatch: Dispatch, newDecimals: number) => {
   const currentDecimals = state.tokens.tokens[state.swap[Field.INPUT]]?.decimals;

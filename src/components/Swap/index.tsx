@@ -3,7 +3,8 @@ import { Box } from '@mui/material';
 import { useWeb3React } from '@web3-react/core';
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { REFRESH_QUOTE_DELAY_MS, Tokens } from '../../constants';
+import { Tokens } from '../../constants';
+import { REFRESH_QUOTE_DELAY_MS } from '../../constants/constants';
 import { ZERO_ADDRESS } from '../../constants/tokens';
 import { useAlertMessage, useGasPriceOptions, useInterval } from '../../hooks';
 import { useUpdate } from '../../hooks';

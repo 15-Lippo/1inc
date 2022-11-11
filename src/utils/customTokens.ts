@@ -1,4 +1,4 @@
-import { LocalStorageKeys } from '../constants';
+import { LocalStorageKeys } from '../constants/localStorageKeys';
 
 export const countOfCustomTokens = (chainId: number | undefined) => {
   if (!chainId) return 0;

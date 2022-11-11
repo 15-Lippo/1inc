@@ -1,16 +1,8 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { load, save } from 'redux-localstorage-simple';
 
-import {
-  approveReducer,
-  healthcheckReducer,
-  recalculateTypedValueOnSelectCurrency,
-  recalculateTypedValueOnSwitchCurrency,
-  swapReducer,
-  tokensReducer,
-  txReducer,
-  userReducer,
-} from '.';
+import { recalculateTypedValueOnSelectCurrency, recalculateTypedValueOnSwitchCurrency } from './customMiddleware';
+import { approveReducer, healthcheckReducer, swapReducer, tokensReducer, txReducer, userReducer } from './state';
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions'];
 

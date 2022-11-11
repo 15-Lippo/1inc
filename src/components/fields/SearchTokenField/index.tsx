@@ -3,7 +3,7 @@ import React from 'react';
 
 import { CloseButton } from '../../buttons';
 import { SearchIcon } from '../../icons';
-import { StyledSearchField } from '../index';
+import { StyledField } from '../../styled';
 
 interface SearchProps {
   inputProps: InputProps;
@@ -18,7 +18,7 @@ export default ({ searchValue, onChange, onClear, inputProps }: SearchProps) => 
       sx={{
         m: '0 16px',
       }}>
-      <StyledSearchField
+      <StyledField
         id="search-token"
         variant="outlined"
         aria-label="search-token"

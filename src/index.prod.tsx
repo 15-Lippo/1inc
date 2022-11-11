@@ -10,9 +10,9 @@ import React from 'react';
 import Swap, { SwapProps } from './components/Swap';
 import Widget, { WidgetProps } from './components/Widget';
 
-export { ALL_SUPPORTED_CHAIN_IDS, DEFAULT_LOCALE, networkConfigs, SUPPORTED_LOCALES } from './constants';
+export { DEFAULT_LOCALE, networkConfigs, SUPPORTED_LOCALES } from './constants';
 export { nereusTheme } from './mui/theme';
-
+export { ALL_SUPPORTED_CHAIN_IDS } from './utils';
 // types
 export type { SupportedLocale } from './constants';
 export type { DefaultTokenOptions, defaultTypedValueOptions, ReferrerOptions, SupportedChainId } from './types';

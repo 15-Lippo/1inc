@@ -106,7 +106,6 @@
     "html-webpack-plugin": "^5.5.0",
     "husky": "^7.0.0",
     "lint-staged": "^13.0.3",
-    "microbundle-crl": "^0.13.11",
     "node-sass": "^7.0.1",
     "postcss-loader": "^7.0.1",
     "prettier": "^2.6.2",
@@ -123,7 +122,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "build": "react-scripts build",
     "start:webpack": "webpack-cli serve --mode=development --env development --hot",
     "build:webpack": "webpack --mode=production --env production --progress",
     "test": "react-scripts test --watchAll=false",

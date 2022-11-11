@@ -13,8 +13,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { setSlippage, useAppDispatch, useAppSelector } from '../../../store';
-import { StyledSearchField } from '../../fields';
 import { SlippageWarningMsg } from '../../messages';
+import { StyledField } from '../../styled';
 
 export const StyledToggleButton: StyledComponent<ToggleButtonProps> = styled(ToggleButton)(({ theme }) => ({
   color: theme.palette.widget['input-primary-text'],
@@ -119,7 +119,7 @@ export const SlippageButtonsGroup = () => {
             3%
           </StyledToggleButton>
         </StyledToggleButtonGroup>
-        <StyledSearchField
+        <StyledField
           InputProps={{ inputProps: { min: 0, max: 50 } }}
           value={customSlippage}
           sx={{

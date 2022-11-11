@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { StyledComponent } from '@mui/styles';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { REFRESH_QUOTE_DELAY_MS } from '../../../constants';
+import { REFRESH_QUOTE_DELAY_MS } from '../../../constants/constants';
 import { useUpdate } from '../../../hooks';
 import { useAppSelector } from '../../../store';
 

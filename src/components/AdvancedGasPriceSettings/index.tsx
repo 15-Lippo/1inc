@@ -238,7 +238,7 @@ const AdvancedGasPriceSettings = ({ gasOptions }: any) => {
             <Trans>Wait time</Trans>
           </Typography>
           <Typography variant="rsm14" lineHeight="16px">
-            {t(customSettings.timeLabel)}
+            <Trans>{customSettings.timeLabel}</Trans>
           </Typography>
         </Stack>
         <Stack direction="row" flexWrap="nowrap" justifyContent="space-between" alignItems="center">
