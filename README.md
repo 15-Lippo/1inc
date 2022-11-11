@@ -4,7 +4,7 @@
 
 You can customize the theme to match the style of your application. You can also configure default tokens, referrer address to each network, default typed value in the input and rpc endpoints.
 
-<img src="https://raw.githubusercontent.com/yozh-io/1inch-widget/updated-readme/src/assets/screenshot-widget.png?token=GHSAT0AAAAAABZC22TVSMASFHIK7BWRLJ7GY3OKUYQ" height="600" />
+<img src="https://raw.githubusercontent.com/yozh-io/1inch-widget/main/src/assets/screenshot-widget.png?token=GHSAT0AAAAAABZC22TVSMASFHIK7BWRLJ7GY3OKUYQ" height="600" />
 
 Supported locales: english, ukrainian.
 
