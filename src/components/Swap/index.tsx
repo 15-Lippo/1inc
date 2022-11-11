@@ -233,15 +233,13 @@ function Swap({ width }: SwapProps) {
         },
         '& ::-webkit-scrollbar-track': {
           display: 'none',
-          // backgroundColor: 'widget.bg-main',
         },
         '& ::-webkit-scrollbar-thumb': {
           display: 'none',
-          // backgroundColor: 'widget.border-01',
-          // borderRadius: '4px',
-          // border: '2px solid',
-          // borderColor: 'widget.bg-main',
         },
+        // Styles to show demo on vercel:
+        borderRadius: '24px',
+        boxShadow: '0 12px 24px #E2E9F6',
       }}>
       <Modal
         headerType={ModalHeaderType.Main}
