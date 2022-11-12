@@ -1,5 +1,5 @@
 {
-  "name": "@yozh/1inch-widget",
+  "name": "@yozh_io/1inch-widget",
   "version": "1.1.0",
   "engines": {
     "node": ">=12.0",
