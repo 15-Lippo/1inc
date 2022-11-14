@@ -1,4 +1,4 @@
-# 🧩 Yozh-widget 
+# 🧩 1inch-widget
 
  Swap widget based on 1inch api. Widget for integration into other projects as a separate component, can be used as a standalone application with the ability to add swap protocols.
 
@@ -20,10 +20,17 @@ Supported networks:
 Networks GNOSIS (100) and OPTIMISM (10) coming soon.
 
 ## How to use?
-_TODO: add commant to install the app_
+Install package:
+
+`yarn add @yozh-io/1inch-widget`
+
+or
+
+`npm install @yozh-io/1inch-widget`
 
 ```ts
-import { SwapWidget, nereusTheme, SupportedChainId } from '@yozh/1inch-widget';
+import { SwapWidget, nereusTheme, SupportedChainId } from '@yozh-io/1inch-widget';
+import { parseUnits } from '@ethersproject/units';
 
 // Set default values for each chainId:
 const defaultInputTokenAddress = {
@@ -32,8 +39,8 @@ const defaultInputTokenAddress = {
     ...
   }
   const defaultTypedValue = {
-    [SupportedChainId.MAINNET]: '2000',
-    [SupportedChainId.FANTOM]: '2000',
+    [SupportedChainId.MAINNET]: '1000000000000000000', // value in wei (1 eth on Ethereum mainnet)
+    [SupportedChainId.FANTOM]: parseUnits('1', 18).toString(), // the second variant 
     ...
   }
 
@@ -77,7 +84,7 @@ export default function App() {
 ```
 # Options
 
-These are the props you can pass into your `<Widget />` React component.
+These are the props you can pass into your `<SwapWidget />` React component.
 
 _ALL OPTIONS ARE NOT REQUIRED_
 
@@ -92,7 +99,8 @@ _ALL OPTIONS ARE NOT REQUIRED_
 | **`locale`**          | `SupportedLocale`                       | Specifies an explicit locale to use for the widget interface. This can be set to one of the values exported by the library in SUPPORTED_LOCALES.| `en`                        |
 | **`theme`**          | `Theme`                       | Specifies a custom theme. See [MUI THEME](https://mui.com/material-ui/customization/theming/) |  light `default-theme`                        |
 
-## Documentation
+## References
 
-- [api reference](https://docs.1inch.io/docs/aggregation-protocol/api/swagger)
+- [YOZH site](https://yozh.io)
+- [Api reference](https://docs.1inch.io/docs/aggregation-protocol/api/swagger)
 

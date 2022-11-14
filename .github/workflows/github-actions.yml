@@ -1,63 +1,63 @@
-# name: CI
+ name: CI
 
-# on:
-#   workflow_dispatch:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
+ on:
+   workflow_dispatch:
+   push:
+     branches:
+       - main
+   pull_request:
 
-# jobs:
-#   lint:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
+ jobs:
+   lint:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v3
 
-#       - uses: ./.github/actions/setup
+       - uses: ./.github/actions/setup
 
-#       - name: Setup SSH agent
-#         uses: webfactory/ssh-agent@v0.5.4
-#         with:
-#           ssh-private-key: ${{ secrets.PRIVATE_KEY }}
+       - name: Setup SSH agent
+         uses: webfactory/ssh-agent@v0.5.4
+         with:
+           ssh-private-key: ${{ secrets.PRIVATE_KEY }}
 
-#       - run: yarn lint
+       - run: yarn lint
 
-#   # cypress-test:
-#   #   runs-on: ubuntu-latest
-#   #   steps:
-#   #     - name: Checkout
-#   #       uses: actions/checkout@v3
+   # cypress-test:
+   #   runs-on: ubuntu-latest
+   #   steps:
+   #     - name: Checkout
+   #       uses: actions/checkout@v3
 
-#   #     - uses: ./.github/actions/setup
+   #     - uses: ./.github/actions/setup
 
-#   #     - uses: actions/cache@v3
-#   #       id: cypress-cache
-#   #       with:
-#   #         path: /home/runner/.cache/Cypress
-#   #         key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
-#   #     - if: steps.cypress-cache.outputs.cache-hit != 'true'
-#   #       run: yarn cypress install
+   #     - uses: actions/cache@v3
+   #       id: cypress-cache
+   #       with:
+   #         path: /home/runner/.cache/Cypress
+   #         key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+   #     - if: steps.cypress-cache.outputs.cache-hit != 'true'
+   #       run: yarn cypress install
 
-#   #     - name: Cypress
-#   #       uses: cypress-io/github-action@v4
-#   #       with:
-#   #         start: yarn start
-#   #         wait-on: 'http://localhost:3000'
-#   #         browser: chrome
-#   #       env:
-#   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+   #     - name: Cypress
+   #       uses: cypress-io/github-action@v4
+   #       with:
+   #         start: yarn start
+   #         wait-on: 'http://localhost:3000'
+   #         browser: chrome
+   #       env:
+   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
+   build:
+     runs-on: ubuntu-latest
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v3
 
-#       - name: Setup SSH agent
-#         uses: webfactory/ssh-agent@v0.5.4
-#         with:
-#           ssh-private-key: ${{ secrets.PRIVATE_KEY }}
+       - name: Setup SSH agent
+         uses: webfactory/ssh-agent@v0.5.4
+         with:
+           ssh-private-key: ${{ secrets.PRIVATE_KEY }}
 
-#       - uses: ./.github/actions/setup
+       - uses: ./.github/actions/setup
 
-#       - run: yarn build:webpack
+       - run: yarn build
