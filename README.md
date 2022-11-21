@@ -4,7 +4,7 @@
 
 You can customize the theme to match the style of your application. You can also configure default tokens, referrer address to each network, default typed value in the input and rpc endpoints.
 
-<img src="https://raw.githubusercontent.com/yozh-io/1inch-widget/main/src/assets/screenshot-widget.png?token=GHSAT0AAAAAABZC22TVNIH4U7W4X5B4BMOIY3OXKFQ" height="600" />
+<img src="https://raw.githubusercontent.com/yozh-io/1inch-widget/main/src/assets/screenshot-nereus-widget.png?token=GHSAT0AAAAAABZC22TVNIH4U7W4X5B4BMOIY3OXKFQ" height="600" />
 
 Supported locales: english, ukrainian.
 
@@ -19,14 +19,13 @@ Supported networks:
 ```
 Networks GNOSIS (100) and OPTIMISM (10) coming soon.
 
-## How to use?
-Install package:
+## How to use Nereus package?
 
-`yarn add @yozh-io/1inch-widget`
-
-or
-
-`npm install @yozh-io/1inch-widget`
+1. Make a build `yarn build`
+2. Make an archive `yarn pack`
+3. Copy an archive to another directory/directory
+4. Set dependency in the package.json like `"@yozh-io/1inch-widget": "file:yozh-io-1inch-widget-v1.1.0.tgz"`
+5. Call SwapWidget component: 
 
 ```ts
 import { SwapWidget, nereusTheme, SupportedChainId } from '@yozh-io/1inch-widget';
@@ -82,6 +81,15 @@ export default function App() {
     />
 )};
 ```
+
+### The main version of the widget is already published. You can install it
+
+`yarn add @yozh-io/1inch-widget`
+
+or
+
+`npm install @yozh-io/1inch-widget`
+
 # Options
 
 These are the props you can pass into your `<SwapWidget />` React component.
