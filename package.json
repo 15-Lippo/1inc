@@ -24,9 +24,6 @@
     "url": "https://github.com/yozh-io/1inch-widget.git",
     "type": "git"
   },
-  "publishConfig": {
-    "@yozh-io:registry": "https://github.com/yozh-io/1inch-widget-api-client"
-  },
   "peerDependencies": {
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
