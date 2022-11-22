@@ -7,7 +7,7 @@ import { Connector, Provider as Eip1193Provider } from '@web3-react/types';
 import React, { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
 
 import { SupportedChainId } from '../../types';
-import { JsonRpcConnector, WalletConnectPopup } from '../../utils';
+import { connect, JsonRpcConnector, supportedChainId, WalletConnectPopup } from '../../utils';
 import { Provider as ConnectorsProvider } from './useConnectors';
 import {
   JsonRpcConnectionMap,
@@ -15,6 +15,8 @@ import {
   toJsonRpcConnectionMap,
   toJsonRpcUrlMap,
 } from './useJsonRpcUrlsMap';
+
+const DEFAULT_CHAIN_ID = SupportedChainId.MAINNET;
 
 type Web3ReactConnector<T extends Connector = Connector> = [T, Web3ReactHooks];
 
@@ -26,25 +28,35 @@ interface Web3ReactConnectors {
 }
 
 interface ProviderProps {
-  provider?: Eip1193Provider | JsonRpcProvider;
-  jsonRpcMap?: JsonRpcConnectionMap;
+  provider?: Eip1193Provider | JsonRpcProvider | null;
   defaultChainId?: SupportedChainId;
+  jsonRpcUrlMap?: JsonRpcConnectionMap;
 }
 
 export function Provider({
-  defaultChainId = SupportedChainId.MAINNET,
-  jsonRpcMap,
+  defaultChainId: chainId = DEFAULT_CHAIN_ID,
+  jsonRpcUrlMap,
   provider,
   children,
 }: PropsWithChildren<ProviderProps>) {
-  const web3ReactConnectors = useWeb3ReactConnectors({ provider, jsonRpcMap, defaultChainId });
+  const defaultChainId = useMemo(() => {
+    if (!supportedChainId(chainId)) {
+      console.warn(
+        `Unsupported chainId: ${chainId}. Falling back to ${DEFAULT_CHAIN_ID} (${SupportedChainId[DEFAULT_CHAIN_ID]}).`
+      );
+      return DEFAULT_CHAIN_ID;
+    }
+    return chainId;
+  }, [chainId]);
+
+  const web3ReactConnectors = useWeb3ReactConnectors({ provider, jsonRpcUrlMap, defaultChainId });
 
   const key = useRef(0);
   const prioritizedConnectors = useMemo(() => {
     // Re-key Web3ReactProvider before rendering new connectors, as it expects connectors to be referentially static.
     key.current += 1;
 
-    const prioritizedConnectors: (Web3ReactConnector | undefined)[] = [
+    const prioritizedConnectors: (Web3ReactConnector | null | undefined)[] = [
       web3ReactConnectors.user,
       web3ReactConnectors.metaMask,
       web3ReactConnectors.walletConnect,
@@ -63,25 +75,22 @@ export function Provider({
     [web3ReactConnectors]
   );
 
-  // Attempt to connect eagerly if there is no user-provided provider.
+  const shouldEagerlyConnect = provider === undefined;
   useEffect(() => {
     // Ignore any errors during connection so they do not propagate to the widget.
     if (connectors.user) {
-      connectors.user.activate().catch(() => undefined);
+      connect(connectors.user);
       return;
+    } else if (shouldEagerlyConnect) {
+      const eagerConnectors = [connectors.metaMask, connectors.walletConnect];
+      eagerConnectors.forEach((connector) => connect(connector));
     }
-    const eagerConnectors = [connectors.metaMask, connectors.walletConnect];
-    eagerConnectors.forEach((connector) => connector.connectEagerly().catch(() => undefined));
-    connectors.network.activate().catch(() => undefined);
-  }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect]);
-
-  useEffect(() => {
-    connectors.network.activate().catch(() => undefined);
-  }, [connectors.network]);
+    connect(connectors.network);
+  }, [connectors.metaMask, connectors.network, connectors.user, connectors.walletConnect, shouldEagerlyConnect]);
 
   return (
     <Web3ReactProvider connectors={prioritizedConnectors} key={key.current}>
-      <JsonRpcUrlMapProvider jsonRpcMap={jsonRpcMap}>
+      <JsonRpcUrlMapProvider jsonRpcMap={jsonRpcUrlMap}>
         <ConnectorsProvider connectors={connectors}>{children}</ConnectorsProvider>
       </JsonRpcUrlMapProvider>
     </Web3ReactProvider>
@@ -98,10 +107,10 @@ function initializeWeb3ReactConnector<T extends Connector, P extends object>(
   return [connector, hooks];
 }
 
-function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcMap }: ProviderProps) {
+function useWeb3ReactConnectors({ defaultChainId, provider, jsonRpcUrlMap }: ProviderProps) {
   const [urlMap, connectionMap] = useMemo(
-    () => [toJsonRpcUrlMap(jsonRpcMap), toJsonRpcConnectionMap(jsonRpcMap)],
-    [jsonRpcMap]
+    () => [toJsonRpcUrlMap(jsonRpcUrlMap), toJsonRpcConnectionMap(jsonRpcUrlMap)],
+    [jsonRpcUrlMap]
   );
 
   const user = useMemo(() => {

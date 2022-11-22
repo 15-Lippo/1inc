@@ -83,7 +83,7 @@ export default function Widget({
         <CssBaseline />
         <I18nextProvider i18n={i18n}>
           <Provider store={store}>
-            <Web3ReactProvider provider={provider} jsonRpcMap={jsonRpcEndpoint}>
+            <Web3ReactProvider provider={provider} jsonRpcUrlMap={jsonRpcEndpoint}>
               {children}
             </Web3ReactProvider>
           </Provider>

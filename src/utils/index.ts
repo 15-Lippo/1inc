@@ -1,12 +1,15 @@
 export { bigFloatToFixed } from './bigFloatToFixed';
 export { calculateGasMargin } from './calculateGasMargin';
 export { calculateRoughFees, calculateTxCost, calculateTxFee } from './calculateTxCost';
+export { connect } from './connect';
 export { getContract } from './contract';
 export { formatGweiFixed, formatUsdFixed, parseGwei } from './conversion';
 export { countOfCustomTokens } from './customTokens';
 export { getSwapApiData } from './getSwapApiData';
+export { invariant } from './invariant';
 export { default as JsonRpcConnector } from './JsonRpcConnector';
 export { roundPercentInRoutes } from './roundPercentInRoutes';
+export { supportedChainId } from './supportedChainId';
 export { toHex } from './toHex';
 export { totalRouteSteps } from './totalRouteSteps';
 export { getTxStatus, TxStatusType } from './txStatus';

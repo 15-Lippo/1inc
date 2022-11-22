@@ -16,7 +16,7 @@ export type GasOption = {
 };
 
 export const useGasPriceOptions = () => {
-  const { provider } = useWeb3React();
+  const { chainId, provider } = useWeb3React();
   const [blockNum, setBlockNum] = useState<number>();
 
   const zeroGwei = '-- / -- - 0.00 Gwei';
@@ -56,13 +56,13 @@ export const useGasPriceOptions = () => {
     },
   });
 
-  if (provider)
+  if (chainId && provider)
     provider.on('block', async (block: number) => {
       return setBlockNum(block);
     });
 
   const getGasOptions = async () => {
-    if (provider) {
+    if (chainId && provider) {
       const feeData = await provider.getFeeData();
       if (feeData && feeData.gasPrice) {
         const gasPriceGwei = formatGweiFixed(feeData.gasPrice);
@@ -125,5 +125,6 @@ export const useGasPriceOptions = () => {
   useEffect(() => {
     getGasOptions();
   }, [blockNum]);
+
   return { gasOptions, blockNum };
 };

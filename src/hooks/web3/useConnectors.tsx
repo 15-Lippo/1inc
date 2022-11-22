@@ -1,11 +1,10 @@
-import { useWeb3React } from '@web3-react/core';
 import { EIP1193 } from '@web3-react/eip1193';
 import { MetaMask } from '@web3-react/metamask';
 import { Network } from '@web3-react/network';
-import { createContext, PropsWithChildren, useContext, useEffect } from 'react';
+import { createContext, PropsWithChildren, useContext } from 'react';
 import React from 'react';
 
-import { JsonRpcConnector, WalletConnectPopup } from '../../utils';
+import { invariant, JsonRpcConnector, WalletConnectPopup } from '../../utils';
 
 export interface Connectors {
   user: EIP1193 | JsonRpcConnector | undefined;
@@ -17,17 +16,11 @@ export interface Connectors {
 const ConnectorsContext = createContext<Connectors | null>(null);
 
 export function Provider({ connectors, children }: PropsWithChildren<{ connectors: Connectors }>) {
-  const { chainId, connector } = useWeb3React();
-
-  useEffect(() => {
-    if (connector !== connectors.network) {
-      connectors.network.activate(chainId);
-    }
-  }, [chainId, connector, connectors.network]);
-
   return <ConnectorsContext.Provider value={connectors}>{children}</ConnectorsContext.Provider>;
 }
 
 export default function useConnectors() {
-  return useContext(ConnectorsContext);
+  const connectors = useContext(ConnectorsContext);
+  invariant(connectors, 'useConnectors used without initializing the context');
+  return connectors;
 }
