@@ -6,7 +6,7 @@ import { calculateGasMargin } from '../utils';
 export const estimateGas = async (tx: TransactionRequest, provider: Provider, chainId: number): Promise<string> => {
   try {
     return calculateGasMargin(await provider.estimateGas(tx)).toString();
-  } catch (e: any) {
+  } catch (e) {
     console.error('ESTIMATE GAS LIMIT FAILED! Tx:', tx);
     console.error(e);
     console.log('SETTING DEFAULT GAS LIMIT...');

@@ -37,7 +37,7 @@ export const useUpdateParams = (): UpdateQuoteParams | undefined => {
       fromTokenDecimals,
       toTokenDecimals,
       slippage,
-      amount,
+      amount: String(amount),
       fromAddress: account,
       chainId,
       provider,

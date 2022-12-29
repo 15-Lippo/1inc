@@ -9,7 +9,7 @@ export const useUpdateUniswapQuote = (): ((params: UpdateQuoteParams) => Promise
   return useCallback(async (params: UpdateQuoteParams) => {
     try {
       return await getUniswapQuote(params);
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
       throw e;
     }
