@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@uniswap/sdk-core';
 
 import ERC20ABI from '../abi/ERC20ABI';
-import { V3_SWAP_ROUTER_ADDRESS } from '../constants';
+import { JOE_ROUTER_ADDRESS, V3_SWAP_ROUTER_ADDRESS } from '../constants';
 import { INCH_NATIVE_TOKEN_ADDRESS } from '../constants/tokens';
 import { getContract } from '../utils';
 import { fetchOneInchSpender } from './oneInchApi';
@@ -22,4 +22,8 @@ export const getUniswapAllowance = async (params: AllowanceParams): Promise<stri
 export const getOneInchAllowance = async (params: AllowanceParams): Promise<string> => {
   const spender: string = await fetchOneInchSpender(params.chainId);
   return getAllowance({ ...params, spender });
+};
+
+export const getJoeRouterAllowance = async (params: AllowanceParams): Promise<string> => {
+  return getAllowance({ ...params, spender: JOE_ROUTER_ADDRESS });
 };

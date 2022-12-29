@@ -12,3 +12,4 @@ export { LocalStorageKeys } from './localStorageKeys';
 export { ALL_SUPPORTED_CHAIN_IDS, getNetworkConfig, networkConfigs } from './networks';
 export * as Tokens from './tokens';
 export const V3_SWAP_ROUTER_ADDRESS = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45';
+export const JOE_ROUTER_ADDRESS = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45';

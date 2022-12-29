@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useCallback, useEffect } from 'react';
 
 import ERC20ABI from '../../abi/ERC20ABI';
-import { V3_SWAP_ROUTER_ADDRESS } from '../../constants';
+import { JOE_ROUTER_ADDRESS, V3_SWAP_ROUTER_ADDRESS } from '../../constants';
 import { ProtocolName } from '../../constants/protocolNames';
 import { ZERO_ADDRESS } from '../../constants/tokens';
 import { fetchOneInchApproveTx } from '../../services';
@@ -52,6 +52,14 @@ async function createApproveTx({ selectedMethod, to, chainId, from }: GetApprove
       const ierc20 = new Interface(ERC20ABI);
       return {
         data: ierc20.encodeFunctionData('approve', [V3_SWAP_ROUTER_ADDRESS, MaxUint256.toString()]),
+        value: '0',
+        to,
+      };
+    },
+    [ProtocolName.JOE_ROUTER]: async () => {
+      const ierc20 = new Interface(ERC20ABI);
+      return {
+        data: ierc20.encodeFunctionData('approve', [JOE_ROUTER_ADDRESS, MaxUint256.toString()]),
         value: '0',
         to,
       };
