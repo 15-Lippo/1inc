@@ -9,7 +9,7 @@ export const useUpdateOneInchQuote = (): ((params: UpdateQuoteParams) => Promise
   return useCallback(async (params: UpdateQuoteParams) => {
     try {
       return await getOneInchQuote(params);
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
       throw e;
     }
