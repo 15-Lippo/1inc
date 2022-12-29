@@ -124,7 +124,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "build": "react-scripts build",
     "start:webpack": "webpack-cli serve --mode=development --env development --hot",
     "build:webpack": "webpack --mode=production --env production --progress",
     "test": "react-scripts test --watchAll=false",
