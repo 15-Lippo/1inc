@@ -1,7 +1,9 @@
 import { Contract } from '@ethersproject/contracts';
 
 import JoeRouterABI from '../abi/JoeRouterABI';
+import { Token } from '../store';
 import { getContract } from '../utils';
+import { getSwapAvalancheType, SwapAvalancheType } from '../utils/getSwapAvalancheType';
 import { UpdateJoeRouterParams } from './types';
 
 export const JoeRouter = (params: UpdateJoeRouterParams): Contract => {
@@ -14,4 +16,25 @@ export const JoeRouter = (params: UpdateJoeRouterParams): Contract => {
   }
 
   return contract;
+};
+
+export const getSwapPath = async (
+  params: UpdateJoeRouterParams,
+  { fromToken, toToken }: { fromToken: Token; toToken: Token }
+): Promise<any[]> => {
+  const WAVAX = await JoeRouter(params).WAVAX();
+
+  const { fromTokenAddress, toTokenAddress } = {
+    fromTokenAddress: fromToken.address,
+    toTokenAddress: toToken.address,
+  };
+  const swapType = getSwapAvalancheType({ fromToken, toToken });
+
+  const swapPaths = {
+    [SwapAvalancheType.swapExactTokensForTokens]: [fromTokenAddress, WAVAX, toTokenAddress],
+    [SwapAvalancheType.swapExactTokensForAVAX]: [fromTokenAddress, WAVAX],
+    [SwapAvalancheType.swapExactAVAXForTokens]: [WAVAX, toTokenAddress],
+  };
+
+  return swapPaths[swapType];
 };
