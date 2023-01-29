@@ -31,3 +31,7 @@ yarn-error.log*
 
 **/.idea
 .vscode/
+#output
+.build
+#vercel
+.vercel
